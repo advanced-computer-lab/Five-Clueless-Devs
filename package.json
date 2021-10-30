@@ -1,0 +1,31 @@
+{
+  "name": "five-clueless-devs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "axios": "^0.24.0",
+    "body-parser": "^1.19.0",
+    "config": "^3.3.6",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.12",
+    "nodemon": "^2.0.14",
+    "validation": "^0.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/advanced-computer-lab/Five-Clueless-Devs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/advanced-computer-lab/Five-Clueless-Devs/issues"
+  },
+  "homepage": "https://github.com/advanced-computer-lab/Five-Clueless-Devs#readme"
+}
