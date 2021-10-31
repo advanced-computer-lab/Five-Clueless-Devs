@@ -10,5 +10,18 @@ const Flight = require('../model/Flight');
 // @access Public
 router.get('/test', (req, res) => res.send('user flight testing!'));
 
+// POST: Create a flight
+router.post('/createFlight', (req, res) => {
+    Flight.create({ ...req.body })
+        .then(users => res.json({ msg: 'Flight added successfully' }))
+        .catch(err => res.status(400).json({ error: 'Unable to add flight' }));
+});
+
+//GET: Search for a flight
+router.get('/search', (req, res) => {
+    Flight.find(req.query)
+        .then(flight => res.json(flight))
+        .catch(err => res.status(404).json({ nobookfound: 'No flights found' }));
+});
 
 module.exports = router;
