@@ -1,10 +1,18 @@
 const express = require('express');
+
 const connectDB = require('./config/db.js');
 
 const app = express();
 
+
 // Connect Database
 connectDB();
+
+
+const bp = require('body-parser')
+app.use(bp.json())
+app.use(bp.urlencoded({ extended: true }))
+
 
 app.get('/', (req, res) => res.send('Hello world!'));
 

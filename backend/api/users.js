@@ -1,6 +1,7 @@
 const express = require('express');
 const { models } = require('mongoose');
 const router = express.Router();
+var bodyParser = require('body-parser')
 
 // Load User model
 const User = require('../model/User');
@@ -19,5 +20,13 @@ router.get('/', (req, res) => {
         .then(users => res.json(users))
         .catch(err => res.status(404).json({ noUsersFound: 'No Users found' }));
 });
+
+
+router.post('/createAdmin', (req, res) => {
+    User.create({ ...req.body, isAdmin: "true" })
+        .then(users => res.json({ msg: 'Admin added successfully' }))
+        .catch(err => res.status(400).json({ error: err }));
+});
+
 
 module.exports = router;
