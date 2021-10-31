@@ -14,6 +14,9 @@ app.get('/', (req, res) => res.send('Hello world!'));
 const userRouter = require('./api/users');
 app.use('/api/users', userRouter);
 
+const flightRouter = require('./api/flights');
+app.use('/api/flights', flightRouter);
+
 
 
 
