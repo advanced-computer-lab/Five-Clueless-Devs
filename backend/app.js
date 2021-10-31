@@ -8,9 +8,13 @@ connectDB();
 
 app.get('/', (req, res) => res.send('Hello world!'));
 
-const bookRouter = require("./api/books")
+//const bookRouter = require("./api/books")
+//app.use("/api/books", bookRouter);
 
-app.use("/api/books", bookRouter);
+const userRouter = require('./api/users');
+app.use('/api/users', userRouter);
+
+
 
 
 const port = process.env.PORT || 8082;
