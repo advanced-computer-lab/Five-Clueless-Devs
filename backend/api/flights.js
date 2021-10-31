@@ -24,4 +24,11 @@ router.get('/search', (req, res) => {
         .catch(err => res.status(404).json({ nobookfound: 'No flights found' }));
 });
 
+//DELETE :Delete a flight
+router.delete('/deleteFlight',(req,res) => {
+    Flight.deleteOne({...req.body})
+        .then(flight => res.json(flight))
+        .catch(err => res.status(404).json(err));
+})
+
 module.exports = router;
