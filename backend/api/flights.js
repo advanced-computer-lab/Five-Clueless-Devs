@@ -8,7 +8,7 @@ const Flight = require('../model/Flight');
 // @route GET api/flights/test
 // @description tests users route
 // @access Public
-router.get('/test', (req, res) => res.send('user flight testing!'));
+router.get('/test', (req, res) => res.json({"res" : "123"}));
 
 // POST: Create a flight
 router.post('/createFlight', (req, res) => {
