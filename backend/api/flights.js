@@ -24,4 +24,13 @@ router.get('/search', (req, res) => {
         .catch(err => res.status(404).json({ nobookfound: 'No flights found' }));
 });
 
+
+//PUT: Update flight details
+router.put('/update', (req, res) => {
+    Flight.findOneAndUpdate(req.params, req.body)
+    .then(book => res.json({ msg: 'Updated successfully' }))
+    .catch(err =>
+        res.status(400).json({ error: 'Unable to update the Database' })
+   );
+});
 module.exports = router;
