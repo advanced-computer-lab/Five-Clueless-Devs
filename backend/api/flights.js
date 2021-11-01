@@ -24,6 +24,7 @@ router.get('/search', (req, res) => {
         .catch(err => res.status(404).json({ nobookfound: 'No flights found' }));
 });
 
+<<<<<<< HEAD
 
 //PUT: Update flight details
 router.put('/update', (req, res) => {
@@ -33,4 +34,13 @@ router.put('/update', (req, res) => {
         res.status(400).json({ error: 'Unable to update the Database' })
    );
 });
+=======
+//DELETE :Delete a flight
+router.delete('/deleteFlight',(req,res) => {
+    Flight.deleteOne({...req.body})
+        .then(flight => res.json(flight))
+        .catch(err => res.status(404).json(err));
+})
+
+>>>>>>> main
 module.exports = router;
