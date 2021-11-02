@@ -8,6 +8,7 @@ import {
 
 import Home from './Pages/Home.Page';
 import Test from './Pages/Test.page';
+import CreateFlight from './Components/CreateFlight';
 
 function App() {
   
@@ -21,6 +22,7 @@ function App() {
           <Route path="/test"
             component={Test}
           />
+           <Route path='/create-flight' component={CreateFlight} />
         </Switch>
       </Router>
     </div>
