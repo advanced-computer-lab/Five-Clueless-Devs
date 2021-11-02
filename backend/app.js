@@ -4,6 +4,8 @@ const connectDB = require('./config/db.js');
 
 const app = express();
 
+var cors = require('cors');
+
 
 // Connect Database
 connectDB();
@@ -12,6 +14,7 @@ connectDB();
 const bp = require('body-parser')
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
+app.use(cors({ origin: true, credentials: true }));
 
 
 app.get('/', (req, res) => res.send('Hello world!'));

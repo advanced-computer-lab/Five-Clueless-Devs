@@ -41,11 +41,11 @@ const FlightSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    airport: {
+    arrivalTerminal: {
         type: String,
         required: true
     },
-    terminal: {
+    departureTerminal: {
         type: String,
         required: true
     }
