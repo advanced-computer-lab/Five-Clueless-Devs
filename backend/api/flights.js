@@ -12,6 +12,7 @@ router.get('/test', (req, res) => res.json({"res" : "123"}));
 
 // POST: Create a flight
 router.post('/createFlight', (req, res) => {
+    console.log('YOU ADDED A FLIGHT');
     Flight.create({ ...req.body })
         .then(users => res.json({ msg: 'Flight added successfully' }))
         .catch(err => res.status(400).json({ error: 'Unable to add flight' }));
@@ -23,6 +24,7 @@ router.get('/search', (req, res) => {
         .then(flight => res.json(flight))
         .catch(err => res.status(404).json({ nobookfound: 'No flights found' }));
 });
+
 
 //PUT: Update flight details
 router.put('/update', (req, res) => {
