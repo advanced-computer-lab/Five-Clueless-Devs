@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import '../App.css';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
-
+import FlightCard from './FlightCard';
 
 class SearchFlight extends Component {
   constructor(props) {

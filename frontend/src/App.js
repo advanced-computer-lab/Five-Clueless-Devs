@@ -1,15 +1,11 @@
-/*import { useState } from 'react';
+import { useState } from 'react';
 import './App.css';
 import {
   BrowserRouter as Router,
   Switch,
   Route
-} from "react-router-dom";*/
+} from "react-router-dom";
 
-
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import './App.css'
 
 import Home from './Pages/Home.Page';
 import Test from './Pages/Test.page';
