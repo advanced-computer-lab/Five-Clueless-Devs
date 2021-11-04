@@ -18,11 +18,11 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/"
-            component={Home}
-          />
+            component={Home} />
+
           <Route path="/test"
-            component={Test}
-          />
+            component={Test} />
+            
           <Route path='/create-flight' component={CreateFlight} />
           <Route path='/update-flight' component={UpdateFlight} />
         </Switch>
