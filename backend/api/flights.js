@@ -8,7 +8,7 @@ const Flight = require('../model/Flight');
 // @route GET api/flights/test
 // @description tests users route
 // @access Public
-router.get('/test', (req, res) => res.send('user flight testing!'));
+router.get('/test', (req, res) => res.json({"res" : "123"}));
 
 // POST: Create a flight
 router.post('/createFlight', (req, res) => {
@@ -23,5 +23,12 @@ router.get('/search', (req, res) => {
         .then(flight => res.json(flight))
         .catch(err => res.status(404).json({ nobookfound: 'No flights found' }));
 });
+
+//DELETE :Delete a flight
+router.delete('/deleteFlight',(req,res) => {
+    Flight.deleteOne({...req.body})
+        .then(flight => res.json(flight))
+        .catch(err => res.status(404).json(err));
+})
 
 module.exports = router;
