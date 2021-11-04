@@ -9,7 +9,9 @@ import {
 import Home from './Pages/Home.Page';
 import Test from './Pages/Test.page';
 import CreateFlight from './Components/CreateFlight';
-import ViewFlight from './Components/ViewFlight';
+import SearchFlight from './Components/SearchFlight';
+import ViewFlightDetails from './Components/ViewFlightDetails';
+import UpdateFlight from './Components/UpdateFlight';
 
 function App() {
   
@@ -24,7 +26,10 @@ function App() {
             component={Test}
           />
            <Route path='/create-flight' component={CreateFlight} />
-           <Route path='/search' component={ViewFlight} />
+           <Route path='/search' component={SearchFlight} />
+           <Route path='/details' component={ViewFlightDetails} />
+           <Route path='/edit-flight/:id' component={UpdateFlight} />
+           
            
         </Switch>
       </Router>
