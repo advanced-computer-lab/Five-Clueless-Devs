@@ -1,10 +1,15 @@
-import { useState } from 'react';
+/*import { useState } from 'react';
 import './App.css';
 import {
   BrowserRouter as Router,
   Switch,
   Route
-} from "react-router-dom";
+} from "react-router-dom";*/
+
+
+import React, { Component } from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import './App.css'
 
 import Home from './Pages/Home.Page';
 import Test from './Pages/Test.page';
@@ -26,7 +31,7 @@ function App() {
             component={Test}
           />
            <Route path='/create-flight' component={CreateFlight} />
-           <Route path='/search' component={SearchFlight} />
+           <Route path='/search/:id' component={SearchFlight} />
            <Route path='/details' component={ViewFlightDetails} />
            <Route path='/edit-flight/:id' component={UpdateFlight} />
            
