@@ -38,7 +38,9 @@ const ViewFlightDetails = () => {
   }
     , []);
 
-  const onDeleteClick = () => {
+
+
+  const onDeleteConfirm = () => {
     axios
       .delete(BACKEND_URL + "flights/deleteFlight?flightId=" + id)
       .then(res => {
@@ -49,6 +51,17 @@ const ViewFlightDetails = () => {
         console.log(err);
       })
   };
+  const [showConfirm, setConfirm] = useState(false);
+  const setConfirmButton = () => {
+    setConfirm(true)
+    setDelete(false)
+  };
+
+  const [showDelete, setDelete] = useState(true);
+  const setDeleteButton = () => {
+    showDelete(false)
+  };
+  
 
   return (
     <div className="ViewFlight">
@@ -155,7 +168,11 @@ const ViewFlightDetails = () => {
               Edit Flights
             </Link>
             <br />
-            <button onClick={onDeleteClick}>Delete</button>
+            {showDelete?   <button onClick={setConfirmButton}>Delete </button>:null}
+            {showConfirm? <button onClick={onDeleteConfirm}>Confirm</button>:null}
+            <div className="App">
+             
+          </div>
           </div>
 
         </div>
