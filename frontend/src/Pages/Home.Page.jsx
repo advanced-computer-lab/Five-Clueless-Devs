@@ -1,42 +1,46 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "../API/URLS";
+import FlightCard from "../Components/FlightCard";
+import './Home.css'
 
 
-const Home = ({ inheritedValue }) => {
+const Home = () => {
 
 
-    const [counter, setCounter] = useState(0);
+    const [flights, setFlights] = useState([]);
 
     useEffect(() => {
-        console.log('useeffect')
+        getFlights();
     }, []);
 
-    const clickHandler = (x) => {
-        setCounter(x)
-    }
 
     const getFlights = () => {
-        console.log('1')
-        axios.get(BACKEND_URL + '/flights/test/').then(resp => {
+        axios.get(BACKEND_URL + 'flights/search/').then(resp => {
             console.log(resp.data);
+            const sorted = resp.data.sort((a, b) => {
+                if (a.departureDate === b.departureDate) {
+                    return Date.parse(a.departureTime) - Date.parse(b.departureTime)
+                } else {
+                    return Date.parse(a.departureDate) - Date.parse(b.departureDate)
+                }
+            })
+            console.log(sorted);
+            setFlights(sorted);
         });
     }
 
     return (
         <div>
-            home page count = {counter}
-
-            <div>
-                <button onClick={(e) => {
-                    setCounter(counter + 1);
-                    console.log(counter);
-                }}>increment</button>
-            </div>
-
-            <div>
-                <button onClick={() => getFlights()}>reset</button>
-                {inheritedValue}
+            <div className="flight-schedule">
+            <h2> Flight Schedule</h2>
+                {
+                    flights?.map((flight) =>
+                        <div key={flight._id}>
+                            <FlightCard flight={flight} />
+                        </div>
+                    )
+                }
             </div>
 
         </div>
