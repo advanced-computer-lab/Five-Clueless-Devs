@@ -28,6 +28,7 @@ function App() {
            <Route path='/create-flight' component={CreateFlight} />
            <Route path='/update-flight' component={UpdateFlight} />
            <Route path='/search' component={SearchFlight} />
+           <Route path='/search/:id' component={SearchFlight} />
            <Route path='/details' component={ViewFlightDetails} />
            <Route path='/edit-flight/:id' component={UpdateFlight} />
            

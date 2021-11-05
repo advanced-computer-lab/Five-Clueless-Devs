@@ -5,7 +5,6 @@ import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
 import FlightCard from './FlightCard';
 
-
 class SearchFlight extends Component {
   constructor(props) {
     super(props);
