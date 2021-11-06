@@ -11,6 +11,7 @@ import CreateFlight from './Components/CreateFlight';
 import SearchFlight from './Components/SearchFlight';
 import ViewFlightDetails from './Components/ViewFlightDetails';
 import UpdateFlight from './Components/UpdateFlight';
+import SearchFlightCriteria from './Components/SearchFlightCriteria';
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
           <Route path='/update-flight/:id' component={UpdateFlight} />
           <Route path='/search' component={SearchFlight} />
           <Route path='/details/:id' component={ViewFlightDetails} />
+          <Route path='/search-criteria' component={SearchFlightCriteria} />
 
         </Switch>
       </Router>
