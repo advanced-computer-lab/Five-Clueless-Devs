@@ -3,6 +3,7 @@ import { Link, useParams, useHistory } from 'react-router-dom';
 import '../App.css';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
+import { Button, Table, TableBody, TableCell, TableRow } from '@mui/material';
 
 
 const ViewFlightDetails = () => {
@@ -61,18 +62,12 @@ const ViewFlightDetails = () => {
   const setDeleteButton = () => {
     showDelete(false)
   };
-  
+
 
   return (
     <div className="ViewFlight">
       <div className="container">
         <div className="row">
-          <div className="col-md-10 m-auto">
-            <br /> <br />
-            <Link to="/search/:id" className="btn btn-outline-warning float-left">
-              Show Flights List
-            </Link>
-          </div>
           <br />
           <div className="col-md-8 m-auto">
             <h1 className="display-4 text-center">Flights' Record</h1>
@@ -83,79 +78,79 @@ const ViewFlightDetails = () => {
           </div>
         </div>
         <div>
-          <div>
-            <table className="table table-hover table-dark">
+          <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
+            <Table sx={{ maxWidth: 500 }} className="table table-hover table-dark">
               {/* <thead>
-          <tr>
+          <TableRow>
             <th scope="col">#</th>
             <th scope="col">First</th>
             <th scope="col">Last</th>
             <th scope="col">Handle</th>
-          </tr>
+          </TableRow>
         </thead> */}
-              <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>flightId</td>
-                  <td>{flight.flightId}</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>from</td>
-                  <td>{flight.from}</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>to</td>
-                  <td>{flight.to}</td>
-                </tr>
-                <tr>
-                  <th scope="row">4</th>
-                  <td>departureDate</td>
-                  <td>{flight.departureDate}</td>
-                </tr>
-                <tr>
-                  <th scope="row">5</th>
-                  <td>arrivalDate</td>
-                  <td>{flight.arrivalDate}</td>
-                </tr>
-                <tr>
-                  <th scope="row">6</th>
-                  <td>departureTime</td>
-                  <td>{flight.departureTime}</td>
-                </tr>
-                <tr>
-                  <th scope="row">7</th>
-                  <td>arrivalTime</td>
-                  <td>{flight.arrivalTime}</td>
-                </tr>
-                <tr>
-                  <th scope="row">8</th>
-                  <td>availableEconomy</td>
-                  <td>{flight.availableEconomy}</td>
-                </tr>
-                <tr>
-                  <th scope="row">9</th>
-                  <td>availableBusiness</td>
-                  <td>{flight.availableBusiness}</td>
-                </tr>
-                <tr>
-                  <th scope="row">10</th>
-                  <td>availableFirst</td>
-                  <td>{flight.availableFirst}</td>
-                </tr>
-                <tr>
-                  <th scope="row">11</th>
-                  <td>departureTerminal</td>
-                  <td>{flight.departureTerminal}</td>
-                </tr>
-                <tr>
-                  <th scope="row">12</th>
-                  <td>arrivalTerminal</td>
-                  <td>{flight.arrivalTerminal}</td>
-                </tr>
-              </tbody>
-            </table>
+              <TableBody>
+                <TableRow>
+                  {/* <th scope="row">1</th> */}
+                  <TableCell>Flight ID</TableCell>
+                  <TableCell>{flight.flightId}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">2</th> */}
+                  <TableCell>Origin Country</TableCell>
+                  <TableCell>{flight.from}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">3</th> */}
+                  <TableCell>Destination</TableCell>
+                  <TableCell>{flight.to}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">4</th> */}
+                  <TableCell>Departure Date</TableCell>
+                  <TableCell>{flight.departureDate.substring(0, 10)}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">5</th> */}
+                  <TableCell>Arrival Date</TableCell>
+                  <TableCell>{flight.arrivalDate.substring(0, 10)}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">6</th> */}
+                  <TableCell>Departure Time</TableCell>
+                  <TableCell>{flight.departureTime}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">7</th> */}
+                  <TableCell>Arrival Time</TableCell>
+                  <TableCell>{flight.arrivalTime}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">8</th> */}
+                  <TableCell>Available Economy Seats</TableCell>
+                  <TableCell>{flight.availableEconomy}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">9</th> */}
+                  <TableCell>Available Business Seats</TableCell>
+                  <TableCell>{flight.availableBusiness}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">10</th> */}
+                  <TableCell>Available First Class Seats</TableCell>
+                  <TableCell>{flight.availableFirst}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">11</th> */}
+                  <TableCell>Departure Terminal</TableCell>
+                  <TableCell>{flight.departureTerminal}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">12</th> */}
+                  <TableCell>Arrival Terminal</TableCell>
+                  <TableCell>{flight.arrivalTerminal}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
         </div>
 
@@ -163,20 +158,25 @@ const ViewFlightDetails = () => {
           <div className="col-md-6">
           </div>
 
-          <div className="col-md-6">
-            <Link to={`/update-flight/${id}`} className="btn btn-outline-info btn-lg btn-block">
+          <div className="col-md-6" style={{ margin: "10px" }}>
+            {/* <Link to={`/update-flight/${id}`} className="btn btn-outline-info btn-lg btn-block">
               Edit Flights
             </Link>
-            <br />
-            {showDelete?   <button onClick={setConfirmButton}>Delete </button>:null}
-            {showConfirm? <button onClick={onDeleteConfirm}>Confirm</button>:null}
-            <div className="App">
-             
-          </div>
-          </div>
+            <br /> */}
 
+            <Button
+              onClick={() => history.push(`/update-flight/${id}`)}
+              variant="outlined"
+              style={{ marginRight: "10px" }}
+            > Edit </Button>
+
+            {showDelete ? <Button onClick={setConfirmButton} variant="outlined" color="error">Delete </Button> : null}
+            {showConfirm ? <Button onClick={onDeleteConfirm} variant="outlined" color="error">Confirm</Button> : null}
+
+          </div>
         </div>
       </div>
+      
     </div>
   )
 }
