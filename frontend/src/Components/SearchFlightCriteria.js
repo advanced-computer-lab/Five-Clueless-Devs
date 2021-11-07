@@ -169,18 +169,18 @@ const SearchFlightCriteria = ({ location }) => {
                   <TextField
                     id="outlined"
                     className='form-control'
-                    label='Arrival Terminal'
-                    name="arrivalTerminal"
-                    value={flight.arrivalTerminal}
+                    label='Departure Terminal'
+                    name="departureTerminal"
+                    value={flight.departureTerminal}
                     onChange={(e) => onChange(e)}
                   />
 
                   <TextField
                     id="outlined"
                     className='form-control'
-                    label='Departure Terminal'
-                    name="departureTerminal"
-                    value={flight.departureTerminal}
+                    label='Arrival Terminal '
+                    name="arrivalTerminal"
+                    value={flight.arrivalTerminal}
                     onChange={(e) => onChange(e)}
                   />
                 </div>
