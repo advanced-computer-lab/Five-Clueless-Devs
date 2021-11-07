@@ -8,7 +8,7 @@ const Flight = require('../model/Flight');
 // @route GET api/flights/test
 // @description tests users route
 // @access Public
-router.get('/test', (req, res) => res.json({"res" : "123"}));
+router.get('/test', (req, res) => res.json({ "res": "123" }));
 
 // POST: Create a flight
 router.post('/createFlight', (req, res) => {
@@ -25,18 +25,17 @@ router.get('/search', (req, res) => {
         .catch(err => res.status(404).json({ nobookfound: 'No flights found' }));
 });
 
-
 //PUT: Update flight details
 router.put('/update', (req, res) => {
-    Flight.findOneAndUpdate(req.params, req.body)
-    .then(book => res.json({ msg: 'Updated successfully' }))
-    .catch(err =>
-        res.status(400).json({ error: 'Unable to update the Database' })
-   );
+    Flight.findOneAndUpdate(req.query, req.body)
+        .then(book => res.json({msg: "updated succesfully"}))
+        .catch(err =>
+            res.status(400).json({ error: 'Unable to update the Database' })
+        );
 });
 //DELETE :Delete a flight
-router.delete('/deleteFlight',(req,res) => {
-    Flight.deleteOne({...req.body})
+router.delete('/deleteFlight', (req, res) => {
+    Flight.deleteOne({ ...req.query })
         .then(flight => res.json(flight))
         .catch(err => res.status(404).json(err));
 })

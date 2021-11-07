@@ -4,6 +4,8 @@ import '../App.css';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
 import './CreateFlight.css';
+import TextField from '@mui/material/TextField';
+import { Button } from '@mui/material';
 
 
 class CreateFlight extends Component {
@@ -21,7 +23,8 @@ class CreateFlight extends Component {
             availableBusiness: '',
             availableFirst: '',
             arrivalTerminal: '',
-            departureTerminal: ''
+            departureTerminal: '',
+            err: ''
         };
     }
 
@@ -65,10 +68,11 @@ class CreateFlight extends Component {
                     arrivalTerminal: '',
                     departureTerminal: ''
                 })
-                this.props.history.push('/');
+                this.props.history.push('/search');
             })
             .catch(err => {
-                console.log("Error in Create Flight!");
+                console.log(err);
+                this.setState({['err']: 'error'})
             })
     };
 
@@ -84,151 +88,153 @@ class CreateFlight extends Component {
                                 Create new flight
                             </p>
 
-                            <form noValidate onSubmit={this.onSubmit}>
+                            <form noValidate onSubmit={this.onSubmit} >
                                 <div className='form-group'>
-                                    <label> Flight ID: </label>
-                                    <input
-                                        type='text'
-                                        placeholder='Flight ID'
-                                        name='flightId'
-                                        className='form-control'
-                                        value={this.state.flightId}
-                                        onChange={this.onChange}
-                                    />
+                                    <div>
+                                        <TextField
+                                            id="outlined"
+                                            label="Flight ID"
+                                            className='form-control'
+                                            name="flightId"
+                                            value={this.state.flightId}
+                                            onChange={this.onChange}
+                                        />
+                                    </div>
 
                                 </div>
 
 
                                 <div className='form-group'>
-                                    <label> From: </label>
-                                    <input
-                                        type='text'
-                                        placeholder='From'
-                                        name='from'
-                                        className='form-control'
-                                        value={this.state.from}
-                                        onChange={this.onChange}
-                                    />
+                                    <div>
+
+                                        <TextField
+                                            id="outlined"
+                                            className='form-control'
+                                            label='Origin Country'
+                                            name="from"
+                                            value={this.state.from}
+                                            onChange={this.onChange}
+                                        />
+
+                                        <TextField
+                                            id="outlined"
+                                            className='form-control'
+                                            label='Destination Country'
+                                            name="to"
+                                            value={this.state.to}
+                                            onChange={this.onChange}
+                                        />
+                                    </div>
+                                </div>
+
+
+                                <div className='form-group'>
+                                    <div>
+                                        <span className={this.state.departureDate === "" ? "hide" : ""}>
+                                            <TextField
+                                                id="outlined"
+                                                type="date"
+                                                className='form-control'
+                                                label='Departure Date'
+                                                name="departureDate"
+                                                value={this.state.departureDate}
+                                                onChange={this.onChange}
+                                            />
+                                        </span>
+                                        <span className={this.state.arrivalDate === "" ? "hide" : ""}>
+                                            <TextField
+                                                type='date'
+                                                className='form-control'
+                                                label='Arrival Date'
+                                                name="arrivalDate"
+                                                value={this.state.arrivalDate}
+                                                onChange={this.onChange}
+                                            />
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className='form-group'>
+                                    <div>
+                                        <span className={`time ${this.state.departureTime === "" ? "hide" : ""}`}>
+                                            <TextField
+                                                type='time'
+                                                className='form-control'
+                                                label='Departure Time'
+                                                name="departureTime"
+                                                value={this.state.departureTime}
+                                                onChange={this.onChange}
+                                            />
+                                        </span>
+                                        <span className={`criteria-time ${this.state.arrivalTime === "" ? "criteria-hide" : ""}`}>
+                                            <TextField
+                                                type='time'
+                                                className='form-control'
+                                                label='Arrival Time'
+                                                name="arrivalTime"
+                                                value={this.state.arrivalTime}
+                                                onChange={this.onChange}
+                                            />
+                                        </span>
+                                    </div>
                                 </div>
 
                                 <div className='form-group'>
-                                    <label> To: </label>
-                                    <input
-                                        type='text'
-                                        placeholder='To'
-                                        name='to'
-                                        className='form-control'
-                                        value={this.state.to}
-                                        onChange={this.onChange}
-                                    />
+                                    <div>
+                                        <TextField
+                                            id="outlined"
+                                            className='form-control'
+                                            label='Departure Terminal'
+                                            name="departureTerminal"
+                                            value={this.state.departureTerminal}
+                                            onChange={this.onChange}
+                                        />
+
+                                        <TextField
+                                            id="outlined"
+                                            className='form-control'
+                                            label='Arrival Terminal'
+                                            name="arrivalTerminal"
+                                            value={this.state.arrivalTerminal}
+                                            onChange={this.onChange}
+                                        />
+                                    </div>
+                                    <div>
+                                        <TextField
+                                            id="outlined"
+                                            className='form-control'
+                                            label='Economy Seats'
+                                            name="availableEconomy"
+                                            value={this.state.availableEconomy}
+                                            onChange={this.onChange}
+                                        />
+
+                                        <TextField
+                                            id="outlined"
+                                            className='form-control'
+                                            label='Business Seats'
+                                            name="availableBusiness"
+                                            value={this.state.availableBusiness}
+                                            onChange={this.onChange}
+                                        />
+
+                                        <TextField
+                                            id="outlined"
+                                            className='form-control'
+                                            label='First Class Seats'
+                                            name="availableFirst"
+                                            value={this.state.availableFirst}
+                                            onChange={this.onChange}
+                                        />
+                                    </div>
                                 </div>
 
 
-                                <div className='form-group'>
-                                    <label> Departure Time: </label>
-                                    <input
-                                        type='time'
-                                        placeholder='Departure Time'
-                                        name='departureTime'
-                                        className='form-control'
-                                        value={this.state.departureTime}
-                                        onChange={this.onChange}
-                                    />
+                                {
+                                    this.state.err ? <p>Cannot add flight, Ensure FlightID is unique and all fields are filled</p> : null
+                                }
+                                <div className='button'>
+                                    <Button variant="outlined" type="submit">Submit</Button>
                                 </div>
-                                <div className='form-group'>
-                                    <label> Arrival Time: </label>
-                                    <input
-                                        type='time'
-                                        placeholder='Arrival Time'
-                                        name='arrivalTime'
-                                        className='form-control'
-                                        value={this.state.arrivalTime}
-                                        onChange={this.onChange}
-                                    />
-                                </div>
-                                <div className='form-group'>
-                                    <label> Economy Class Seats: </label>
-                                    <input
-                                        type='text'
-                                        placeholder='Economy Class Seats'
-                                        name='availableEconomy'
-                                        className='form-control'
-                                        value={this.state.availableEconomy}
-                                        onChange={this.onChange}
-                                    />
-                                </div>
-                                <div className='form-group'>
-                                    <label> Business Class Seats: </label>
-                                    <input
-                                        type='text'
-                                        placeholder='Business Class Seats'
-                                        name='availableBusiness'
-                                        className='form-control'
-                                        value={this.state.availableBusiness}
-                                        onChange={this.onChange}
-                                    />
-                                </div>
-                                <div className='form-group'>
-                                    <label> First Class Seats: </label>
-                                    <input
-                                        type='text'
-                                        placeholder='First Class Seats'
-                                        name='availableFirst'
-                                        className='form-control'
-                                        value={this.state.availableFirst}
-                                        onChange={this.onChange}
-                                    />
-                                </div>
-                                <div className='form-group'>
-                                    <label> Departure Terminal: </label>
-                                    <input
-                                        type='text'
-                                        placeholder='Departure Terminal'
-                                        name='departureTerminal'
-                                        className='form-control'
-                                        value={this.state.departureTerminal}  //CHANGE THIS TO DEPARTURE TERMINAL
-                                        onChange={this.onChange}
-                                    />
-                                </div>
-                                <div className='form-group'>
-                                    <label> Arrival Terminal: </label>
-                                    <input
-                                        type='text'
-                                        placeholder='Arrival Terminal'
-                                        name='arrivalTerminal'
-                                        className='form-control'
-                                        value={this.state.arrivalTerminal} //CHANGE THIS TO ARRIVAL TEMRSINALS
-                                        onChange={this.onChange}
-                                    />
-                                </div>
-                                <div className='form-group'>
-                                    <label> Departure Date: </label>
-                                    <input
-                                        type='date'
-                                        placeholder='Departure Date'
-                                        name='departureDate'
-                                        className='form-control'
-                                        value={this.state.departureDate}
-                                        onChange={this.onChange}
-                                    />
-                                </div>
-
-                                <div className='form-group'>
-                                    <label> Arrival Date: </label>
-                                    <input
-                                        type='date'
-                                        placeholder='Arrival Date'
-                                        name='arrivalDate'
-                                        className='form-control'
-                                        value={this.state.arrivalDate}
-                                        onChange={this.onChange}
-                                    />
-                                </div>
-
-                                <input
-                                    type="submit"
-                                    className="btn btn-outline-warning btn-block mt-4"
-                                />
                             </form>
                         </div>
                     </div>
