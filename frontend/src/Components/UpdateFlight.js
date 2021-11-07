@@ -222,7 +222,9 @@ const UpdateFlight = () => {
 
 
 
-                            <button type="submit" className="btn btn-outline-info btn-lg btn-block">Update Flight</button>
+                            <div className='input-group-append'>
+                                    <Button variant="contained" type="submit">Update Flight</Button>
+                                </div>
                         </form>
                     </div>
                 </div>
