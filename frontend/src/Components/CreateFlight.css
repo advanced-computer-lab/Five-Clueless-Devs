@@ -4,7 +4,7 @@
     flex-direction: column;
 }
 .form-group .MuiFormControl-root{
-    margin: 5px;
+    margin: 10px;
 }
 
 .hide input{

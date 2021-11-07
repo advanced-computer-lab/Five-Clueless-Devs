@@ -228,7 +228,7 @@ class CreateFlight extends Component {
 
 
                                 <div className='button'>
-                                    <Button variant="contained" type="submit">Submit</Button>
+                                    <Button variant="outlined" type="submit">Submit</Button>
                                 </div>
                             </form>
                         </div>

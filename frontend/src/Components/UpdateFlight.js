@@ -69,7 +69,7 @@ const UpdateFlight = () => {
                 <div className="row">
 
                     <div className="col-md-8 m-auto">
-                        <h1 className="display-4 text-center">Update Flight</h1>
+                        <h1 className="display-4 text-center" style={{margin:"10px 0"}}>Update Flight</h1>
 
 
                         <form noValidate onSubmit={onSubmit}>
@@ -223,7 +223,7 @@ const UpdateFlight = () => {
 
 
                             <div className='input-group-append'>
-                                    <Button variant="contained" type="submit">Update Flight</Button>
+                                    <Button variant="outlined" type="submit">Update Flight</Button>
                                 </div>
                         </form>
                     </div>
