@@ -3,7 +3,7 @@ import { Link, useParams, useHistory } from 'react-router-dom';
 import '../App.css';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
-import { Button, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
 
 
 const ViewFlightDetails = () => {
@@ -55,13 +55,17 @@ const ViewFlightDetails = () => {
   const [showConfirm, setConfirm] = useState(false);
   const setConfirmButton = () => {
     setConfirm(true)
-    setDelete(false)
+    // setDelete(false)
   };
 
   const [showDelete, setDelete] = useState(true);
   const setDeleteButton = () => {
     showDelete(false)
   };
+
+  const toggleDialog = () => {
+    setConfirm(!showConfirm);
+  }
 
 
   return (
@@ -78,7 +82,7 @@ const ViewFlightDetails = () => {
           </div>
         </div>
         <div>
-          <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
             <Table sx={{ maxWidth: 500 }} className="table table-hover table-dark">
               {/* <thead>
           <TableRow>
@@ -171,12 +175,30 @@ const ViewFlightDetails = () => {
             > Edit </Button>
 
             {showDelete ? <Button onClick={setConfirmButton} variant="outlined" color="error">Delete </Button> : null}
-            {showConfirm ? <Button onClick={onDeleteConfirm} variant="outlined" color="error">Confirm</Button> : null}
+            {/* {showConfirm ? <Button onClick={onDeleteConfirm} variant="outlined" color="error">Confirm</Button> : null} */}
 
           </div>
         </div>
       </div>
-      
+
+
+      <div>
+        <Dialog
+          open={showConfirm}
+          onClose={toggleDialog}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Are you sure you want to delete this flight?"}
+          </DialogTitle>
+          <DialogActions>
+            <Button onClick={toggleDialog} variant="text">Cancel </Button>
+            <Button onClick={onDeleteConfirm} variant="text" color="error">Delete</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+
     </div>
   )
 }
