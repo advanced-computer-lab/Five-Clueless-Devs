@@ -23,7 +23,8 @@ class CreateFlight extends Component {
             availableBusiness: '',
             availableFirst: '',
             arrivalTerminal: '',
-            departureTerminal: ''
+            departureTerminal: '',
+            err: ''
         };
     }
 
@@ -70,7 +71,8 @@ class CreateFlight extends Component {
                 this.props.history.push('/search');
             })
             .catch(err => {
-                console.log("Error in Create Flight!");
+                console.log(err);
+                this.setState({['err']: 'error'})
             })
     };
 
@@ -227,6 +229,9 @@ class CreateFlight extends Component {
                                 </div>
 
 
+                                {
+                                    this.state.err ? <p>Cannot add flight, Ensure FlightID is unique and all fields are filled</p> : null
+                                }
                                 <div className='button'>
                                     <Button variant="outlined" type="submit">Submit</Button>
                                 </div>
