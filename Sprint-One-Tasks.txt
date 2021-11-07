@@ -1,0 +1,9 @@
+May Magdy:     Worked on Updating Flights functionality in backend and frontend
+
+Mariam Eissa:  Worked on Updating Flights in backend and part of the frontend for searching for flights
+
+David Said:        Worked on Deleting Flights in backend and frontend + deletion confirmation
+
+Youssef Kersha:   Set up project and folder structure,  connected to the database, made the flight and admin models , designed the flight schedule and added some mui materials
+
+Hazem Hisham:    Set up the MongoDB database, worked on Create Flights backend and frontend, Search Flights backend and part of the frontend, and added some mui materials
