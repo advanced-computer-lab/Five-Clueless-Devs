@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 
 const ReservationSchema = new mongoose.Schema({
-  userID: {
+  flightID: {
     type: String,
     required: true
   },
