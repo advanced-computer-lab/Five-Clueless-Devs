@@ -3,7 +3,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
 import FlightCard from './FlightCard';
 import TextField from '@mui/material/TextField';
-import './SearchFlightCriteria.css';
+import './SearchFlightUser.css';
 import { Button, FormControl, InputLabel, Select, MenuItem, Autocomplete } from '@mui/material';
 //NO PREVENT DEFAULT IS PROBLEM?!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!?!!!?!?!!??!?!!?!
 
@@ -267,38 +267,39 @@ const SearchFlightUser = ({ location }) => {
 
                                         </Select>
                                     </FormControl> */}
+                                    <div className='search-center'>
+                                        <Autocomplete
+                                            disablePortal
+                                            id="combo-box-demo"
+                                            options={allFlights.map(flight => flight.from)
+                                                .filter((value, index, self) => self.indexOf(value) === index)}
+                                            sx={{ width: 300 }}
 
-                                    <Autocomplete 
-                                        disablePortal
-                                        id="combo-box-demo"
-                                        options={allFlights.map(flight => flight.to)
-                                            .filter((value, index, self) => self.indexOf(value) === index)}
-                                        sx={{ width: 300 }}
+                                            // onChange={(e) => onChange(e)}
 
-                                        // onChange={(e) => onChange(e)}
+                                            renderInput={(params) => <TextField {...params} required label="From" />}
+                                            // name="to"
+                                            // value={flight.to}
+                                            onChange={handleChangeFrom}
 
-                                        renderInput={(params) => <TextField {...params} required label="To" />}
-                                        // name="to"
-                                        // value={flight.to}
-                                        onChange={handleChangeTo}
+                                        />
+                                        <Autocomplete
+                                            disablePortal
+                                            id="combo-box-demo"
+                                            options={allFlights.map(flight => flight.to)
+                                                .filter((value, index, self) => self.indexOf(value) === index)}
+                                            sx={{ width: 300 }}
+
+                                            // onChange={(e) => onChange(e)}
+
+                                            renderInput={(params) => <TextField {...params} required label="To" />}
+                                            // name="to"
+                                            // value={flight.to}
+                                            onChange={handleChangeTo}
 
 
-                                    />
-                                    <Autocomplete 
-                                        disablePortal
-                                        id="combo-box-demo"
-                                        options={allFlights.map(flight => flight.from)
-                                            .filter((value, index, self) => self.indexOf(value) === index)}
-                                        sx={{ width: 300 }}
-                                        
-                                        // onChange={(e) => onChange(e)}
-
-                                        renderInput={(params) => <TextField {...params} required label="From" />}
-                                        // name="to"
-                                        // value={flight.to}
-                                        onChange={handleChangeFrom}
-
-                                    />
+                                        />
+                                    </div>
                                     <span className={flight.departureDate === "" ? "criteria-hide" : ""}>
                                         <TextField
                                             id="dateInput"

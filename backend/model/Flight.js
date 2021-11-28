@@ -53,27 +53,27 @@ const FlightSchema = new mongoose.Schema({
     },
     price: {
         type: Number,
-        required = true
+        required: true
     },
     baggageAllowance: {
         type: Number,
-        required = true
+        required: true
     },
     seatsEconomy: {
         type: [String],
-        required = true
+        required: true
     },
     seatsBusiness: {
         type: [String],
-        required = true
+        required: true
     },
     seatsFirst: {
         type: [String],
-        required = true
+        required: true
     },
     duration: {
         type: String,
-        required = true
+        required: true
     },
 });
 
