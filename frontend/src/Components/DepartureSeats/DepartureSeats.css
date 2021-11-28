@@ -1,0 +1,9 @@
+.dep-cont{
+    display: flex;
+    margin: 25px;
+}
+
+.dep-summary{
+    min-width: 500px;
+    text-align: left;
+}
