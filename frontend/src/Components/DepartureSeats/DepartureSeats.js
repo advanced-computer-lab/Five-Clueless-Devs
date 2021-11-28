@@ -1,15 +1,34 @@
 import { Button } from "@mui/material";
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { BACKEND_URL } from "../../API/URLS";
 import Seats from "../SeatMap/Seats";
 import './DepartureSeats.css';
 
 const DepartureSeats = () => {
 
-    const [selectedSeats, setSelectedSeats] = useState([]);
+    const [flight, setFlight] = useState({});
+    const [selectedSeats, setSelectedSeats] = useState([]); // [{number:A3, id:2}...]
     const maxSeats = 3;
+    const id = 1;
 
     const seats = [123, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 111,
         123, null, null, 123, null, null, "hell", 123, null, null, 123, null, null, null, null, null];
+
+
+    useEffect(() => {
+        console.log("Print id: " + { id });
+        axios
+            .get(BACKEND_URL + "flights/search?flightId=" + id)
+            .then(res => {
+                console.log(res.data);
+                setFlight(res.data[0] || {});
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+        , []);
 
     return (
         <div>
@@ -26,11 +45,11 @@ const DepartureSeats = () => {
                     <p>Baggage Allowance: 1 23kg bag</p>
                     <p>Price: 10000 EGP</p>
                     <p>Max Number of Seats: {maxSeats}</p>
-                    <p><em> Selected Seats: 
+                    <p><em> Selected Seats:
                         {
-                            ` ${selectedSeats.join(', ')}`
+                            selectedSeats.map((s) => s.number).join(", ")
                         }
-                        </em>
+                    </em>
                     </p>
                 </div>
 
