@@ -35,6 +35,10 @@ const UserSchema = new mongoose.Schema({
     isAdmin:{
         type: Boolean,
         required: true
+    },
+    reservations:{
+        type: [String],
+        required: true
     }
 });
 
