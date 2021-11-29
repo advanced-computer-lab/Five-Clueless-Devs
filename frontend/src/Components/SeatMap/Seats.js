@@ -9,9 +9,16 @@ const Seats = (props) => {
 
     const [rows, setRows] = useState([]);
 
+    const getSeatNumber = (i) => {
+        let letter = String.fromCharCode('A'.charCodeAt(0) + i / 6);
+        let num = i % 6 + 1;
+        return `${letter}${num}`
+    }
+
     useEffect(() => {
         const processedRows = [];
         let temp = [];
+        let tempSelected = [];
         for (let i = 0; i < propSeats.length; i++) {
             if (i % 3 === 0 && i % 6 !== 0) {
                 temp.push(null);
@@ -20,17 +27,26 @@ const Seats = (props) => {
                 temp = [];
             }
 
-            if (propSeats[i] !== null) {
+            if (propSeats[i] == props.userId) {
+                temp.push({ id: i + 1, number: i % 6 + 1, isSelected: true });
+                tempSelected = [...tempSelected, { id: i, number: getSeatNumber(i) }]
+            } else if (propSeats[i] === null || propSeats[i] === 'null') {
                 temp.push({ id: i + 1, number: i % 6 + 1 });
             } else {
                 temp.push({ id: i + 1, number: i % 6 + 1, isReserved: true });
             }
         }
+        if (temp.length > 0) {
+            processedRows.push(temp);
+        }
+        if(tempSelected.length > 0){
+            props.setSelectedSeats(tempSelected);
+        }
 
         setRows(processedRows);
-        // console.log(processedRows);
+        console.log(processedRows);
 
-    }, [])
+    }, [props.seats])
 
     return (
         <>
@@ -38,8 +54,9 @@ const Seats = (props) => {
                 <SeatMap
                     rows={rows}
                     selectedSeats={props.selectedSeats}
-                    setSelectedSeats = {props.setSelectedSeats}
+                    setSelectedSeats={props.setSelectedSeats}
                     maxSeats={props.maxSeats}
+                    removeSeat = {props.removeSeat}
                 />
                 : null}
         </>

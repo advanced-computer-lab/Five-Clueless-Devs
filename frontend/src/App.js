@@ -15,8 +15,8 @@ import SearchFlightCriteria from './Components/SearchFlightCriteria';
 import Navbar from './Components/NavBar';
 import FlightSchedule from './Components/FlightSchedule';
 
-import DepartureSeats from './Components/DepartureSeats/DepartureSeats';
 import SearchFlightUser from './Components/SearchFlightUser';
+import FlightSeats from './Components/FlightSeats/FlightSeats';
 
 function App() {
 
@@ -36,7 +36,7 @@ function App() {
           <Route path='/search' component={SearchFlightCriteria} />
           <Route path='/flight-schedule' component={FlightSchedule} />
           
-          <Route path='/select-seats' component={DepartureSeats} />
+          <Route path='/select-seats' component={FlightSeats} />
           <Route path='/search-user' component={SearchFlightUser} />
 
         </Switch>
