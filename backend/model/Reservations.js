@@ -3,6 +3,10 @@
 const mongoose = require('mongoose');
 
 const ReservationSchema = new mongoose.Schema({
+  ReservationID:{
+     type: String,
+     required:true
+  },
   UserID:{
     type : String,
     required: true

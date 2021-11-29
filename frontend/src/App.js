@@ -16,6 +16,7 @@ import Navbar from './Components/NavBar';
 import FlightSchedule from './Components/FlightSchedule';
 import SearchFlightUser from './Components/SearchFlightUser';
 import ViewDetailsUser from './Components/ViewDetailsUser';
+import ReservedFlight from './Components/ReservedFlight';
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
           <Route path='/flight-schedule' component={FlightSchedule} />
           <Route path='/search-user' component={SearchFlightUser} />
           <Route path='/details-user/:id' component={ViewDetailsUser} />
+          <Route path='/Rserved-flights/:id' component={ReservedFlight} />
 
         </Switch>
       </Router>
