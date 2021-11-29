@@ -3,9 +3,9 @@
 const mongoose = require('mongoose');
 
 const ReservationSchema = new mongoose.Schema({
-  userID:{
-      type:String,
-      required:true
+  UserID:{
+    type : String,
+    required: true
   },
   from: {
     type: Number,
@@ -18,8 +18,7 @@ const ReservationSchema = new mongoose.Schema({
   cabin:{
     type:String ,
     required:true
-  }
-
+  },
 });
 
 module.exports = Reservation = mongoose.model('reservation', ReservationSchema);
