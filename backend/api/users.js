@@ -28,6 +28,12 @@ router.post('/createAdmin', (req, res) => {
         .catch(err => res.status(400).json({ error: err }));
 });
 
+router.post('/createUser', (req, res) => {
+    User.create({ ...req.body, isAdmin: "false" })
+        .then(users => res.json({ msg: 'User added successfully' }))
+        .catch(err => res.status(400).json({ error: err }));
+});
+
 
 
 
