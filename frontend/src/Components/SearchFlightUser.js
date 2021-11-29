@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
-import FlightCard from './FlightCard';
+import DepartureFlightCard from './DepartureFlightCard';
+import ReturnFlightCard from './ReturnFlightCard';
 import TextField from '@mui/material/TextField';
 import './SearchFlightUser.css';
 import { Button, FormControl, InputLabel, Select, MenuItem, Autocomplete } from '@mui/material';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import { CardActionArea } from '@mui/material';
 //NO PREVENT DEFAULT IS PROBLEM?!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!?!!!?!?!!??!?!!?!
 
 const SearchFlightUser = ({ location }) => {
     // const history = useHistory();
     // useState hooks for input and language
+
 
     const [returnFlight, setReturnFlight] = useState({
         flightId: '',
@@ -23,13 +30,31 @@ const SearchFlightUser = ({ location }) => {
         availableBusiness: '',
         availableFirst: '',
         arrivalTerminal: '',
-        departureTerminal: ''
+        departureTerminal: '',
+        price: '',
+        baggageAllowance: '',
+        seatsEconomy: '',
+        seatsBusiness: '',
+        seatsFirst: '',
+        duration: ''
     });
+    //passing info to other components for summary
+    const [selectedDeptFlightId, setDeptSelectedId] = useState(0);
+    const [deptFlightFrom, setDeptFlightFrom] = useState("");
+    const [deptFlightTo, setDeptFlightTo] = useState("");
+    const [deptFlightDuration, setDeptFlightDuration] = useState("");
+    const [selectedRetFlightId, setRetSelectedId] = useState(0);
+    const [retFlightFrom, setRetFlightFrom] = useState("");
+    const [retFlightTo, setRetFlightTo] = useState("");
+    const [retFlightDuration, setRetFlightDuration] = useState("");
+    //info used in this component
+    const [view, setView] = useState(1);
     const [chosenClass, setClass] = useState('Economy');
     const [returnDate, setReturnDate] = useState('');
     const [adultsNumber, setAdultNumber] = useState(1);
     const [childNumber, setChildNumber] = useState(0);
     const [allFlights, setAll] = useState([]);
+    const [returnFlightRes, setReturnResult] = useState([]);
     const [flightRes, setResult] = useState([]);
     const [flight, setFlight] = useState({
         flightId: '',
@@ -43,15 +68,23 @@ const SearchFlightUser = ({ location }) => {
         availableBusiness: '',
         availableFirst: '',
         arrivalTerminal: '',
-        departureTerminal: ''
+        departureTerminal: '',
+        price: '',
+        baggageAllowance: '',
+        seatsEconomy: '',
+        seatsBusiness: '',
+        seatsFirst: '',
+        duration: ''
     });
+
+
 
     useEffect(() => {
         axios
             .get(BACKEND_URL + "flights/search?")
             .then(res => {
                 console.log(res.data);
-                setResult(res.data);
+
                 console.log(flightRes);
                 setAll(res.data);
 
@@ -126,6 +159,22 @@ const SearchFlightUser = ({ location }) => {
         console.log(flight);
 
     };
+    const selectDept = () => {
+        if (view == 1) {
+            setView(2);
+        }
+        else {
+            setView(3);
+        }
+        console.log(flight.flightId);
+        console.log("helooo");
+    }
+    const editDept = () => {
+        setView(1);
+    }
+    const editRet = () => {
+        setView(2);
+    }
 
     // const clearAll = (e) => {
     //     var elementsSelect = document.getElementById('select');
@@ -159,10 +208,11 @@ const SearchFlightUser = ({ location }) => {
     };
     // function for handling form submit
     const submitAction = (e) => {
-        setReturnFlight(flight);    //Remove return date from model and just replace
-        returnFlight.departureDate = returnDate;
-        returnFlight.from = flight.to;
+        console.log("This is the flight:")
+
         returnFlight.to = flight.from;
+        returnFlight.from = flight.to;
+        returnFlight.departureDate = returnDate;
         console.log(returnFlight);
         var passNumber = adultsNumber + childNumber;
         var numberAndClass = "";
@@ -202,6 +252,7 @@ const SearchFlightUser = ({ location }) => {
         keysForDel2.forEach(key => {
             uspReturn.delete(key);
         });
+        console.log(flight);
         console.log(usp.toString());
         console.log(uspReturn.toString());
         // prevents default, so page won't reload on form submit
@@ -218,23 +269,37 @@ const SearchFlightUser = ({ location }) => {
             .catch(err => {
                 console.log(err);
             })
+        //--------------------------------------------------------------------------------
+        axios
+            .get(BACKEND_URL + "flights/searchUser?" + uspReturn.toString() + "&" + numberAndClass)
+            .then(res => {
+                console.log(res.data);
+                setReturnResult(res.data);
+                console.log(returnFlightRes);
+
+            })
+            .catch(err => {
+                console.log(err);
+            })
 
     };
 
-    return (
-        <>
 
-            <div className='bg-dark text-light'>
-                <div className='container pt-5' style={{ height: '100vh' }}>
-                    <h1 className="display-4 text-center">Search for flights</h1>
+    if (view == 1) {
+        return (
+            <>
+
+                <div className='bg-dark text-light'>
+                    <div className='container pt-5' style={{ height: '100vh' }}>
+                        <h1 className="display-4 text-center">Search for flights</h1>
 
 
-                    <form onSubmit={submitAction} className='mt-5'>
-                        <div className='input-group'>
-                            <div className='criteria-form-group'>
+                        <form onSubmit={submitAction} className='mt-5'>
+                            <div className='input-group'>
+                                <div className='criteria-form-group'>
 
-                                <div>
-                                    {/* <FormControl sx={{ m: 1, minWidth: 120 }} >
+                                    <div>
+                                        {/* <FormControl sx={{ m: 1, minWidth: 120 }} >
                                         <InputLabel id="demo-simple-select-label">From</InputLabel>
                                         <Select
                                             labelId="demo-simple-select-label"
@@ -250,7 +315,7 @@ const SearchFlightUser = ({ location }) => {
 
                                         </Select>
                                     </FormControl> */}
-                                    {/* <FormControl sx={{ m: 1, minWidth: 120 }} >
+                                        {/* <FormControl sx={{ m: 1, minWidth: 120 }} >
                                         <InputLabel id="demo-simple-select-label">To</InputLabel>
                                         <Select
                                             labelId="demo-simple-select-label"
@@ -267,153 +332,322 @@ const SearchFlightUser = ({ location }) => {
 
                                         </Select>
                                     </FormControl> */}
-                                    <div className='search-center'>
-                                        <Autocomplete
-                                            disablePortal
-                                            id="combo-box-demo"
-                                            options={allFlights.map(flight => flight.from)
-                                                .filter((value, index, self) => self.indexOf(value) === index)}
-                                            sx={{ width: 300 }}
+                                        <div className='search-center'>
+                                            <Autocomplete
+                                                disablePortal
+                                                id="combo-box-demo"
+                                                options={allFlights.map(flight => flight.from)
+                                                    .filter((value, index, self) => self.indexOf(value) === index)}
+                                                sx={{ width: 300 }}
 
-                                            // onChange={(e) => onChange(e)}
+                                                // onChange={(e) => onChange(e)}
 
-                                            renderInput={(params) => <TextField {...params} required label="From" />}
-                                            // name="to"
-                                            // value={flight.to}
-                                            onChange={handleChangeFrom}
+                                                renderInput={(params) => <TextField {...params} required label="From" />}
+                                                // name="to"
+                                                // value={flight.to}
+                                                onChange={handleChangeFrom}
 
-                                        />
-                                        <Autocomplete
-                                            disablePortal
-                                            id="combo-box-demo"
-                                            options={allFlights.map(flight => flight.to)
-                                                .filter((value, index, self) => self.indexOf(value) === index)}
-                                            sx={{ width: 300 }}
+                                            />
+                                            <Autocomplete
+                                                disablePortal
+                                                id="combo-box-demo"
+                                                options={allFlights.map(flight => flight.to)
+                                                    .filter((value, index, self) => self.indexOf(value) === index)}
+                                                sx={{ width: 300 }}
 
-                                            // onChange={(e) => onChange(e)}
+                                                // onChange={(e) => onChange(e)}
 
-                                            renderInput={(params) => <TextField {...params} required label="To" />}
-                                            // name="to"
-                                            // value={flight.to}
-                                            onChange={handleChangeTo}
+                                                renderInput={(params) => <TextField {...params} required label="To" />}
+                                                // name="to"
+                                                // value={flight.to}
+                                                onChange={handleChangeTo}
 
 
-                                        />
-                                    </div>
-                                    <span className={flight.departureDate === "" ? "criteria-hide" : ""}>
-                                        <TextField
-                                            id="dateInput"
-                                            type="date"
-                                            className='form-control'
-                                            label='Departure Date'
-                                            name="departureDate"
-                                            value={flight.departureDate}
-                                            onChange={(e) => onChange(e)}
-                                        />
-                                    </span>
-                                    <span className={returnDate === "" ? "criteria-hide" : ""}>
-                                        <TextField
-                                            id="dateInput"
-                                            type='date'
-                                            className='form-control'
-                                            label='Return Date'
-                                            name="returnDate"
-                                            value={returnDate}
-                                            onChange={(e) => onChooseReturnDate(e)}
-                                        />
-                                    </span>
-                                    <div>
+                                            />
+                                        </div>
+                                        <span className={flight.departureDate === "" ? "criteria-hide" : ""}>
+                                            <TextField
+                                                id="dateInput"
+                                                type="date"
+                                                className='form-control'
+                                                label='Departure Date'
+                                                name="departureDate"
+                                                value={flight.departureDate}
+                                                onChange={(e) => onChange(e)}
+                                            />
+                                        </span>
+                                        <span className={returnDate === "" ? "criteria-hide" : ""}>
+                                            <TextField
+                                                id="dateInput"
+                                                type='date'
+                                                className='form-control'
+                                                label='Return Date'
+                                                name="returnDate"
+                                                value={returnDate}
+                                                onChange={(e) => onChooseReturnDate(e)}
+                                            />
+                                        </span>
+                                        <div>
+                                            <FormControl sx={{ m: 1, minWidth: 120 }} >
+                                                <InputLabel id="demo-simple-select-label">Class</InputLabel>
+                                                <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="select"
+
+                                                    value={chosenClass}
+                                                    label="Class"
+                                                    onChange={(e) => onChooseClass(e)}
+
+                                                >
+
+                                                    <MenuItem value={'Economy'} >Economy</MenuItem>
+                                                    <MenuItem value={'Business'} >Business</MenuItem>
+                                                    <MenuItem value={'First'} >First</MenuItem>
+
+                                                </Select>
+                                            </FormControl>
+                                        </div>
                                         <FormControl sx={{ m: 1, minWidth: 120 }} >
-                                            <InputLabel id="demo-simple-select-label">Class</InputLabel>
+                                            <InputLabel id="demo-simple-select-label">Adults</InputLabel>
                                             <Select
                                                 labelId="demo-simple-select-label"
                                                 id="select"
 
-                                                value={chosenClass}
-                                                label="Class"
-                                                onChange={(e) => onChooseClass(e)}
+                                                value={adultsNumber}
+                                                label="Adults"
+                                                onChange={(e) => onChooseAdult(e)}
 
                                             >
 
-                                                <MenuItem value={'Economy'} >Economy</MenuItem>
-                                                <MenuItem value={'Business'} >Business</MenuItem>
-                                                <MenuItem value={'First'} >First</MenuItem>
+
+                                                <MenuItem value={1} >1</MenuItem>
+                                                <MenuItem value={2} >2</MenuItem>
+                                                <MenuItem value={3} >3</MenuItem>
+                                                <MenuItem value={4} >4</MenuItem>
+                                                <MenuItem value={5} >5</MenuItem>
+                                                <MenuItem value={6} >6</MenuItem>
+                                                <MenuItem value={7} >7</MenuItem>
+                                                <MenuItem value={8} >8</MenuItem>
+                                                <MenuItem value={9} >9</MenuItem>
+
+                                            </Select>
+                                        </FormControl>
+                                        <FormControl sx={{ m: 1, minWidth: 120 }} >
+                                            <InputLabel id="demo-simple-select-label">Children</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="select"
+
+                                                value={childNumber}
+                                                label="Children"
+                                                onChange={(e) => onChooseChild(e)}
+
+                                            >
+
+                                                <MenuItem value={0} >0</MenuItem>
+                                                <MenuItem value={1} >1</MenuItem>
+                                                <MenuItem value={2} >2</MenuItem>
+                                                <MenuItem value={3} >3</MenuItem>
+                                                <MenuItem value={4} >4</MenuItem>
+                                                <MenuItem value={5} >5</MenuItem>
+                                                <MenuItem value={6} >6</MenuItem>
+                                                <MenuItem value={7} >7</MenuItem>
+                                                <MenuItem value={8} >8</MenuItem>
+                                                <MenuItem value={9} >9</MenuItem>
 
                                             </Select>
                                         </FormControl>
                                     </div>
-                                    <FormControl sx={{ m: 1, minWidth: 120 }} >
-                                        <InputLabel id="demo-simple-select-label">Adults</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="select"
-
-                                            value={adultsNumber}
-                                            label="Adults"
-                                            onChange={(e) => onChooseAdult(e)}
-
-                                        >
+                                    <div className='input-group-append'>
+                                        <Button variant="outlined" type="submit">Search</Button>
 
 
-                                            <MenuItem value={1} >1</MenuItem>
-                                            <MenuItem value={2} >2</MenuItem>
-                                            <MenuItem value={3} >3</MenuItem>
-                                            <MenuItem value={4} >4</MenuItem>
-                                            <MenuItem value={5} >5</MenuItem>
-                                            <MenuItem value={6} >6</MenuItem>
-                                            <MenuItem value={7} >7</MenuItem>
-                                            <MenuItem value={8} >8</MenuItem>
-                                            <MenuItem value={9} >9</MenuItem>
+                                    </div>
 
-                                        </Select>
-                                    </FormControl>
-                                    <FormControl sx={{ m: 1, minWidth: 120 }} >
-                                        <InputLabel id="demo-simple-select-label">Children</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="select"
 
-                                            value={childNumber}
-                                            label="Children"
-                                            onChange={(e) => onChooseChild(e)}
+                                    <div className="list">
+                                        {flightRes.map((flight, k) =>
+                                            <DepartureFlightCard flight={flight} numOfChildren={childNumber} numOfAdults={adultsNumber}
+                                                chosenClass={chosenClass} data={selectDept} key={k} passDeptId={setDeptSelectedId} passDeptFrom={setDeptFlightFrom}
+                                                passDeptTo={setDeptFlightTo} passDeptDuration={setDeptFlightDuration} />
+                                        )}
+                                    </div>
 
-                                        >
-
-                                            <MenuItem value={0} >0</MenuItem>
-                                            <MenuItem value={1} >1</MenuItem>
-                                            <MenuItem value={2} >2</MenuItem>
-                                            <MenuItem value={3} >3</MenuItem>
-                                            <MenuItem value={4} >4</MenuItem>
-                                            <MenuItem value={5} >5</MenuItem>
-                                            <MenuItem value={6} >6</MenuItem>
-                                            <MenuItem value={7} >7</MenuItem>
-                                            <MenuItem value={8} >8</MenuItem>
-                                            <MenuItem value={9} >9</MenuItem>
-
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                                <div className='input-group-append'>
-                                    <Button variant="outlined" type="submit">Search</Button>
 
 
                                 </div>
-                                <div>
-                                    <Button variant="outlined" onClick={(e) => showAll(e)} >Show All</Button>
-                                </div>
-                                <div className="list">
-                                    {flightRes.map((flight, k) =>
-                                        <FlightCard flight={flight} key={k} />
-                                    )}
-                                </div>
-
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        </>
-    );
-};
+            </>
+        );
+    }
+    else if (view == 2) {
+        return (
+            <>
+
+
+                <div >
+                    <p className="selected-depart">Selected Departure Flight:</p>
+
+
+
+                    <Card sx={{ maxWidth: 345 }}>
+                        <CardActionArea>
+
+
+                            <CardContent>
+                                <div className="ret-container">
+
+                                    <div className="left-image">
+                                        <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
+                                            alt="airplaneDepart"
+                                            width="27px"
+                                            height="27px"
+                                        />
+                                    </div>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {deptFlightFrom}
+                                    </Typography>
+                                    <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
+                                        alt="arrow"
+                                        width="40px"
+                                        height="27px" />
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {deptFlightTo}
+                                    </Typography>
+                                </div>
+                                <Typography variant="body2" color="text.secondary">
+                                    Duration: {deptFlightDuration}
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                    <div><h2> Select return flight </h2></div>
+
+                    <div className="list">
+
+                        {
+                            returnFlightRes.map((flight, k) =>
+                                <ReturnFlightCard flight={flight} data={selectDept} numOfChildren={childNumber} numOfAdults={adultsNumber} chosenClass={chosenClass} key={k}
+                                    passRetId={setRetSelectedId} passRetFrom={setRetFlightFrom}
+                                    passRetTo={setRetFlightTo} passRetDuration={setRetFlightDuration} />
+                            )}
+
+                    </div>
+
+
+
+
+
+                </div>
+
+            </>
+        );
+    }
+    else {
+
+        return (
+            <>
+
+
+                <div className="rowC" >
+                    <div className="colC">
+                        <p className="selected-depart">Selected Departure Flight:</p>
+
+
+
+                        <Card sx={{ maxWidth: 345 }}>
+                            <CardActionArea>
+
+
+                                <CardContent>
+                                    <div className="left-container">
+
+                                        <div className="left-image">
+                                            <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
+                                                alt="airplaneDepart"
+                                                width="27px"
+                                                height="27px"
+                                            />
+                                        </div>
+                                        <Typography gutterBottom variant="h5" component="div">
+                                            {deptFlightFrom}
+                                        </Typography>
+                                        <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
+                                            alt="arrow"
+                                            width="40px"
+                                            height="27px" />
+                                        <Typography gutterBottom variant="h5" component="div">
+                                            {deptFlightTo}
+                                        </Typography>
+                                    </div>
+                                    <Typography variant="body2" color="text.secondary">
+                                        Duration: {deptFlightDuration}
+                                    </Typography>
+                                    <Typography>
+                                        <button className="editButton" type="button" onClick={editDept}>Edit</button>
+                                    </Typography>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                    </div>
+                    <div className="colC">
+                        <p className="selected-return">Selected Return Flight:</p>
+                        <Card sx={{ maxWidth: 345 }}>
+                            <CardActionArea>
+
+
+                                <CardContent>
+                                    <div className="middle-container">
+
+                                        <div className="left-image">
+                                            <img className="flip-image" src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
+                                                alt="airplaneDepart"
+                                                width="27px"
+                                                height="27px"
+                                            />
+                                        </div>
+                                        <Typography gutterBottom variant="h5" component="div">
+                                            {retFlightFrom}
+                                        </Typography>
+                                        <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
+                                            alt="arrow"
+                                            width="40px"
+                                            height="27px" />
+                                        <Typography gutterBottom variant="h5" component="div">
+                                            {retFlightTo}
+                                        </Typography>
+                                    </div>
+                                    <Typography variant="body2" color="text.secondary">
+                                        Duration: {retFlightDuration}
+                                    </Typography>
+                                    <Typography>
+                                        <button className="editButton" type="button" onClick={editRet}>Edit</button>
+                                    </Typography>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                    </div>
+                </div>
+                <div><h2></h2></div>
+
+
+
+
+
+
+
+
+
+            </>
+        );
+
+    }
+
+
+}
+
 
 export default SearchFlightUser;

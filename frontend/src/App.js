@@ -16,6 +16,7 @@ import Navbar from './Components/NavBar';
 import FlightSchedule from './Components/FlightSchedule';
 import SearchFlightUser from './Components/SearchFlightUser';
 
+
 function App() {
 
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path='/search' component={SearchFlightCriteria} />
           <Route path='/flight-schedule' component={FlightSchedule} />
           <Route path='/search-user' component={SearchFlightUser} />
+          
 
         </Switch>
       </Router>
