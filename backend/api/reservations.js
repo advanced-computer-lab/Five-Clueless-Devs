@@ -11,4 +11,10 @@ const User = require('../model/Reservations');
 // @access Public
 router.get('/test', (req, res) => res.send('reservation route testing!'));
 
+router.post('/createReservation', (req, res) => {  
+    console.log('YOU ADDED A Reservation');
+    Reservations.create({ ...req.body })
+        .then(users => res.json({ msg: 'Reservation added successfully' }))
+        .catch(err => res.status(400).json({ error: 'Unable to add reservation' }));
+});
 module.exports = router;
