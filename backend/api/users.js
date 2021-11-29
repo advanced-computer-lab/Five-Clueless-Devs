@@ -28,10 +28,14 @@ router.post('/createAdmin', (req, res) => {
         .catch(err => res.status(400).json({ error: err }));
 });
 
-router.post('/createUser', (req, res) => {
-    User.create({ ...req.body, isAdmin: "false" })
+router.get('/add', (req, res) => {
+    myU = {username : "UserX", password: "1234", firstName: "May", lastName: "Magdy", homeAddress:"october", countryCode:"123",  telephone: ["123666"], email:"May@gmail.com", passportNumber:"gert763", isAdmin: false}
+    const newUser= new User(myU);
+    newUser.save()
+    .then(res.send(newUser)).catch(err => console.log(err));
+    /*User.create({ ...req.body, isAdmin: "false" })
         .then(users => res.json({ msg: 'User added successfully' }))
-        .catch(err => res.status(400).json({ error: err }));
+        .catch(err => res.status(400).json({ error: err }));*/
 });
 
 
