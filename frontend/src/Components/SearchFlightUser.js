@@ -5,19 +5,38 @@ import DepartureFlightCard from './DepartureFlightCard';
 import ReturnFlightCard from './ReturnFlightCard';
 import TextField from '@mui/material/TextField';
 import './SearchFlightUser.css';
-import { Button, FormControl, InputLabel, Select, MenuItem, Autocomplete } from '@mui/material';
+import { Button, FormControl, InputLabel, Select, MenuItem, Autocomplete, Stepper } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
-//NO PREVENT DEFAULT IS PROBLEM?!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!?!!!?!?!!??!?!!?!
+import Box from '@mui/material/Box';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import Itinerary from './Itinerary';
+
+
 
 const SearchFlightUser = ({ location }) => {
     // const history = useHistory();
     // useState hooks for input and language
 
+    const moment= require('moment') 
+    const getDuration = (flight) =>{
+        let depDate = moment(flight?.departureDate?.substring(0, 10) + "T" + flight?.departureTime + ":00"); 
+        let arrDate = moment(flight?.arrivalDate?.substring(0, 10) + "T" + flight?.arrivalTime + ":00"); 
+        let durationInMins = arrDate.diff(depDate, 'minutes');
+        let durHours = Math.floor(durationInMins/60);
+        durationInMins = durationInMins - 60*durHours;
+        return `${durHours} hours and ${durationInMins} minutes`;
+    }
 
+    const steps = [
+        'Search & Select Departure Flight',
+        'Select Return Flight',
+        'View Your Itinerary',
+
+    ];
     const [returnFlight, setReturnFlight] = useState({
         flightId: '',
         from: '',
@@ -39,14 +58,26 @@ const SearchFlightUser = ({ location }) => {
         duration: ''
     });
     //passing info to other components for summary
+    const [selectedDeptFlight, setSelectedDeptFlight] = useState("");
     const [selectedDeptFlightId, setDeptSelectedId] = useState(0);
+    const [deptFlightDeptDate , setDeptDeptDate] = useState("");
+    const [deptFlightArrivalDate , setDeptArrivalDate] = useState("");
     const [deptFlightFrom, setDeptFlightFrom] = useState("");
     const [deptFlightTo, setDeptFlightTo] = useState("");
     const [deptFlightDuration, setDeptFlightDuration] = useState("");
+    const [deptFlightDeptTime, setDeptFlightDeptTime] = useState("");
+    const [deptFlightArrivalTime, setDeptFlightArrivalTime] = useState("");
+    const [deptFlightPrice , setDeptPrice] = useState(0);
+    const [selectedRetFlight, setSelectedRetFlight] = useState("");
     const [selectedRetFlightId, setRetSelectedId] = useState(0);
+    const [retFlightDeptDate , setRetDeptDate] = useState("");
+    const [retFlightArrivalDate , setRetArrivalDate] = useState("");
     const [retFlightFrom, setRetFlightFrom] = useState("");
     const [retFlightTo, setRetFlightTo] = useState("");
     const [retFlightDuration, setRetFlightDuration] = useState("");
+    const [retFlightDeptTime, setRetFlightDeptTime] = useState("");
+    const [retFlightArrivalTime, setRetFlightArrivalTime] = useState("");
+    const [retFlightPrice , setRetPrice] = useState(0);
     //info used in this component
     const [view, setView] = useState(1);
     const [chosenClass, setClass] = useState('Economy');
@@ -284,11 +315,20 @@ const SearchFlightUser = ({ location }) => {
 
     };
 
-
+    //SEARCHING AND SELECTING DEPARTURE FLIGHT------------------------------------------------------------------------------------------------------------------------------------------
     if (view == 1) {
         return (
             <>
 
+                <div className="stepper-space"><Box sx={{ width: '100%' }}>
+                    <Stepper activeStep={0} alternativeLabel>
+                        {steps.map((label) => (
+                            <Step key={label}>
+                                <StepLabel>{label}</StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+                </Box></div>
                 <div className='bg-dark text-light'>
                     <div className='container pt-5' style={{ height: '100vh' }}>
                         <h1 className="display-4 text-center">Search for flights</h1>
@@ -299,39 +339,7 @@ const SearchFlightUser = ({ location }) => {
                                 <div className='criteria-form-group'>
 
                                     <div>
-                                        {/* <FormControl sx={{ m: 1, minWidth: 120 }} >
-                                        <InputLabel id="demo-simple-select-label">From</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="select"
-                                            name="from"
-                                            value={flight.from}
-                                            label="From"
-                                            onChange={(e) => onChange(e)}
-                                        >
-                                            {allFlights.map(flight => flight.from)
-                                                .filter((value, index, self) => self.indexOf(value) === index).map((fl, k) =>
-                                                    <MenuItem value={fl} key={k} >{fl}</MenuItem>)}
 
-                                        </Select>
-                                    </FormControl> */}
-                                        {/* <FormControl sx={{ m: 1, minWidth: 120 }} >
-                                        <InputLabel id="demo-simple-select-label">To</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="select"
-                                            name="to"
-                                            value={flight.to}
-                                            label="To"
-                                            onChange={(e) => onChange(e)}
-                                            
-                                        >
-                                            {flightRes.map(flight => flight.to)
-                                                .filter((value, index, self) => self.indexOf(value) === index).map((fl, k) =>
-                                                    <MenuItem value={fl} key={k} >{fl}</MenuItem>)}
-
-                                        </Select>
-                                    </FormControl> */}
                                         <div className='search-center'>
                                             <Autocomplete
                                                 disablePortal
@@ -367,6 +375,7 @@ const SearchFlightUser = ({ location }) => {
                                         </div>
                                         <span className={flight.departureDate === "" ? "criteria-hide" : ""}>
                                             <TextField
+                                            //required
                                                 id="dateInput"
                                                 type="date"
                                                 className='form-control'
@@ -378,6 +387,7 @@ const SearchFlightUser = ({ location }) => {
                                         </span>
                                         <span className={returnDate === "" ? "criteria-hide" : ""}>
                                             <TextField
+                                           // required
                                                 id="dateInput"
                                                 type='date'
                                                 className='form-control'
@@ -469,7 +479,10 @@ const SearchFlightUser = ({ location }) => {
                                         {flightRes.map((flight, k) =>
                                             <DepartureFlightCard flight={flight} numOfChildren={childNumber} numOfAdults={adultsNumber}
                                                 chosenClass={chosenClass} data={selectDept} key={k} passDeptId={setDeptSelectedId} passDeptFrom={setDeptFlightFrom}
-                                                passDeptTo={setDeptFlightTo} passDeptDuration={setDeptFlightDuration} />
+                                                passDeptTo={setDeptFlightTo} passDeptDuration={setDeptFlightDuration} passDeptFlightDeptTime={setDeptFlightDeptTime}
+                                                passDeptFlightArrivalTime={setDeptFlightArrivalTime} passDeptFlightDeptDate={setDeptDeptDate} 
+                                                passDeptFlightArrivalDate={setDeptArrivalDate} passDeptFlightPrice={setDeptPrice}
+                                                passSelectedDeptFlight={setSelectedDeptFlight}/>
                                         )}
                                     </div>
 
@@ -483,82 +496,27 @@ const SearchFlightUser = ({ location }) => {
             </>
         );
     }
+    //SELECTING RETURN FLIGHT------------------------------------------------------------------------------------------------------------------------------------------------------
     else if (view == 2) {
         return (
             <>
-
+                <div className="stepper-space"><Box sx={{ width: '100%' }}>
+                    <Stepper activeStep={1} alternativeLabel>
+                        {steps.map((label) => (
+                            <Step key={label}>
+                                <StepLabel>{label}</StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+                </Box></div>
 
                 <div >
-                    <p className="selected-depart">Selected Departure Flight:</p>
-
-
-
-                    <Card sx={{ maxWidth: 345 }}>
-                        <CardActionArea>
-
-
-                            <CardContent>
-                                <div className="ret-container">
-
-                                    <div className="left-image">
-                                        <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
-                                            alt="airplaneDepart"
-                                            width="27px"
-                                            height="27px"
-                                        />
-                                    </div>
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        {deptFlightFrom}
-                                    </Typography>
-                                    <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
-                                        alt="arrow"
-                                        width="40px"
-                                        height="27px" />
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        {deptFlightTo}
-                                    </Typography>
-                                </div>
-                                <Typography variant="body2" color="text.secondary">
-                                    Duration: {deptFlightDuration}
-                                </Typography>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card>
-                    <div><h2> Select return flight </h2></div>
-
-                    <div className="list">
-
-                        {
-                            returnFlightRes.map((flight, k) =>
-                                <ReturnFlightCard flight={flight} data={selectDept} numOfChildren={childNumber} numOfAdults={adultsNumber} chosenClass={chosenClass} key={k}
-                                    passRetId={setRetSelectedId} passRetFrom={setRetFlightFrom}
-                                    passRetTo={setRetFlightTo} passRetDuration={setRetFlightDuration} />
-                            )}
-
-                    </div>
-
-
-
-
-
-                </div>
-
-            </>
-        );
-    }
-    else {
-
-        return (
-            <>
-
-
-                <div className="rowC" >
                     <div className="colC">
                         <p className="selected-depart">Selected Departure Flight:</p>
 
 
 
-                        <Card sx={{ maxWidth: 345 }}>
+                        <Card sx={{ maxWidth: 500,  }}  >
                             <CardActionArea>
 
 
@@ -573,18 +531,18 @@ const SearchFlightUser = ({ location }) => {
                                             />
                                         </div>
                                         <Typography gutterBottom variant="h5" component="div">
-                                            {deptFlightFrom}
+                                            {deptFlightFrom} ({deptFlightDeptTime})
                                         </Typography>
                                         <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
                                             alt="arrow"
                                             width="40px"
                                             height="27px" />
                                         <Typography gutterBottom variant="h5" component="div">
-                                            {deptFlightTo}
+                                            {deptFlightTo} ({deptFlightArrivalTime})
                                         </Typography>
                                     </div>
                                     <Typography variant="body2" color="text.secondary">
-                                        Duration: {deptFlightDuration}
+                                        Duration: {getDuration(selectedDeptFlight)}
                                     </Typography>
                                     <Typography>
                                         <button className="editButton" type="button" onClick={editDept}>Edit</button>
@@ -593,9 +551,89 @@ const SearchFlightUser = ({ location }) => {
                             </CardActionArea>
                         </Card>
                     </div>
-                    <div className="colC">
+                    <div><h2> Select return flight </h2></div>
+
+                    <div className="list">
+
+                        {
+                            returnFlightRes.map((flight, k) =>
+                                <ReturnFlightCard flight={flight} data={selectDept} numOfChildren={childNumber} numOfAdults={adultsNumber} chosenClass={chosenClass} key={k}
+                                    passRetId={setRetSelectedId} passRetFrom={setRetFlightFrom}
+                                    passRetTo={setRetFlightTo} passRetDuration={setRetFlightDuration} passRetFlightDeptTime={setRetFlightDeptTime}
+                                    passRetFlightArrivalTime={setRetFlightArrivalTime} passRetFlightPrice={setRetPrice} passRetFlightDate={setRetDeptDate}
+                                    passRetFlightArrivalDate={setRetArrivalDate} passSelectedRetFlight={setSelectedRetFlight} />
+                            )}
+
+                    </div>
+
+
+
+
+
+                </div>
+
+            </>
+        );
+    }
+    //VIEWING SUMMARY -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+    else {
+
+        return (
+            <>
+
+                <div className="stepper-space"><Box sx={{ width: '100%' }}>
+                    <Stepper activeStep={2} alternativeLabel>
+                        {steps.map((label) => (
+                            <Step key={label}>
+                                <StepLabel>{label}</StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+                </Box></div>
+                <div className="row" >
+                    <div className="column">
+                        <p className="selected-depart">Selected Departure Flight:</p>
+
+
+
+                        <Card sx={{ maxWidth: 500 }}>
+                            <CardActionArea>
+
+
+                                <CardContent>
+                                    <div className="left-container">
+
+                                        <div className="left-image">
+                                            <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
+                                                alt="airplaneDepart"
+                                                width="27px"
+                                                height="27px"
+                                            />
+                                        </div>
+                                        <Typography gutterBottom variant="h5" component="div">
+                                            {deptFlightFrom} ({deptFlightDeptTime})
+                                        </Typography>
+                                        <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
+                                            alt="arrow"
+                                            width="40px"
+                                            height="27px" />
+                                        <Typography gutterBottom variant="h5" component="div">
+                                            {deptFlightTo} ({deptFlightArrivalTime})
+                                        </Typography>
+                                    </div>
+                                    <Typography variant="body2" color="text.secondary">
+                                        Duration: {getDuration(selectedDeptFlight)}
+                                    </Typography>
+                                    <Typography>
+                                        <button className="editButton" type="button" onClick={editDept}>Edit</button>
+                                    </Typography>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                    </div>
+                    <div className="column">
                         <p className="selected-return">Selected Return Flight:</p>
-                        <Card sx={{ maxWidth: 345 }}>
+                        <Card sx={{ maxWidth: 500 }}>
                             <CardActionArea>
 
 
@@ -610,18 +648,18 @@ const SearchFlightUser = ({ location }) => {
                                             />
                                         </div>
                                         <Typography gutterBottom variant="h5" component="div">
-                                            {retFlightFrom}
+                                            {retFlightFrom} ({retFlightDeptTime})
                                         </Typography>
                                         <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
                                             alt="arrow"
                                             width="40px"
                                             height="27px" />
                                         <Typography gutterBottom variant="h5" component="div">
-                                            {retFlightTo}
+                                            {retFlightTo} ({retFlightArrivalTime})
                                         </Typography>
                                     </div>
                                     <Typography variant="body2" color="text.secondary">
-                                        Duration: {retFlightDuration}
+                                        Duration: {getDuration(selectedRetFlight)}
                                     </Typography>
                                     <Typography>
                                         <button className="editButton" type="button" onClick={editRet}>Edit</button>
@@ -630,15 +668,83 @@ const SearchFlightUser = ({ location }) => {
                             </CardActionArea>
                         </Card>
                     </div>
+                    <div className="column">
+                        <p className="selected-return">Summary:</p>
+                        <Card sx={{ maxWidth: 500 }}>
+                            <CardActionArea>
+
+
+                                <CardContent>
+                                    <div className="right-container">
+                                        <div className="middle-container">
+                                            <div className="left-image">
+                                                <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
+                                                    alt="airplaneDepart"
+                                                    width="27px"
+                                                    height="27px"
+                                                />
+                                            </div>
+                                            <Typography gutterBottom variant="h5" component="div">
+                                                {deptFlightFrom} ({deptFlightDeptTime})
+                                            </Typography>
+                                            <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
+                                                alt="arrow"
+                                                width="40px"
+                                                height="27px" />
+                                            <Typography gutterBottom variant="h5" component="div">
+                                                {deptFlightTo} ({deptFlightArrivalTime})
+                                            </Typography>
+                                        </div>
+
+                                        <div className="middle-container">
+                                            <div className="left-image">
+                                                <img className="flip-image" src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
+                                                    alt="airplaneDepart"
+                                                    width="27px"
+                                                    height="27px"
+                                                />
+                                            </div>
+                                            <Typography gutterBottom variant="h5" component="div">
+                                                {retFlightFrom} ({retFlightDeptTime})
+                                            </Typography>
+                                            <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
+                                                alt="arrow"
+                                                width="40px"
+                                                height="27px" />
+                                            <Typography gutterBottom variant="h5" component="div">
+                                                {retFlightTo} ({retFlightArrivalTime})
+                                            </Typography>
+                                        </div>
+
+                                    </div>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                    </div>
                 </div>
-                <div><h2></h2></div>
+                <div><Itinerary deptFrom={deptFlightFrom} deptTo={deptFlightTo} deptFlightDeptTime={deptFlightDeptTime} deptFlightArrivalTime={deptFlightArrivalTime}
+                deptFlightDeptDate={deptFlightDeptDate} deptFlightArrivalDate={deptFlightArrivalDate} chosenClass={chosenClass} selectedDeptFlightId={selectedDeptFlightId}
+                deptFlightPrice={deptFlightPrice} retFlightPrice={retFlightPrice} retFlightDeptTime={retFlightDeptTime} retFlightDeptDate={retFlightDeptDate} 
+                retFlightArrivalTime={retFlightArrivalTime}
+                retFlightArrivalDate={retFlightArrivalDate} retFlightId={selectedRetFlightId} numOfAdults={adultsNumber} numOfChildren={childNumber}/></div>
 
 
 
 
 
 
-
+                {/* const [selectedDeptFlightId, setDeptSelectedId] = useState(0);
+    const [deptFlightFrom, setDeptFlightFrom] = useState("");
+    const [deptFlightTo, setDeptFlightTo] = useState("");
+    const [deptFlightDuration, setDeptFlightDuration] = useState("");
+    const [deptFlightDeptTime, setDeptFlightDeptTime] = useState("");
+    const [deptFlightArrivalTime, setDeptFlightArrivalTime] = useState("");
+    const [selectedRetFlightId, setRetSelectedId] = useState(0);
+    const [retFlightFrom, setRetFlightFrom] = useState("");
+    const [retFlightTo, setRetFlightTo] = useState("");
+    const [retFlightDuration, setRetFlightDuration] = useState("");
+    const [retFlightDeptTime, setRetFlightDeptTime] = useState("");
+    const [retFlightArrivalTime, setRetFlightArrivalTime] = useState(""); */}
 
 
             </>

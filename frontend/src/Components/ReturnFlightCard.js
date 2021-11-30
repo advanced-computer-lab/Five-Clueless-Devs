@@ -4,6 +4,7 @@ import '../App.css';
 import "./DepartureFlightCard.css";
 
 const FlightCard = (props) => {
+    const moment= require('moment') 
     const flight = props.flight;
 
     const history = useHistory();
@@ -13,18 +14,32 @@ const FlightCard = (props) => {
         props.passRetFrom(flight.from);
         props.passRetTo(flight.to);
         props.passRetDuration(flight.duration);
+        props.passRetFlightDeptTime(flight.departureTime)
+        props.passRetFlightArrivalTime(flight.arrivalTime)
+        props.passRetFlightPrice(checkTotal())
+        props.passRetFlightDate(flight.departureDate)
+        props.passRetFlightArrivalDate(flight.arrivalDate)
+        props.passSelectedRetFlight(flight);
         console.log(flight.flightId);
         console.log(flight.from); 
     }
+    const getDuration = (flight) =>{
+        let depDate = moment(flight?.departureDate?.substring(0, 10) + "T" + flight?.departureTime + ":00"); 
+        let arrDate = moment(flight?.arrivalDate?.substring(0, 10) + "T" + flight?.arrivalTime + ":00"); 
+        let durationInMins = arrDate.diff(depDate, 'minutes');
+        let durHours = Math.floor(durationInMins/60);
+        durationInMins = durationInMins - 60*durHours;
+        return `${durHours} hours and ${durationInMins} minutes`;
+    }
     const checkTotal = () => {
         if (props.chosenClass == "Economy") {
-            return flight.price * props.numOfAdults + flight.price * props.numOfChildren * 0.7
+            return +(flight.price * props.numOfAdults + flight.price * props.numOfChildren * 0.7).toFixed(2)
         }
         else if (props.chosenClass == "Business") {
-            return 1.2*(flight.price * props.numOfAdults + flight.price * props.numOfChildren * 0.7)
+            return +(1.2*(flight.price * props.numOfAdults + flight.price * props.numOfChildren * 0.7)).toFixed(2)
         }
         else if (props.chosenClass == "First") {
-            return 1.4*(flight.price * props.numOfAdults + flight.price * props.numOfChildren * 0.7)
+            return +(1.4*(flight.price * props.numOfAdults + flight.price * props.numOfChildren * 0.7)).toFixed(2)
         }
     }
 
@@ -41,7 +56,7 @@ const FlightCard = (props) => {
                 <p>{flight.to}</p>
             </div> */}
 
-            <div className="flight-card" >
+            <div className="flight-card-search" >
                 <div className="flight-card-left">
                     <div className="head-card-return">
                         <p className="flight-card-head-type">Return</p>
@@ -81,7 +96,7 @@ const FlightCard = (props) => {
                             width="40px"
                             height="40px" />
 
-                        <p className="flight-card-duration">Duration {flight.duration} </p>
+                        <p className="flight-card-duration">Duration {getDuration(flight)} </p>
 
                     </div>
                     
