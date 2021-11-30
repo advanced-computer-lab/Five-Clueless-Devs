@@ -17,9 +17,10 @@ const ReservedFlight = () => {
     }, []);
     //let { id } = useParams();
 
-const [r,setr]=useState("");
     const getReservetion = () => {
-        //console.log("Print id: " + { id });
+        let fromtemp = [];
+        let totemp = [];
+
         axios.get(BACKEND_URL + "reservations/GetReservation?UserID=" + 5)
             .then(res => {
                 var temp = [];
@@ -35,15 +36,16 @@ const [r,setr]=useState("");
                 })
                 //console.log(from);
                 //console.log(to);
-                var fromtemp = [];
-                var totemp = [];
                 for (let i = 0; i < from.length; i++) {
                     axios
                         .get(BACKEND_URL + "flights/search?flightId=" + from[i])
                         .then(res => {
-                            //  console.log(res.data);
-                            fromtemp[i] = (res.data);
-                            //setfromId(fromtemp);
+                            //console.log(res.data[0]);
+                            fromtemp[i] = (res.data[0]);
+                           
+                            let t = [...fromtemp];
+                            t[i] = res.data[0]
+                            setfromId(t);
                         })
                         .catch(err => {
                             console.log(err);
@@ -51,29 +53,26 @@ const [r,setr]=useState("");
                     axios
                         .get(BACKEND_URL + "flights/search?flightId=" + to[i])
                         .then(res => {
-                            //  console.log(res.data);
-                            totemp[i] = (res.data);
+                            //console.log(res.data);
+                            totemp[i] = (res.data[0]);
+                            let t = [...totemp];
+                            t[i] = res.data[0]
+                            settoId(t);
                         })
                         .catch(err => {
                             console.log(err);
                         })
                 }
-                // console.log(fromtemp);
-                //console.log(totemp);
-                setfromId(fromtemp);
-                settoId(totemp);
-                setr("  ");
-                setr("");
             })
             .catch(err => {
                 console.log(err);
             })
 
-
     }
 
     useEffect(() => {
-        console.log(fromId);
+        // console.log(fromId.length);
+
     }, [fromId])
 
 
@@ -81,13 +80,13 @@ const [r,setr]=useState("");
         <div>
             <div className="flight-schedule">
                 <h2> Reserved Flight </h2>
-                {fromId.length != 0 ?
-                    fromId.map((from, index) => 
-                        <div key={from._id}>
+                {
+                    fromId.map((from, index) =>
+                        <div key={index}>
                             <ReservedFlightCard from={from} to={toId[index]} />
                         </div>
 
-                    ) : null
+                    )
                 }
             </div>
 

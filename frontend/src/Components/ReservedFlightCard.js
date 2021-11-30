@@ -31,14 +31,14 @@ const ReservedFlightCard = (props) => {
                     <p className="flight-card-airport">{fromflight?.from}</p>
                     <p className="flight-card-airport">{fromflight?.to}</p>
                     <p className="flight-card-head"> departure date</p>
-                    <p className="flight-card-date">{`${fromflight.departureDate?.substring(0, 10)}  ${fromflight.departureTime}`}</p>
+                    <p className="flight-card-date">{`${fromflight?.departureDate?.substring(0, 10)}  ${fromflight?.departureTime}`}</p>
                     <p className="flight-card-head"> arrival date</p>
-                    <p className="flight-card-date">{`${fromflight.arrivalDate?.substring(0, 10)}  ${fromflight.arrivalTime}`}</p>
+                    <p className="flight-card-date">{`${fromflight?.arrivalDate?.substring(0, 10)}  ${fromflight?.arrivalTime}`}</p>
                     {/* <p className="flight-card-date">{}</p> */}
                     <p className="flight-card-head">departure terminal</p>
-                    <p className="flight-card-terminal">{fromflight.departureTerminal}</p>
+                    <p className="flight-card-terminal">{fromflight?.departureTerminal}</p>
                     <p className="flight-card-head">arrival terminal</p>
-                    <p className="flight-card-terminal">{fromflight.arrivalTerminal}</p>
+                    <p className="flight-card-terminal">{fromflight?.arrivalTerminal}</p>
                 </div>
 
                 <div className="">
@@ -49,9 +49,9 @@ const ReservedFlightCard = (props) => {
                         height="40px"
                     />
                      <p className="flight-card-head">departure flight number</p>
-                    <p className="flight-card-date">{fromflight.flightId}</p>
+                    <p className="flight-card-date">{fromflight?.flightId}</p>
                     <p className="flight-card-head">arrival flight number</p>
-                    <p className="flight-card-date">{toflight.flightId}</p>
+                    <p className="flight-card-date">{toflight?.flightId}</p>
                 </div>
 
                 <div className="flight-card-right">
@@ -59,14 +59,14 @@ const ReservedFlightCard = (props) => {
                     <p className="flight-card-airport">{toflight?.from}</p>
                     <p className="flight-card-airport">{toflight?.to}</p>
                     <p className="flight-card-head"> departure date</p>
-                    <p className="flight-card-date">{`${toflight.departureDate?.substring(0, 10)}  ${toflight.departureTime}`}</p>
+                    <p className="flight-card-date">{`${toflight?.departureDate?.substring(0, 10)}  ${toflight?.departureTime}`}</p>
                     <p className="flight-card-head">arrival date</p>
-                    <p className="flight-card-date">{`${toflight.arrivalDate?.substring(0, 10)}  ${toflight.arrivalTime}`}</p>
+                    <p className="flight-card-date">{`${toflight?.arrivalDate?.substring(0, 10)}  ${toflight?.arrivalTime}`}</p>
                     {/* <p className="flight-card-date">{flight.arrivalTime}</p> */}
                     <p className="flight-card-head">departure terminal</p>
-                    <p className="flight-card-terminal">{toflight.departureTerminal}</p>
+                    <p className="flight-card-terminal">{toflight?.departureTerminal}</p>
                     <p className="flight-card-head">arrival terminal</p>
-                    <p className="flight-card-terminal">{toflight.arrivalTerminal}</p>
+                    <p className="flight-card-terminal">{toflight?.arrivalTerminal}</p>
 
 
                 </div>
