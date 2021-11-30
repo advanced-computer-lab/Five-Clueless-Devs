@@ -43,7 +43,7 @@ class SeatMap extends Component {
         await new Promise(resolve => setTimeout(resolve, 750));
         console.log(`Added seat ${number}, row ${row}, id ${id}`);
         tmpSeat = tmpSeat.concat([{ number: `${row}${number}`, id: id - 1 }])
-        // const newTooltip = `tooltip for id-${id} added by callback`;
+        //const newTooltip = `Click to remove this seat`;
         addCb(row, number, id);
         this.setState({ loading: false, selectedSeats: tmpSeat });
         console.log(tmpSeat)
@@ -82,7 +82,7 @@ class SeatMap extends Component {
             removeSeatCallback={this.removeSeatCallback}
             rows={this.props.rows}
             maxReservableSeats={this.props.maxSeats}
-            alpha
+            
             visible
             selectedByDefault
             loading={loading}

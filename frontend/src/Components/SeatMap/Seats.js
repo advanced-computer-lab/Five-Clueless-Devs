@@ -10,9 +10,12 @@ const Seats = (props) => {
     const [rows, setRows] = useState([]);
 
     const getSeatNumber = (i) => {
-        let letter = String.fromCharCode('A'.charCodeAt(0) + i / 6);
-        let num = i % 6 + 1;
-        return `${letter}${num}`
+        let letter = String.fromCharCode('A'.charCodeAt(0) + i % 6);
+        let num = Math.floor(i / 6 + 1);
+        return `${num}${letter}`
+    }
+    const getSeatLetter = (i) => {
+        return String.fromCharCode('A'.charCodeAt(0) + i % 6);
     }
 
     useEffect(() => {
@@ -28,12 +31,12 @@ const Seats = (props) => {
             }
 
             if (propSeats[i] == props.userId) {
-                temp.push({ id: i + 1, number: i % 6 + 1, isSelected: true });
+                temp.push({ id: i + 1, number: getSeatLetter(i), isSelected: true });
                 tempSelected = [...tempSelected, { id: i, number: getSeatNumber(i) }]
             } else if (propSeats[i] === null || propSeats[i] === 'null') {
-                temp.push({ id: i + 1, number: i % 6 + 1 });
+                temp.push({ id: i + 1, number: getSeatLetter(i)});
             } else {
-                temp.push({ id: i + 1, number: i % 6 + 1, isReserved: true });
+                temp.push({ id: i + 1, number: getSeatLetter(i), isReserved: true });
             }
         }
         if (temp.length > 0) {
