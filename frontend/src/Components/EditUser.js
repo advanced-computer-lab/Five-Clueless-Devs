@@ -55,6 +55,7 @@ const EditUser = () => {
             })
             .catch(err => {
                 console.log(err);
+                history.push('/');
             })
     };
 
@@ -67,17 +68,20 @@ const EditUser = () => {
 	const handleSend = async (e) => {
 		setSent(true)
 		try {
+            
             console.log(user);
 			await axios.post("http://localhost:8082/send_mail", {
 				text
 			})
 		} catch (error) {
+            
 			console.error(error)
 		}
 	}
 
 
     return (
+
         <div className="Edit User">
             <div className="container">
                 <div className="row">
@@ -204,24 +208,22 @@ const EditUser = () => {
                                     <Button variant="outlined" type="submit">Edit User</Button>
                                 </div>
                                 <div className="App">
-                                
-                              
-            
-			{!sent ? (
-				<form onSubmit={handleSend}>
-					<input type="text" value={text} onChange={(e) => setText(e.target.value)} />
 
-					<button type="submit">Send Email</button>
+			{!sent ? (
+				<form onClick={handleSend}>
+					<button type="button">Send Email</button>
 				</form>
 			) : (
 				<h1>Email Sent</h1>
 			)}
 		</div>
-                        </form>
+    
+                    </form>
                     </div>
                 </div>
             </div>
         </div>
+        
     );
 }
 

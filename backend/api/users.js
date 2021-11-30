@@ -3,6 +3,7 @@ const { models } = require('mongoose');
 const router = express.Router();
 var bodyParser = require('body-parser')
 
+
 // Load User model
 const User = require('../model/User');
 
@@ -30,14 +31,18 @@ router.post('/createAdmin', (req, res) => {
 });
 
 router.post('/createUser', (req, res) => {
-    console.log(req.body);
+   currEmail=req.body.email;
+   console.log(currEmail);
     User.create({ ...req.body , isAdmin:"false" })
         .then(users => res.json({ msg: 'User added successfully' }))
         .catch(err => res.status(400).json({ error: 'Unable to add User' }));
+    
 });
 
+
 router.put('/update', (req, res) => {
-    Flight.findOneAndUpdate(req.query, req.body)
+    console.log("User updated");
+    User.findOneAndUpdate(req.query, req.body)
         .then(book => res.json({msg: "updated succesfully"}))
         .catch(err =>
             res.status(400).json({ error: 'Unable to update the Database' })
