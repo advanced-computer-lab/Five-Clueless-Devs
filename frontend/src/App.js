@@ -37,7 +37,7 @@ function App() {
           <Route path='/flight-schedule' component={FlightSchedule} />
           <Route path='/search-user' component={SearchFlightUser} />
           <Route path='/details-user/:id' component={ViewDetailsUser} />
-          <Route path='/Rserved-flights/:id' component={ReservedFlight} />
+          <Route path='/Reserved-flights' component={ReservedFlight} />
 
         </Switch>
       </Router>

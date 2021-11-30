@@ -1,49 +1,100 @@
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { response } from 'express';
-import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import Reservations from '../../../backend/model/Reservations';
 import { BACKEND_URL } from '../API/URLS';
-import '../App.css';
-import "./FlightCard.css";
+import FlightCard from './FlightCard';
+import TextField from '@mui/material/TextField';
+import './SearchFlightCriteria.css';
+import { Button } from '@mui/material';
+import ReservedFlightCard from './ReservedFlightCard';
+
 
 const ReservedFlight = () => {
     const [Reservation, setReservation] = useState();
-
+    const [fromId, setfromId] = useState([]);
+    const [toId, settoId] = useState([]);
     useEffect(() => {
         getReservetion();
     }, []);
-    let { id } = useParams();
+    //let { id } = useParams();
 
-
+const [r,setr]=useState("");
     const getReservetion = () => {
-        console.log("Print id: " + { id });
-        axios.get(BACKEND_URL + "reservations/GetFlight?UserID=" + id)
+        //console.log("Print id: " + { id });
+        axios.get(BACKEND_URL + "reservations/GetReservation?UserID=" + 5)
             .then(res => {
-                console.log(res.data);
+                var temp = [];
+                //  console.log(res.data);
+                temp = [...res.data];
+                var from = [];
+                res.data.map((reservation) => {
+                    from.push(reservation.from);
+                })
+                var to = [];
+                temp.map((reservation) => {
+                    to.push(reservation.to);
+                })
+                //console.log(from);
+                //console.log(to);
+                var fromtemp = [];
+                var totemp = [];
+                for (let i = 0; i < from.length; i++) {
+                    axios
+                        .get(BACKEND_URL + "flights/search?flightId=" + from[i])
+                        .then(res => {
+                            //  console.log(res.data);
+                            fromtemp[i] = (res.data);
+                            //setfromId(fromtemp);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })
+                    axios
+                        .get(BACKEND_URL + "flights/search?flightId=" + to[i])
+                        .then(res => {
+                            //  console.log(res.data);
+                            totemp[i] = (res.data);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })
+                }
+                // console.log(fromtemp);
+                //console.log(totemp);
+                setfromId(fromtemp);
+                settoId(totemp);
+                setr("  ");
+                setr("");
             })
             .catch(err => {
                 console.log(err);
             })
-    
+
+
     }
-   
-    
+
+    useEffect(() => {
+        console.log(fromId);
+    }, [fromId])
+
 
     return (
-       /** */ <div className="card-container">
-            {/* <img src="https://www.google.com/imgres?imgurl=https%3A%2F%2Fetraveltech.com%2Fwp-content%2Fuploads%2F2021%2F09%2FMW-HE536_airpla_20190225131547_ZH.jpg&imgrefurl=https%3A%2F%2Fetraveltech.com%2Fcheap-flights-cairo-from-to-hurghada%2F&tbnid=-LhKiDUJLgmoMM&vet=12ahUKEwjz18q7vf_zAhXiMewKHadADmkQMygDegUIARDNAQ..i&docid=0R9RSPJABoN1lM&w=890&h=501&q=flight&ved=2ahUKEwjz18q7vf_zAhXiMewKHadADmkQMygDegUIARDNAQ" alt="" />
-            <div className="desc">
-                <h2>
-                    <Link to={`/details/${flight.flightId}`}>
-                        {flight.flightId}
-                    </Link>
-                </h2>
-                <h3>{flight.from}</h3>
-                <p>{flight.to}</p>
-            </div> */
+        <div>
+            <div className="flight-schedule">
+                <h2> Reserved Flight </h2>
+                {fromId.length != 0 ?
+                    fromId.map((from, index) => 
+                        <div key={from._id}>
+                            <ReservedFlightCard from={from} to={toId[index]} />
+                        </div>
+
+                    ) : null
+                }
+            </div>
 
         </div>
+        //   <div>
+        //   <Button variant="outlined" onClick={getReservetion}>Search</Button>
+        // </div>
     )
 };
 
