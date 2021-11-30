@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, IconButton, Table, TableBody, TableCell, TableRow, Typography } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
@@ -6,11 +6,13 @@ import { BACKEND_URL } from "../../API/URLS";
 import Seats from "../SeatMap/Seats";
 import './DepartureSeats.css';
 import moment from 'moment';
+import ArrowBack from '@mui/icons-material/ArrowBack';
+
 
 const FlightSeats = () => {
     const history = useHistory();
 
-    const [type, setType] = useState("departure");
+    const [type, setType] = useState("Departure");
     const [errMsg, setErrMsg] = useState("");
 
     //must get it from the previous step
@@ -45,7 +47,7 @@ const FlightSeats = () => {
 
     useEffect(() => {
         console.log("Print id: " + flightId);
-        if (type === 'departure') {
+        if (type === 'Departure') {
             axios
                 .get(BACKEND_URL + "flights/search?flightId=" + flightId)
                 .then(res => {
@@ -56,7 +58,7 @@ const FlightSeats = () => {
                     console.log(err);
                 })
         }
-        if (type === 'arrival') {
+        if (type === 'Arrival') {
             axios
                 .get(BACKEND_URL + "flights/search?flightId=" + flightId1)
                 .then(res => {
@@ -124,14 +126,14 @@ const FlightSeats = () => {
             }
 
             let id = flightId;
-            if (type === 'arrival') {
+            if (type === 'Arrival') {
                 id = flightId1;
             }
             axios
                 .put(BACKEND_URL + 'flights/update?flightId=' + id, tmpFlight)
                 .then(res => {
                     console.log(res.data);
-                    if (type === 'arrival') {
+                    if (type === 'Arrival') {
                         history.push('/');
                     }
                 })
@@ -140,45 +142,104 @@ const FlightSeats = () => {
                 })
 
 
-            if (type == 'departure') {
+            if (type == 'Departure') {
                 setSeats([]);
-                setType('arrival');
+                setType('Arrival');
             }
         }
 
     };
 
-    const getDuration = () =>{
-        let depDate = moment(flight?.departureDate?.substring(0, 10) + "T" + flight?.departureTime + ":00"); 
-        let arrDate = moment(flight?.arrivalDate?.substring(0, 10) + "T" + flight?.arrivalTime + ":00"); 
+    const getDuration = () => {
+        let depDate = moment(flight?.departureDate?.substring(0, 10) + "T" + flight?.departureTime + ":00");
+        let arrDate = moment(flight?.arrivalDate?.substring(0, 10) + "T" + flight?.arrivalTime + ":00");
         let durationInMins = arrDate.diff(depDate, 'minutes');
-        let durHours = Math.floor(durationInMins/60);
-        durationInMins = durationInMins - 60*durHours;
+        let durHours = Math.floor(durationInMins / 60);
+        durationInMins = durationInMins - 60 * durHours;
         return `${durHours} hours and ${durationInMins} minutes`;
+    }
+
+
+    const goBack = ()=>{
+        setSeats([]);
+        setType('Departure');
     }
 
     return (
         <div>
+
             <div className="dep-cont">
-
+                {type === 'Arrival'?
+                    <IconButton onClick={goBack} style={{ marginBottom: 'auto' }}>
+                        <ArrowBack />
+                    </IconButton>:null
+                }
                 <div className="dep-summary">
+                    <Table size="small">
+                        <TableBody>
+                            <TableRow>
+                                <TableCell colSpan="2">
+                                    <Typography variant="h4" component="h4">
+                                        {type} Flight Summary
+                                    </Typography>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Flight Number</TableCell>
+                                <TableCell>{flight.flightId}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Origin Country</TableCell>
+                                <TableCell>{flight.from}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Destination</TableCell>
+                                <TableCell>{flight.to}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Departure Date</TableCell>
+                                <TableCell>{flight?.departureDate?.substring(0, 10)}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Arrival Date</TableCell>
+                                <TableCell>{flight?.arrivalDate?.substring(0, 10)}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Departure Time</TableCell>
+                                <TableCell>{flight.departureTime}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Arrival Time</TableCell>
+                                <TableCell>{flight.arrivalTime}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Arrival Time</TableCell>
+                                <TableCell>{flight.arrivalTime}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Duration</TableCell>
+                                <TableCell>{getDuration()}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Cabin Class</TableCell>
+                                <TableCell>{'Economy'}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Baggage Allowance</TableCell>
+                                <TableCell>{'One 23kg Bag'}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Price</TableCell>
+                                <TableCell>{'10000 EGP'}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Max Number Of Seats</TableCell>
+                                <TableCell>{maxSeats}</TableCell>
+                            </TableRow>
 
-                    <h1> {type} Flight Summary</h1>
-                    <p>Flight Number: {flight.flightId}</p>
-                    <p>From: {flight.from} To: {flight.to}</p>
-                    <p>Departure: {flight.departureDate?.substring(0, 10)} , time:  {flight.departureTime} </p>
-                    <p>Arrival: {flight.arrivalDate?.substring(0, 10)} , time:  {flight.arrivalTime} </p>
-                    <p>Duration: {getDuration()}</p>
-                    <p>Cabin Class: Economy</p>
-                    <p>Baggage Allowance: 1 23kg bag</p>
-                    <p>Price: 10000 EGP</p>
-                    <p>Max Number of Seats: {maxSeats}</p>
-                    <p><em> Selected Seats:
-                        {
-                            selectedSeats.map((s) => s.number).join(", ")
-                        }
-                    </em>
-                    </p>
+
+                        </TableBody>
+                    </Table>
                 </div>
 
                 <div className="dep-seats">
@@ -190,17 +251,22 @@ const FlightSeats = () => {
                         userId={userId}
                         removeSeat={removeSeat}
                     />
+                    <Typography style={{ fontStyle: 'italic', maxWidth:'240px' }}> {`Selected Seats: `}
+                        {
+                            selectedSeats.map((s) => s.number).join(", ")
+                        }
+                    </Typography>
                 </div>
 
             </div>
-            
-           
+
+
             <Button variant="outlined" type="submit" onClick={onSubmit}>
-                Confirm Seats
-            </Button> 
-            <p style={{color: '#ff3333'}}>
+                Confirm {type} Seats
+            </Button>
+            <Typography style={{ color: '#ff3333' }}>
                 {errMsg}
-            </p>
+            </Typography>
 
         </div>
     );
