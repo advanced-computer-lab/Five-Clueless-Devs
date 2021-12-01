@@ -18,6 +18,7 @@ import FlightSchedule from './Components/FlightSchedule';
 import SearchFlightUser from './Components/SearchFlightUser';
 import FlightSeats from './Components/FlightSeats/FlightSeats';
 
+
 function App() {
 
   return (
@@ -38,6 +39,7 @@ function App() {
           
           <Route path='/select-seats' component={FlightSeats} />
           <Route path='/search-user' component={SearchFlightUser} />
+          
 
         </Switch>
       </Router>
