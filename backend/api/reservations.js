@@ -28,10 +28,5 @@ router.get('/GetReservation', (req, res) => {
         .then(Reservations => res.json(Reservations))
         .catch(err => res.status(404).json({ noreservationfound: 'No Reservation found' }));
     });
-router.get('/GetReservationById', (req, res) => {
-        Reservations.findById(req.query)
-            .then(Reservations => res.json(Reservations))
-            .catch(err => res.status(404).json({ noreservationfound: 'No Reservation found' }));
-        });
 
 module.exports = router;
