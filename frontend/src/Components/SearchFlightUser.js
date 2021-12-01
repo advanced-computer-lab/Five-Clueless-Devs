@@ -34,6 +34,7 @@ const SearchFlightUser = ({ location }) => {
     const steps = [
         'Search & Select Departure Flight',
         'Select Return Flight',
+        'Select Seats',
         'View Your Itinerary',
 
     ];
@@ -194,8 +195,11 @@ const SearchFlightUser = ({ location }) => {
         if (view == 1) {
             setView(2);
         }
-        else {
+        else if(view ==2) {
             setView(3);
+        }
+        else{
+            setView(4);
         }
         console.log(flight.flightId);
         console.log("helooo");
@@ -575,6 +579,8 @@ const SearchFlightUser = ({ location }) => {
             </>
         );
     }
+
+    else if(view == 3){}//SEATS FUNC HERE
     //VIEWING SUMMARY -----------------------------------------------------------------------------------------------------------------------------------------------------------------
     else {
 
