@@ -38,6 +38,9 @@ const ViewSummary = () => {
   useEffect(() => {
     getSummary();
 }, []);
+const Tocancel=()=>{
+    console.log("cancel")
+}
 const getSummary = () =>{
     //console.log("Print id: " + { id });
     var tempFromEconomy=[];
@@ -191,52 +194,52 @@ const getSummary = () =>{
                 <TableRow>
                   {/* <th scope="row">1</th> */}
                   <TableCell>Departure Flight ID</TableCell>
-                  <TableCell>{fromflight.flightId}</TableCell>
+                  <TableCell>{fromflight?.flightId}</TableCell>
                 </TableRow>
                 <TableRow>
                   {/* <th scope="row">2</th> */}
                   <TableCell>Departure Country</TableCell>
-                  <TableCell>{fromflight.from}</TableCell>
+                  <TableCell>{fromflight?.from}</TableCell>
                 </TableRow>
                 <TableRow>
                   {/* <th scope="row">3</th> */}
                   <TableCell>Destination</TableCell>
-                  <TableCell>{fromflight.to}</TableCell>
+                  <TableCell>{fromflight?.to}</TableCell>
                 </TableRow>
                 <TableRow>
                   {/* <th scope="row">4</th> */}
                   <TableCell>Departure Date</TableCell>
-                  <TableCell>{fromflight.departureDate.substring(0, 10)}</TableCell>
+                  <TableCell>{fromflight?.departureDate.substring(0, 10)}</TableCell>
                 </TableRow>
                 <TableRow>
                   {/* <th scope="row">5</th> */}
                   <TableCell>Arrival Date</TableCell>
-                  <TableCell>{fromflight.arrivalDate.substring(0, 10)}</TableCell>
+                  <TableCell>{fromflight?.arrivalDate.substring(0, 10)}</TableCell>
                 </TableRow>
                 <TableRow>
                   {/* <th scope="row">6</th> */}
                   <TableCell>Departure Time</TableCell>
-                  <TableCell>{fromflight.departureTime}</TableCell>
+                  <TableCell>{fromflight?.departureTime}</TableCell>
                 </TableRow>
                 <TableRow>
                   {/* <th scope="row">7</th> */}
                   <TableCell>Arrival Time</TableCell>
-                  <TableCell>{fromflight.arrivalTime}</TableCell>
+                  <TableCell>{fromflight?.arrivalTime}</TableCell>
                 </TableRow>
                 <TableRow>
                   {/* <th scope="row">11</th> */}
                   <TableCell>Departure Terminal</TableCell>
-                  <TableCell>{fromflight.departureTerminal}</TableCell>
+                  <TableCell>{fromflight?.departureTerminal}</TableCell>
                 </TableRow>
                 <TableRow>
                   {/* <th scope="row">12</th> */}
                   <TableCell>Arrival Terminal</TableCell>
-                  <TableCell>{fromflight.arrivalTerminal}</TableCell>
+                  <TableCell>{fromflight?.arrivalTerminal}</TableCell>
                 </TableRow>
                 <TableRow>
                   {/* <th scope="row">12</th> */}
                   <TableCell>Cabin Class</TableCell>
-                  <TableCell>{reservation.cabin}</TableCell>
+                  <TableCell>{reservation?.cabin}</TableCell>
                 </TableRow>
                 <TableRow>
                   {/* <th scope="row">12</th> */}
@@ -293,11 +296,6 @@ const getSummary = () =>{
                 </TableRow>
                 <TableRow>
                   {/* <th scope="row">12</th> */}
-                  <TableCell>Cabin Class</TableCell>
-                  <TableCell>{reservation.cabin}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">12</th> */}
                   <TableCell>Seats</TableCell>
                   <TableCell>{seatsTO}</TableCell>
                 </TableRow>
@@ -315,6 +313,9 @@ const getSummary = () =>{
               Edit Flights
             </Link>
             <br /> */}
+             <div>
+           <Button variant="outlined" onClick={Tocancel}>cancel Resrevation</Button>
+            </div>
 
           </div>
         </div>
