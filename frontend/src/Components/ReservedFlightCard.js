@@ -6,9 +6,9 @@ import "./FlightCard.css";
 const ReservedFlightCard = (props) => {
     const fromflight = props.from;
     const toflight = props.to;
-    //const history = useHistory();
+    const history = useHistory();
     const handleClick = () => {
-       // history.push(`/details/${flight.flightId}`)
+        history.push(`/summary/${fromflight.flightId}/${toflight.flightId}`)
        console.log("entered");
     }
 
@@ -27,7 +27,7 @@ const ReservedFlightCard = (props) => {
 
             <div className="flight-card" onClick={handleClick}>
                 <div className="flight-card-left">
-                    <p className="flight-card-head">departure</p>
+                    <p className="flight-card-head">departure flight</p>
                     <p className="flight-card-airport">{fromflight?.from}</p>
                     <p className="flight-card-airport">{fromflight?.to}</p>
                     <p className="flight-card-head"> departure date</p>
@@ -50,12 +50,12 @@ const ReservedFlightCard = (props) => {
                     />
                      <p className="flight-card-head">departure flight number</p>
                     <p className="flight-card-date">{fromflight?.flightId}</p>
-                    <p className="flight-card-head">arrival flight number</p>
+                    <p className="flight-card-head">return flight number</p>
                     <p className="flight-card-date">{toflight?.flightId}</p>
                 </div>
 
                 <div className="flight-card-right">
-                    <p className="flight-card-head">arrival</p>
+                    <p className="flight-card-head">return flight</p>
                     <p className="flight-card-airport">{toflight?.from}</p>
                     <p className="flight-card-airport">{toflight?.to}</p>
                     <p className="flight-card-head"> departure date</p>
