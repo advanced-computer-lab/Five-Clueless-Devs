@@ -57,7 +57,7 @@ const Itinerary = (props) => {
                     </div>
                 </div>
                 <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <Table aria-label="simple table">
 
                         <TableBody>
 
@@ -91,7 +91,7 @@ const Itinerary = (props) => {
                     </div>
                 </div>
                 <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <Table aria-label="simple table">
 
                         <TableBody>
 

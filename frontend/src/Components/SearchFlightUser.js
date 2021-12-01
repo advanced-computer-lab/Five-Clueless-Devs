@@ -14,6 +14,7 @@ import Box from '@mui/material/Box';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Itinerary from './Itinerary';
+import FlightSeats from './FlightSeats/FlightSeats';
 
 
 
@@ -21,13 +22,13 @@ const SearchFlightUser = ({ location }) => {
     // const history = useHistory();
     // useState hooks for input and language
 
-    const moment= require('moment') 
-    const getDuration = (flight) =>{
-        let depDate = moment(flight?.departureDate?.substring(0, 10) + "T" + flight?.departureTime + ":00"); 
-        let arrDate = moment(flight?.arrivalDate?.substring(0, 10) + "T" + flight?.arrivalTime + ":00"); 
+    const moment = require('moment')
+    const getDuration = (flight) => {
+        let depDate = moment(flight?.departureDate?.substring(0, 10) + "T" + flight?.departureTime + ":00");
+        let arrDate = moment(flight?.arrivalDate?.substring(0, 10) + "T" + flight?.arrivalTime + ":00");
         let durationInMins = arrDate.diff(depDate, 'minutes');
-        let durHours = Math.floor(durationInMins/60);
-        durationInMins = durationInMins - 60*durHours;
+        let durHours = Math.floor(durationInMins / 60);
+        durationInMins = durationInMins - 60 * durHours;
         return `${durHours} hours and ${durationInMins} minutes`;
     }
 
@@ -61,24 +62,24 @@ const SearchFlightUser = ({ location }) => {
     //passing info to other components for summary
     const [selectedDeptFlight, setSelectedDeptFlight] = useState("");
     const [selectedDeptFlightId, setDeptSelectedId] = useState(0);
-    const [deptFlightDeptDate , setDeptDeptDate] = useState("");
-    const [deptFlightArrivalDate , setDeptArrivalDate] = useState("");
+    const [deptFlightDeptDate, setDeptDeptDate] = useState("");
+    const [deptFlightArrivalDate, setDeptArrivalDate] = useState("");
     const [deptFlightFrom, setDeptFlightFrom] = useState("");
     const [deptFlightTo, setDeptFlightTo] = useState("");
     const [deptFlightDuration, setDeptFlightDuration] = useState("");
     const [deptFlightDeptTime, setDeptFlightDeptTime] = useState("");
     const [deptFlightArrivalTime, setDeptFlightArrivalTime] = useState("");
-    const [deptFlightPrice , setDeptPrice] = useState(0);
+    const [deptFlightPrice, setDeptPrice] = useState(0);
     const [selectedRetFlight, setSelectedRetFlight] = useState("");
     const [selectedRetFlightId, setRetSelectedId] = useState(0);
-    const [retFlightDeptDate , setRetDeptDate] = useState("");
-    const [retFlightArrivalDate , setRetArrivalDate] = useState("");
+    const [retFlightDeptDate, setRetDeptDate] = useState("");
+    const [retFlightArrivalDate, setRetArrivalDate] = useState("");
     const [retFlightFrom, setRetFlightFrom] = useState("");
     const [retFlightTo, setRetFlightTo] = useState("");
     const [retFlightDuration, setRetFlightDuration] = useState("");
     const [retFlightDeptTime, setRetFlightDeptTime] = useState("");
     const [retFlightArrivalTime, setRetFlightArrivalTime] = useState("");
-    const [retFlightPrice , setRetPrice] = useState(0);
+    const [retFlightPrice, setRetPrice] = useState(0);
     //info used in this component
     const [view, setView] = useState(1);
     const [chosenClass, setClass] = useState('Economy');
@@ -195,10 +196,10 @@ const SearchFlightUser = ({ location }) => {
         if (view == 1) {
             setView(2);
         }
-        else if(view ==2) {
+        else if (view == 2) {
             setView(3);
         }
-        else{
+        else {
             setView(4);
         }
         console.log(flight.flightId);
@@ -379,7 +380,7 @@ const SearchFlightUser = ({ location }) => {
                                         </div>
                                         <span className={flight.departureDate === "" ? "criteria-hide" : ""}>
                                             <TextField
-                                            //required
+                                                //required
                                                 id="dateInput"
                                                 type="date"
                                                 className='form-control'
@@ -391,7 +392,7 @@ const SearchFlightUser = ({ location }) => {
                                         </span>
                                         <span className={returnDate === "" ? "criteria-hide" : ""}>
                                             <TextField
-                                           // required
+                                                // required
                                                 id="dateInput"
                                                 type='date'
                                                 className='form-control'
@@ -484,9 +485,9 @@ const SearchFlightUser = ({ location }) => {
                                             <DepartureFlightCard flight={flight} numOfChildren={childNumber} numOfAdults={adultsNumber}
                                                 chosenClass={chosenClass} data={selectDept} key={k} passDeptId={setDeptSelectedId} passDeptFrom={setDeptFlightFrom}
                                                 passDeptTo={setDeptFlightTo} passDeptDuration={setDeptFlightDuration} passDeptFlightDeptTime={setDeptFlightDeptTime}
-                                                passDeptFlightArrivalTime={setDeptFlightArrivalTime} passDeptFlightDeptDate={setDeptDeptDate} 
+                                                passDeptFlightArrivalTime={setDeptFlightArrivalTime} passDeptFlightDeptDate={setDeptDeptDate}
                                                 passDeptFlightArrivalDate={setDeptArrivalDate} passDeptFlightPrice={setDeptPrice}
-                                                passSelectedDeptFlight={setSelectedDeptFlight}/>
+                                                passSelectedDeptFlight={setSelectedDeptFlight} />
                                         )}
                                     </div>
 
@@ -520,7 +521,7 @@ const SearchFlightUser = ({ location }) => {
 
 
 
-                        <Card sx={{ maxWidth: 500,  }}  >
+                        <Card sx={{ maxWidth: 500, }}  >
                             <CardActionArea>
 
 
@@ -580,7 +581,31 @@ const SearchFlightUser = ({ location }) => {
         );
     }
 
-    else if(view == 3){}//SEATS FUNC HERE
+    else if (view == 3) {
+        return (
+            <>
+                <div className="stepper-space">
+                    <Box sx={{ width: '100%' }}>
+                        <Stepper activeStep={2} alternativeLabel>
+                            {steps.map((label) => (
+                                <Step key={label}>
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            ))}
+                        </Stepper>
+                    </Box>
+                </div>
+                <div>
+                    <FlightSeats 
+                        from = {selectedDeptFlight}
+                        to = {selectedRetFlight}
+                        maxSeats = {adultsNumber + childNumber}
+                        setView = {(num) => setView(num)}
+                    />
+                </div>
+            </>
+        )
+    }//SEATS FUNC HERE
     //VIEWING SUMMARY -----------------------------------------------------------------------------------------------------------------------------------------------------------------
     else {
 
@@ -588,7 +613,7 @@ const SearchFlightUser = ({ location }) => {
             <>
 
                 <div className="stepper-space"><Box sx={{ width: '100%' }}>
-                    <Stepper activeStep={2} alternativeLabel>
+                    <Stepper activeStep={3} alternativeLabel>
                         {steps.map((label) => (
                             <Step key={label}>
                                 <StepLabel>{label}</StepLabel>
@@ -678,8 +703,6 @@ const SearchFlightUser = ({ location }) => {
                         <p className="selected-return">Summary:</p>
                         <Card sx={{ maxWidth: 500 }}>
                             <CardActionArea>
-
-
                                 <CardContent>
                                     <div className="right-container">
                                         <div className="middle-container">
@@ -729,10 +752,10 @@ const SearchFlightUser = ({ location }) => {
                     </div>
                 </div>
                 <div><Itinerary deptFrom={deptFlightFrom} deptTo={deptFlightTo} deptFlightDeptTime={deptFlightDeptTime} deptFlightArrivalTime={deptFlightArrivalTime}
-                deptFlightDeptDate={deptFlightDeptDate} deptFlightArrivalDate={deptFlightArrivalDate} chosenClass={chosenClass} selectedDeptFlightId={selectedDeptFlightId}
-                deptFlightPrice={deptFlightPrice} retFlightPrice={retFlightPrice} retFlightDeptTime={retFlightDeptTime} retFlightDeptDate={retFlightDeptDate} 
-                retFlightArrivalTime={retFlightArrivalTime}
-                retFlightArrivalDate={retFlightArrivalDate} retFlightId={selectedRetFlightId} numOfAdults={adultsNumber} numOfChildren={childNumber}/></div>
+                    deptFlightDeptDate={deptFlightDeptDate} deptFlightArrivalDate={deptFlightArrivalDate} chosenClass={chosenClass} selectedDeptFlightId={selectedDeptFlightId}
+                    deptFlightPrice={deptFlightPrice} retFlightPrice={retFlightPrice} retFlightDeptTime={retFlightDeptTime} retFlightDeptDate={retFlightDeptDate}
+                    retFlightArrivalTime={retFlightArrivalTime}
+                    retFlightArrivalDate={retFlightArrivalDate} retFlightId={selectedRetFlightId} numOfAdults={adultsNumber} numOfChildren={childNumber} /></div>
 
 
 

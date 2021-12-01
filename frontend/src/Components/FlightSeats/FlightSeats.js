@@ -9,15 +9,16 @@ import moment from 'moment';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 
 
-const FlightSeats = () => {
+const FlightSeats = ({ from, to, maxSeats, setView }) => {
+
     const history = useHistory();
 
     const [type, setType] = useState("Departure");
     const [errMsg, setErrMsg] = useState("");
 
     //must get it from the previous step
-    const maxSeats = 3;
-    const userId = 11;
+    //const maxSeats = 3;
+    const userId = 20;
     const flightId = 2;
     const flightId1 = 79;
     const cabin = 'economy';
@@ -34,58 +35,61 @@ const FlightSeats = () => {
 
     useEffect(() => {
         console.log("Print id: " + flightId);
-        axios
-            .get(BACKEND_URL + "flights/search?flightId=" + flightId)
-            .then(res => {
-                console.log(res.data);
-                setFlight(res.data[0] || {});
-            })
-            .catch(err => {
-                console.log(err);
-            })
+        setFlight(from);
+        // axios
+        //     .get(BACKEND_URL + "flights/search?flightId=" + flightId)
+        //     .then(res => {
+        //         console.log(res.data);
+        //         setFlight(res.data[0] || {});
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //     })
     }, []);
 
     useEffect(() => {
         console.log("Print id: " + flightId);
         if (type === 'Departure') {
-            axios
-                .get(BACKEND_URL + "flights/search?flightId=" + flightId)
-                .then(res => {
-                    console.log(res.data);
-                    setFlight(res.data[0] || {});
-                })
-                .catch(err => {
-                    console.log(err);
-                })
+            setFlight(from);
+            // axios
+            //     .get(BACKEND_URL + "flights/search?flightId=" + flightId)
+            //     .then(res => {
+            //         console.log(res.data);
+            //         setFlight(res.data[0] || {});
+            //     })
+            //     .catch(err => {
+            //         console.log(err);
+            //     })
         }
         if (type === 'Arrival') {
-            axios
-                .get(BACKEND_URL + "flights/search?flightId=" + flightId1)
-                .then(res => {
-                    console.log(res.data);
-                    setFlight(res.data[0] || {});
-                })
-                .catch(err => {
-                    console.log(err);
-                })
+            setFlight(to);
+            // axios
+            //     .get(BACKEND_URL + "flights/search?flightId=" + flightId1)
+            //     .then(res => {
+            //         console.log(res.data);
+            //         setFlight(res.data[0] || {});
+            //     })
+            //     .catch(err => {
+            //         console.log(err);
+            //     })
         }
 
     }, [type]);
 
 
     useEffect(() => {
-        if (cabin === 'economy' && flight.seatsEconomy) {
-            setSeats(flight.seatsEconomy)
+        if (cabin === 'economy' && flight?.seatsEconomy) {
+            setSeats(flight?.seatsEconomy)
         }
-        else if (cabin === 'business' && flight.seatsBusiness) {
-            setSeats(flight.seatsBusiness);
+        else if (cabin === 'business' && flight?.seatsBusiness) {
+            setSeats(flight?.seatsBusiness);
         }
-        else if (cabin === 'first' && flight.seatsFirst) {
-            setSeats(flight.seatsFirst);
+        else if (cabin === 'first' && flight?.seatsFirst) {
+            setSeats(flight?.seatsFirst);
         }
 
         console.log(seats);
-    }, [flight.flightId])
+    }, [flight?.flightId])
 
     const removeSeat = (id) => {
         let tmpSeats = [...seats];
@@ -112,29 +116,32 @@ const FlightSeats = () => {
                 }
             })
             setSeats(tmpSeats);
+            let freeSeats = seats.filter((s) => s === null || s === "null");
+            let remSeats = freeSeats.length;
+
             if (cabin === 'economy') {
-                setFlight({ ...flight, seatsEconomy: tmpSeats });
+                setFlight({ ...flight, availableEconomy: remSeats, seatsEconomy: tmpSeats });
                 tmpFlight = { ...tmpFlight, seatsEconomy: tmpSeats }
             }
             else if (cabin === 'business') {
-                setFlight({ ...flight, seatsBusiness: tmpSeats });
+                setFlight({ ...flight, availableBusiness: remSeats, seatsBusiness: tmpSeats });
                 tmpFlight = { ...tmpFlight, seatsBusiness: tmpSeats }
             }
             else if (cabin === 'first') {
-                setFlight({ ...flight, seatsFirst: tmpSeats });
+                setFlight({ ...flight, availableSeats: remSeats, seatsFirst: tmpSeats });
                 tmpFlight = { ...tmpFlight, seatsFirst: tmpSeats }
             }
 
-            let id = flightId;
-            if (type === 'Arrival') {
-                id = flightId1;
-            }
+            let id = flight?.flightId;
+            // if (type === 'Arrival') {
+            //     id = flightId1;
+            // }
             axios
                 .put(BACKEND_URL + 'flights/update?flightId=' + id, tmpFlight)
                 .then(res => {
                     console.log(res.data);
                     if (type === 'Arrival') {
-                        history.push('/');
+                        setView(4);
                     }
                 })
                 .catch(err => {
@@ -160,20 +167,26 @@ const FlightSeats = () => {
     }
 
 
-    const goBack = ()=>{
-        setSeats([]);
-        setType('Departure');
+    const goBack = () => {
+
+        if (type === "Departure") {
+            setView(2);
+        }
+        else {
+            setSeats([]);
+            setType('Departure');
+        }
     }
 
     return (
         <div>
 
             <div className="dep-cont">
-                {type === 'Arrival'?
-                    <IconButton onClick={goBack} style={{ marginBottom: 'auto' }}>
-                        <ArrowBack />
-                    </IconButton>:null
-                }
+
+                <IconButton onClick={goBack} style={{ marginBottom: 'auto' }}>
+                    <ArrowBack />
+                </IconButton>
+
                 <div className="dep-summary">
                     <Table size="small">
                         <TableBody>
@@ -186,15 +199,15 @@ const FlightSeats = () => {
                             </TableRow>
                             <TableRow>
                                 <TableCell>Flight Number</TableCell>
-                                <TableCell>{flight.flightId}</TableCell>
+                                <TableCell>{flight?.flightId}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>Origin Country</TableCell>
-                                <TableCell>{flight.from}</TableCell>
+                                <TableCell>{flight?.from}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>Destination</TableCell>
-                                <TableCell>{flight.to}</TableCell>
+                                <TableCell>{flight?.to}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>Departure Date</TableCell>
@@ -206,15 +219,15 @@ const FlightSeats = () => {
                             </TableRow>
                             <TableRow>
                                 <TableCell>Departure Time</TableCell>
-                                <TableCell>{flight.departureTime}</TableCell>
+                                <TableCell>{flight?.departureTime}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>Arrival Time</TableCell>
-                                <TableCell>{flight.arrivalTime}</TableCell>
+                                <TableCell>{flight?.arrivalTime}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>Arrival Time</TableCell>
-                                <TableCell>{flight.arrivalTime}</TableCell>
+                                <TableCell>{flight?.arrivalTime}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>Duration</TableCell>
@@ -251,7 +264,7 @@ const FlightSeats = () => {
                         userId={userId}
                         removeSeat={removeSeat}
                     />
-                    <Typography style={{ fontStyle: 'italic', maxWidth:'240px' }}> {`Selected Seats: `}
+                    <Typography style={{ fontStyle: 'italic', maxWidth: '240px' }}> {`Selected Seats: `}
                         {
                             selectedSeats.map((s) => s.number).join(", ")
                         }

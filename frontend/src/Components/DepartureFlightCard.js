@@ -63,7 +63,7 @@ const FlightCard = (props) => {
 
             <div className="flight-card-search" >
                 <div className="flight-card-left">
-                    <div className="head-card">
+                    <div className="head-card head-card2">
                         <p className="flight-card-head-type">Departure</p>
                         <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
                             alt="airplaneDepart"
