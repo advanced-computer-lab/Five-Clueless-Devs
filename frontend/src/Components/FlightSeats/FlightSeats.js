@@ -9,7 +9,7 @@ import moment from 'moment';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 
 
-const FlightSeats = ({ from, to, maxSeats, setView }) => {
+const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo }) => {
 
     const history = useHistory();
 
@@ -17,11 +17,8 @@ const FlightSeats = ({ from, to, maxSeats, setView }) => {
     const [errMsg, setErrMsg] = useState("");
 
     //must get it from the previous step
-    //const maxSeats = 3;
-    const userId = 20;
-    const flightId = 2;
-    const flightId1 = 79;
-    const cabin = 'economy';
+    const userId = 1;
+
     //-----------------------------------
 
 
@@ -34,7 +31,7 @@ const FlightSeats = ({ from, to, maxSeats, setView }) => {
 
 
     useEffect(() => {
-        console.log("Print id: " + flightId);
+        console.log("Print id: " + flight?.flightId);
         setFlight(from);
         // axios
         //     .get(BACKEND_URL + "flights/search?flightId=" + flightId)
@@ -48,46 +45,27 @@ const FlightSeats = ({ from, to, maxSeats, setView }) => {
     }, []);
 
     useEffect(() => {
-        console.log("Print id: " + flightId);
+        console.log("Print id: " + flight?.flightId);
         if (type === 'Departure') {
             setFlight(from);
-            // axios
-            //     .get(BACKEND_URL + "flights/search?flightId=" + flightId)
-            //     .then(res => {
-            //         console.log(res.data);
-            //         setFlight(res.data[0] || {});
-            //     })
-            //     .catch(err => {
-            //         console.log(err);
-            //     })
         }
         if (type === 'Arrival') {
             setFlight(to);
-            // axios
-            //     .get(BACKEND_URL + "flights/search?flightId=" + flightId1)
-            //     .then(res => {
-            //         console.log(res.data);
-            //         setFlight(res.data[0] || {});
-            //     })
-            //     .catch(err => {
-            //         console.log(err);
-            //     })
         }
 
     }, [type]);
 
 
     useEffect(() => {
-        if (cabin === 'economy' && flight?.seatsEconomy) {
+        if (cabin === 'Economy' && flight?.seatsEconomy) {
             setSeats(flight?.seatsEconomy)
         }
-        else if (cabin === 'business' && flight?.seatsBusiness) {
+        else if (cabin === 'Business' && flight?.seatsBusiness) {
             setSeats(flight?.seatsBusiness);
         }
-        else if (cabin === 'first' && flight?.seatsFirst) {
+        else if (cabin === 'First' && flight?.seatsFirst) {
             setSeats(flight?.seatsFirst);
         }
-
         console.log(seats);
     }, [flight?.flightId])
 
@@ -98,11 +76,10 @@ const FlightSeats = ({ from, to, maxSeats, setView }) => {
     }
 
     const onSubmit = (e) => {
+        e.preventDefault();
         if (selectedSeats.length < maxSeats) {
             setErrMsg(`You must select ${maxSeats} seats`)
         } else {
-
-            e.preventDefault();
             setErrMsg('');
             let tmpSeats = [...seats];
             let tmpFlight = { ...flight };
@@ -119,42 +96,41 @@ const FlightSeats = ({ from, to, maxSeats, setView }) => {
             let freeSeats = seats.filter((s) => s === null || s === "null");
             let remSeats = freeSeats.length;
 
-            if (cabin === 'economy') {
+            if (cabin === 'Economy') {
                 setFlight({ ...flight, availableEconomy: remSeats, seatsEconomy: tmpSeats });
                 tmpFlight = { ...tmpFlight, seatsEconomy: tmpSeats }
             }
-            else if (cabin === 'business') {
+            else if (cabin === 'Business') {
                 setFlight({ ...flight, availableBusiness: remSeats, seatsBusiness: tmpSeats });
                 tmpFlight = { ...tmpFlight, seatsBusiness: tmpSeats }
             }
-            else if (cabin === 'first') {
+            else if (cabin === 'First') {
                 setFlight({ ...flight, availableSeats: remSeats, seatsFirst: tmpSeats });
                 tmpFlight = { ...tmpFlight, seatsFirst: tmpSeats }
             }
 
             let id = flight?.flightId;
-            // if (type === 'Arrival') {
-            //     id = flightId1;
-            // }
             axios
                 .put(BACKEND_URL + 'flights/update?flightId=' + id, tmpFlight)
                 .then(res => {
                     console.log(res.data);
                     if (type === 'Arrival') {
                         setView(4);
+                        setTo(tmpFlight);
+                    } else {
+                        setFrom(tmpFlight);
                     }
                 })
                 .catch(err => {
                     console.log(err);
                 })
 
-
             if (type == 'Departure') {
                 setSeats([]);
+                setSelectedSeats([]);
                 setType('Arrival');
             }
         }
-
     };
 
     const getDuration = () => {
@@ -168,12 +144,12 @@ const FlightSeats = ({ from, to, maxSeats, setView }) => {
 
 
     const goBack = () => {
-
         if (type === "Departure") {
             setView(2);
         }
         else {
             setSeats([]);
+            setSelectedSeats([]);
             setType('Departure');
         }
     }
@@ -249,8 +225,6 @@ const FlightSeats = ({ from, to, maxSeats, setView }) => {
                                 <TableCell>Max Number Of Seats</TableCell>
                                 <TableCell>{maxSeats}</TableCell>
                             </TableRow>
-
-
                         </TableBody>
                     </Table>
                 </div>

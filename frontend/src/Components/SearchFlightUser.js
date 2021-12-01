@@ -598,9 +598,12 @@ const SearchFlightUser = ({ location }) => {
                 <div>
                     <FlightSeats 
                         from = {selectedDeptFlight}
+                        setFrom = {setSelectedDeptFlight}
                         to = {selectedRetFlight}
+                        setTo = {setSelectedRetFlight}
                         maxSeats = {adultsNumber + childNumber}
                         setView = {(num) => setView(num)}
+                        cabin = {chosenClass}
                     />
                 </div>
             </>
