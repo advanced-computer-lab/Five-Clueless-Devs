@@ -32,6 +32,8 @@ const ViewSummary = () => {
     departureTerminal: ''
   });
   const[reservation,setReservation]=useState();
+  const[seatsFrom,setSeatsFrom]=useState();
+  const[seatsTO,setSeatsTO]=useState();
   let { idfrom,idto } = useParams();
   useEffect(() => {
     getSummary();
@@ -70,16 +72,16 @@ const getSummary = () =>{
           console.log(err);
         })
        // console.log(tempFromEconomy);
-        axios.get(BACKEND_URL + "reservations/GetReservation?UserID=" + 5)
+        axios.get(BACKEND_URL + "reservations/GetReservation?UserID=5&from="+idfrom+"&to="+idto)
         .then(res => {
            setReservation(res.data[0]);
             var temp1=[];
             var temp2=[];
-          console.log(res.data);
+          console.log(res.data[0]._id);
           //temp=[...res.data];
           let test="Economy";
           //console.log(tempFromEconomy);
-          switch(test){
+          switch(res.data[0].cabin){
               case "Economy":
                   temp1=tempFromEconomy;
                   temp2=temptoEconomy;
@@ -95,19 +97,23 @@ const getSummary = () =>{
           //console.log(temp1);
           //console.log(temp2);
           let Uid="10";
-          let SeatsFrom=[];
+          let SeatFrom=[];
           let SeatTo=[];
           for(let i=0;i<temp1.length;i++){
               if(temp1[i]==Uid){
-                  SeatsFrom.push(i);
+                  SeatFrom.push(getSeatNumber(i));
               }
           }
-          //console.log(SeatsFrom);
+          var seatFromAsString = SeatFrom.join(', ');
+          setSeatsFrom(seatFromAsString);
+          //console.log(SeatFrom);
           for(let i=0;i<temp2.length;i++){
             if(temp2[i]==Uid){
-                SeatTo.push(i);
+                SeatTo.push(getSeatNumber(i));
             }
         }
+        var seatToAsString = SeatTo.join(', ');
+        setSeatsTO(seatToAsString);
         })
         .catch(err => {
           console.log(err);
@@ -118,11 +124,11 @@ const getSummary = () =>{
       })
      
   }
-//   const getSeatNumber = (i) => {
-//     let letter = String.fromCharCode('A'.charCodeAt(0) + i % 6);
-//     let num = Math.floor(i / 6 + 1);
-//     return ${num}${letter}
-// }
+  const getSeatNumber = (i) => {
+    let letter = String.fromCharCode('A'.charCodeAt(0) + i % 6);
+    let num = Math.floor(i / 6 + 1);
+    return `${num}${letter}`
+}
 
 
 
@@ -154,140 +160,167 @@ const getSummary = () =>{
 
 
   return (
-        <div>
-          <Button variant="outlined" onClick={getSummary}>Search</Button>
+        // <div>
+        //   <Button variant="outlined" onClick={getSummary}>Search</Button>
+        // </div>
+    <div className="ViewFlight">
+      <div className="container">
+        <div className="row">
+          <br />
+          <div className="col-md-8 m-auto">
+            <h1 className="display-4 text-center">Flights' Record</h1>
+            <p className="lead text-center">
+              View Flights' Info
+            </p>
+            <hr /> <br />
+          </div>
         </div>
-    // <div className="ViewFlight">
-    //   <div className="container">
-    //     <div className="row">
-    //       <br />
-    //       <div className="col-md-8 m-auto">
-    //         <h1 className="display-4 text-center">Flights' Record</h1>
-    //         <p className="lead text-center">
-    //           View Flights' Info
-    //         </p>
-    //         <hr /> <br />
-    //       </div>
-    //     </div>
-    //     <div>
-    //       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-    //         <Table sx={{ maxWidth: 500 }} className="table table-hover table-dark">
-    //           {/* <thead>
-    //       <TableRow>
-    //         <th scope="col">#</th>
-    //         <th scope="col">First</th>
-    //         <th scope="col">Last</th>
-    //         <th scope="col">Handle</th>
-    //       </TableRow>
-    //     </thead> */}
-    //           <TableBody>
-    //             <TableRow>
-    //               {/* <th scope="row">1</th> */}
-    //               <TableCell>Flight ID</TableCell>
-    //               <TableCell>{flight.flightId}</TableCell>
-    //             </TableRow>
-    //             <TableRow>
-    //               {/* <th scope="row">2</th> */}
-    //               <TableCell>Origin Country</TableCell>
-    //               <TableCell>{flight.from}</TableCell>
-    //             </TableRow>
-    //             <TableRow>
-    //               {/* <th scope="row">3</th> */}
-    //               <TableCell>Destination</TableCell>
-    //               <TableCell>{flight.to}</TableCell>
-    //             </TableRow>
-    //             <TableRow>
-    //               {/* <th scope="row">4</th> */}
-    //               <TableCell>Departure Date</TableCell>
-    //               <TableCell>{flight.departureDate.substring(0, 10)}</TableCell>
-    //             </TableRow>
-    //             <TableRow>
-    //               {/* <th scope="row">5</th> */}
-    //               <TableCell>Arrival Date</TableCell>
-    //               <TableCell>{flight.arrivalDate.substring(0, 10)}</TableCell>
-    //             </TableRow>
-    //             <TableRow>
-    //               {/* <th scope="row">6</th> */}
-    //               <TableCell>Departure Time</TableCell>
-    //               <TableCell>{flight.departureTime}</TableCell>
-    //             </TableRow>
-    //             <TableRow>
-    //               {/* <th scope="row">7</th> */}
-    //               <TableCell>Arrival Time</TableCell>
-    //               <TableCell>{flight.arrivalTime}</TableCell>
-    //             </TableRow>
-    //             <TableRow>
-    //               {/* <th scope="row">8</th> */}
-    //               <TableCell>Available Economy Seats</TableCell>
-    //               <TableCell>{flight.availableEconomy}</TableCell>
-    //             </TableRow>
-    //             <TableRow>
-    //               {/* <th scope="row">9</th> */}
-    //               <TableCell>Available Business Seats</TableCell>
-    //               <TableCell>{flight.availableBusiness}</TableCell>
-    //             </TableRow>
-    //             <TableRow>
-    //               {/* <th scope="row">10</th> */}
-    //               <TableCell>Available First Class Seats</TableCell>
-    //               <TableCell>{flight.availableFirst}</TableCell>
-    //             </TableRow>
-    //             <TableRow>
-    //               {/* <th scope="row">11</th> */}
-    //               <TableCell>Departure Terminal</TableCell>
-    //               <TableCell>{flight.departureTerminal}</TableCell>
-    //             </TableRow>
-    //             <TableRow>
-    //               {/* <th scope="row">12</th> */}
-    //               <TableCell>Arrival Terminal</TableCell>
-    //               <TableCell>{flight.arrivalTerminal}</TableCell>
-    //             </TableRow>
-    //           </TableBody>
-    //         </Table>
-    //       </div>
-    //     </div>
+        <div>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <Table sx={{ maxWidth: 500 }} className="table table-hover table-dark">
+              {/* <thead>
+          <TableRow>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Handle</th>
+          </TableRow>
+        </thead> */}
+        <h1> Departure Flight </h1>
+              <TableBody>
+                <TableRow>
+                  {/* <th scope="row">1</th> */}
+                  <TableCell>Departure Flight ID</TableCell>
+                  <TableCell>{fromflight.flightId}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">2</th> */}
+                  <TableCell>Departure Country</TableCell>
+                  <TableCell>{fromflight.from}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">3</th> */}
+                  <TableCell>Destination</TableCell>
+                  <TableCell>{fromflight.to}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">4</th> */}
+                  <TableCell>Departure Date</TableCell>
+                  <TableCell>{fromflight.departureDate.substring(0, 10)}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">5</th> */}
+                  <TableCell>Arrival Date</TableCell>
+                  <TableCell>{fromflight.arrivalDate.substring(0, 10)}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">6</th> */}
+                  <TableCell>Departure Time</TableCell>
+                  <TableCell>{fromflight.departureTime}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">7</th> */}
+                  <TableCell>Arrival Time</TableCell>
+                  <TableCell>{fromflight.arrivalTime}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">11</th> */}
+                  <TableCell>Departure Terminal</TableCell>
+                  <TableCell>{fromflight.departureTerminal}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">12</th> */}
+                  <TableCell>Arrival Terminal</TableCell>
+                  <TableCell>{fromflight.arrivalTerminal}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">12</th> */}
+                  <TableCell>Cabin Class</TableCell>
+                  <TableCell>{reservation.cabin}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">12</th> */}
+                  <TableCell>Seats</TableCell>
+                  <TableCell>{seatsFrom}</TableCell>
+                </TableRow>
+              </TableBody>
+              <h1> Return Flight </h1>
+            <TableBody>
+                <TableRow>
+                  {/* <th scope="row">1</th> */}
+                  <TableCell>Return Flight ID</TableCell>
+                  <TableCell>{toflight.flightId}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">2</th> */}
+                  <TableCell>Departure Country</TableCell>
+                  <TableCell>{toflight.from}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">3</th> */}
+                  <TableCell>Destination</TableCell>
+                  <TableCell>{toflight.to}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">4</th> */}
+                  <TableCell>Departure Date</TableCell>
+                  <TableCell>{toflight.departureDate.substring(0, 10)}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">5</th> */}
+                  <TableCell>Arrival Date</TableCell>
+                  <TableCell>{toflight.arrivalDate.substring(0, 10)}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">6</th> */}
+                  <TableCell>Departure Time</TableCell>
+                  <TableCell>{toflight.departureTime}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">7</th> */}
+                  <TableCell>Arrival Time</TableCell>
+                  <TableCell>{toflight.arrivalTime}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">11</th> */}
+                  <TableCell>Departure Terminal</TableCell>
+                  <TableCell>{toflight.departureTerminal}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">12</th> */}
+                  <TableCell>Arrival Terminal</TableCell>
+                  <TableCell>{toflight.arrivalTerminal}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">12</th> */}
+                  <TableCell>Cabin Class</TableCell>
+                  <TableCell>{reservation.cabin}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">12</th> */}
+                  <TableCell>Seats</TableCell>
+                  <TableCell>{seatsTO}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+        </div>
 
-    //     <div className="row">
-    //       <div className="col-md-6">
-    //       </div>
+        <div className="row">
+          <div className="col-md-6">
+          </div>
 
-    //       <div className="col-md-6" style={{ margin: "10px" }}>
-    //         {/* <Link to={`/update-flight/${id}`} className="btn btn-outline-info btn-lg btn-block">
-    //           Edit Flights
-    //         </Link>
-    //         <br /> */}
+          <div className="col-md-6" style={{ margin: "10px" }}>
+            {/* <Link to={`/update-flight/${id}`} className="btn btn-outline-info btn-lg btn-block">
+              Edit Flights
+            </Link>
+            <br /> */}
 
-    //         <Button
-    //           onClick={() => history.push(`/update-flight/${id}`)}
-    //           variant="outlined"
-    //           style={{ marginRight: "10px" }}
-    //         > Edit </Button>
+          </div>
+        </div>
+      </div>
 
-    //         {showDelete ? <Button onClick={setConfirmButton} variant="outlined" color="error">Delete </Button> : null}
-    //         {/* {showConfirm ? <Button onClick={onDeleteConfirm} variant="outlined" color="error">Confirm</Button> : null} */}
-
-    //       </div>
-    //     </div>
-    //   </div>
-
-
-    //   <div>
-    //     <Dialog
-    //       open={showConfirm}
-    //       onClose={toggleDialog}
-    //       aria-labelledby="alert-dialog-title"
-    //       aria-describedby="alert-dialog-description"
-    //     >
-    //       <DialogTitle id="alert-dialog-title">
-    //         {"Are you sure you want to delete this flight?"}
-    //       </DialogTitle>
-    //       <DialogActions>
-    //         <Button onClick={toggleDialog} variant="text">Cancel </Button>
-    //         <Button onClick={onDeleteConfirm} variant="text" color="error">Delete</Button>
-    //       </DialogActions>
-    //     </Dialog>
-    //   </div>
-
-    // </div>
+    </div>
   )
 }
 
