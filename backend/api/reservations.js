@@ -23,9 +23,9 @@ router.delete('/cancelReservation', (req, res) => {
         .then(Reservations => res.json(Reservations))
         .catch(err => res.status(404).json(err));
 });
-router.get('/GetFlight', (req, res) => {
+router.get('/GetReservation', (req, res) => {
     Reservations.find(req.query)
-        .then(Reservations => res.json(flight))
-        .catch(err => res.status(404).json({ nobookfound: 'No flights found' }));
+        .then(Reservations => res.json(Reservations))
+        .catch(err => res.status(404).json({ noreservationfound: 'No Reservation found' }));
     });
 module.exports = router;
