@@ -106,15 +106,20 @@ const OnCancel = () => {
                   SeatFrom[i]=null;
                   countFrom++;
               }
+              else
+              SeatFrom[i]=temp1[i];
           }
           //setSeatsFrom(SeatFrom);
           //console.log(SeatFrom);
           for(let i=0;i<temp2.length;i++){
             if(temp2[i]==10){
                 SeatTo[i]=null;
-                countTo++;
+                countTo++;}
+            else{
+                SeatTo[i]=temp2[i];
             }
-        }
+                
+            }
         switch(cabinclass){
             case "Economy":
                 setfromFlight({...fromflight,availableEconomy:fromflight.availableEconomy+countFrom,seatsEconomy:SeatFrom});
