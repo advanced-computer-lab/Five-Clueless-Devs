@@ -857,9 +857,7 @@ const SearchFlightUser = ({ location }) => {
                                     <Typography variant="body2" color="text.secondary">
                                         Duration: {getDuration(selectedDeptFlight)}
                                     </Typography>
-                                    <Typography>
-                                        <button className="editButton" type="button" onClick={editDept}>Edit</button>
-                                    </Typography>
+                                    
                                 </CardContent>
                             </CardActionArea>
                         </Card>
@@ -894,9 +892,7 @@ const SearchFlightUser = ({ location }) => {
                                     <Typography variant="body2" color="text.secondary">
                                         Duration: {getDuration(selectedRetFlight)}
                                     </Typography>
-                                    <Typography>
-                                        <button className="editButton" type="button" onClick={editRet}>Edit</button>
-                                    </Typography>
+                                   
                                 </CardContent>
                             </CardActionArea>
                         </Card>
