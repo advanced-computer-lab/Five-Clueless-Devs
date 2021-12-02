@@ -112,6 +112,7 @@ const SearchFlightUser = ({ location }) => {
     });
     const [errorMessage, setErrorMessage] = useState('');
 
+    const [selectedSeats, setSelectedSeats] = useState([]);
 
 
     useEffect(() => {
@@ -158,10 +159,10 @@ const SearchFlightUser = ({ location }) => {
     //         })
     // }, [flight])
 
-    useEffect((e) => { 
+    useEffect((e) => {
         setResult([]);
         setReturnResult([]);
-    }, [adultsNumber,childNumber,chosenClass]);
+    }, [adultsNumber, childNumber, chosenClass]);
 
     const onChooseReturnDate = (e) => {
         setReturnDate(e.target.value);
@@ -626,14 +627,14 @@ const SearchFlightUser = ({ location }) => {
                     </Box>
                 </div>
                 <div>
-                    <FlightSeats 
-                        from = {selectedDeptFlight}
-                        setFrom = {setSelectedDeptFlight}
-                        to = {selectedRetFlight}
-                        setTo = {setSelectedRetFlight}
-                        maxSeats = {adultsNumber + childNumber}
-                        setView = {(num) => setView(num)}
-                        cabin = {chosenClass}
+                    <FlightSeats
+                        from={selectedDeptFlight}
+                        setFrom={setSelectedDeptFlight}
+                        to={selectedRetFlight}
+                        setTo={setSelectedRetFlight}
+                        maxSeats={adultsNumber + childNumber}
+                        setView={(num) => setView(num)}
+                        cabin={chosenClass}
                     />
                 </div>
             </>
