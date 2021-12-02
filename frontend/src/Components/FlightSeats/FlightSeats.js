@@ -115,7 +115,7 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo }) => 
                 .then(res => {
                     console.log(res.data);
                     if (type === 'Arrival') {
-                        setView(4);
+                        setView(5);
                         setTo(tmpFlight);
                     } else {
                         setFrom(tmpFlight);

@@ -14,6 +14,7 @@ import Box from '@mui/material/Box';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Itinerary from './Itinerary';
+import Summary from './Summary';
 import FlightSeats from './FlightSeats/FlightSeats';
 import { set } from 'mongoose';
 
@@ -36,6 +37,7 @@ const SearchFlightUser = ({ location }) => {
     const steps = [
         'Search & Select Departure Flight',
         'Select Return Flight',
+        'View Summary',
         'Select Seats',
         'View Your Itinerary',
 
@@ -111,6 +113,8 @@ const SearchFlightUser = ({ location }) => {
         duration: ''
     });
     const [errorMessage, setErrorMessage] = useState('');
+    //counter for itinerary
+    const[forChosenSeats, setForChosenSeats] = useState(0);
 
     const [selectedSeats, setSelectedSeats] = useState([]);
 
@@ -611,13 +615,172 @@ const SearchFlightUser = ({ location }) => {
             </>
         );
     }
-
     else if (view == 3) {
+        return (<>
+
+            <div className="stepper-space"><Box sx={{ width: '100%' }}>
+                <Stepper activeStep={2} alternativeLabel>
+                    {steps.map((label) => (
+                        <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                        </Step>
+                    ))}
+                </Stepper>
+            </Box></div>
+            <div className="row" >
+                <div className="column">
+                    <p className="selected-depart">Selected Departure Flight:</p>
+
+
+
+                    <Card sx={{ maxWidth: 500 }}>
+                        <CardActionArea>
+
+
+                            <CardContent>
+                                <div className="left-container">
+
+                                    <div className="left-image">
+                                        <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
+                                            alt="airplaneDepart"
+                                            width="27px"
+                                            height="27px"
+                                        />
+                                    </div>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {deptFlightFrom} ({deptFlightDeptTime})
+                                    </Typography>
+                                    <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
+                                        alt="arrow"
+                                        width="40px"
+                                        height="27px" />
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {deptFlightTo} ({deptFlightArrivalTime})
+                                    </Typography>
+                                </div>
+                                <Typography variant="body2" color="text.secondary">
+                                    Duration: {getDuration(selectedDeptFlight)}
+                                </Typography>
+                                <Typography>
+                                    <button className="editButton" type="button" onClick={editDept}>Edit</button>
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                </div>
+                <div className="column">
+                    <p className="selected-return">Selected Return Flight:</p>
+                    <Card sx={{ maxWidth: 500 }}>
+                        <CardActionArea>
+
+
+                            <CardContent>
+                                <div className="middle-container">
+
+                                    <div className="left-image">
+                                        <img className="flip-image" src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
+                                            alt="airplaneDepart"
+                                            width="27px"
+                                            height="27px"
+                                        />
+                                    </div>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {retFlightFrom} ({retFlightDeptTime})
+                                    </Typography>
+                                    <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
+                                        alt="arrow"
+                                        width="40px"
+                                        height="27px" />
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {retFlightTo} ({retFlightArrivalTime})
+                                    </Typography>
+                                </div>
+                                <Typography variant="body2" color="text.secondary">
+                                    Duration: {getDuration(selectedRetFlight)}
+                                </Typography>
+                                <Typography>
+                                    <button className="editButton" type="button" onClick={editRet}>Edit</button>
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                </div>
+                <div className="column">
+                    <p className="selected-return">Summary:</p>
+                    <Card sx={{ maxWidth: 500 }}>
+                        <CardActionArea>
+                            <CardContent>
+                                <div className="right-container">
+                                    <div className="middle-container">
+                                        <div className="left-image">
+                                            <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
+                                                alt="airplaneDepart"
+                                                width="27px"
+                                                height="27px"
+                                            />
+                                        </div>
+                                        <Typography gutterBottom variant="h5" component="div">
+                                            {deptFlightFrom} ({deptFlightDeptTime})
+                                        </Typography>
+                                        <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
+                                            alt="arrow"
+                                            width="40px"
+                                            height="27px" />
+                                        <Typography gutterBottom variant="h5" component="div">
+                                            {deptFlightTo} ({deptFlightArrivalTime})
+                                        </Typography>
+                                    </div>
+
+                                    <div className="middle-container">
+                                        <div className="left-image">
+                                            <img className="flip-image" src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
+                                                alt="airplaneDepart"
+                                                width="27px"
+                                                height="27px"
+                                            />
+                                        </div>
+                                        <Typography gutterBottom variant="h5" component="div">
+                                            {retFlightFrom} ({retFlightDeptTime})
+                                        </Typography>
+                                        <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
+                                            alt="arrow"
+                                            width="40px"
+                                            height="27px" />
+                                        <Typography gutterBottom variant="h5" component="div">
+                                            {retFlightTo} ({retFlightArrivalTime})
+                                        </Typography>
+                                    </div>
+
+                                </div>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                </div>
+            </div>
+            <div><Summary deptFrom={deptFlightFrom} deptTo={deptFlightTo} deptFlightDeptTime={deptFlightDeptTime} deptFlightArrivalTime={deptFlightArrivalTime}
+                deptFlightDeptDate={deptFlightDeptDate} deptFlightArrivalDate={deptFlightArrivalDate} chosenClass={chosenClass} selectedDeptFlightId={selectedDeptFlightId}
+                deptFlightPrice={deptFlightPrice} retFlightPrice={retFlightPrice} retFlightDeptTime={retFlightDeptTime} retFlightDeptDate={retFlightDeptDate}
+                retFlightArrivalTime={retFlightArrivalTime}
+                retFlightArrivalDate={retFlightArrivalDate} retFlightId={selectedRetFlightId} numOfAdults={adultsNumber} numOfChildren={childNumber} 
+                forChosenSeats={forChosenSeats} selectDept={selectDept}/></div>
+
+
+
+
+
+
+
+
+
+        </>);
+    }
+
+    else if (view == 4) {
         return (
             <>
                 <div className="stepper-space">
                     <Box sx={{ width: '100%' }}>
-                        <Stepper activeStep={2} alternativeLabel>
+                        <Stepper activeStep={3} alternativeLabel>
                             {steps.map((label) => (
                                 <Step key={label}>
                                     <StepLabel>{label}</StepLabel>
@@ -641,13 +804,13 @@ const SearchFlightUser = ({ location }) => {
         )
     }//SEATS FUNC HERE
     //VIEWING SUMMARY -----------------------------------------------------------------------------------------------------------------------------------------------------------------
-    else if (view == 4) {
+    else if (view == 5) {
 
         return (
             <>
 
                 <div className="stepper-space"><Box sx={{ width: '100%' }}>
-                    <Stepper activeStep={3} alternativeLabel>
+                    <Stepper activeStep={4} alternativeLabel>
                         {steps.map((label) => (
                             <Step key={label}>
                                 <StepLabel>{label}</StepLabel>
