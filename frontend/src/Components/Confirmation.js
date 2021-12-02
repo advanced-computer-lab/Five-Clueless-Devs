@@ -7,9 +7,9 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, Table
 
 
 const Confirmation = () => {
-   /* const UserID = props.id;
-    const fromflight = props.from;
-    const toflight = props.to;
+   /* const id = props.id;
+    const from = props.from;
+    const too = props.to;
     const cabinClass = props.cabin;*/
     let id=10;
     let from=79;
