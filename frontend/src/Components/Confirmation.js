@@ -207,10 +207,10 @@ const Confirmation = () => {
             
     };
     return(
-        /*<div>
+        <div>
               <Button variant="outlined" onClick={onSubmit}>Confirm</Button>
-            </div>*/
-     <div>
+            </div>
+   /*  <div>
             <Dialog
               open={showConfirm}
               onClose={toggleDialog}
@@ -225,7 +225,7 @@ const Confirmation = () => {
                 <Button onClick={onSubmit} variant="text" color="error">Confirm</Button>
               </DialogActions>
             </Dialog>
-          </div> 
+          </div> */
     )
     }
         
