@@ -50,8 +50,8 @@ const EditUser = () => {
         axios
             .put(BACKEND_URL + 'users/update?userId=' + id, user)
             .then(res => {
-                console.log(res.data);
-                history.push('/');
+               // console.log(res.data);
+                history.push('/search');
             })
             .catch(err => {
                 console.log(err);
@@ -63,14 +63,16 @@ const EditUser = () => {
         getUser();
     }, []);
 
+    /*
     const [ sent, setSent ] = useState(false)
 	const [ text, setText ] = useState("")
-	const handleSend = async (e) => {
+    const handleSend = async (e) => {
 		setSent(true)
 		try {
             
             console.log(user);
-			await axios.post("http://localhost:8082/send_mail", {
+			//await axios.post("http://localhost:8082/send_mail", {
+                await axios.post(BACKEND_URL + 'users/send_mail' , {
 				text
 			})
 		} catch (error) {
@@ -78,7 +80,7 @@ const EditUser = () => {
 			console.error(error)
 		}
 	}
-
+*/
 
     return (
 
@@ -209,13 +211,13 @@ const EditUser = () => {
                                 </div>
                                 <div className="App">
 
-			{!sent ? (
+			{/*!sent ? (
 				<form onClick={handleSend}>
 					<button type="button">Send Email</button>
 				</form>
 			) : (
 				<h1>Email Sent</h1>
-			)}
+            )*/}
 		</div>
     
                     </form>

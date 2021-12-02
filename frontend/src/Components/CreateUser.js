@@ -221,7 +221,7 @@ class CreateUser extends Component {
 
 
                                 {
-                                    this.state.err ? <p>Cannot add user, Ensure userID is unique and all fields are filled</p> : null
+                                   /* this.state.err ? <p>Cannot add user, Ensure userID is unique and all fields are filled</p> : null*/
                                 }
                                 <div className='button'>
                                     <Button variant="outlined" type="submit">Submit</Button>

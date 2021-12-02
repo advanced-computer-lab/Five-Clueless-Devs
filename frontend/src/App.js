@@ -11,6 +11,7 @@ import CreateFlight from './Components/CreateFlight';
 import CreateUser from './Components/CreateUser'
 import SearchFlight from './Components/SearchFlight';
 import ViewFlightDetails from './Components/ViewFlightDetails';
+import ViewUserDetails from './Components/ViewUserDetails';
 import UpdateFlight from './Components/UpdateFlight';
 import EditUser from './Components/EditUser';
 import SearchFlightCriteria from './Components/SearchFlightCriteria';
@@ -39,6 +40,7 @@ function App() {
 
           <Route path='/edit-user/:id' component={EditUser} />
           <Route path='/create-user' component={CreateUser} />
+          <Route path='/user-details/:id' component={ViewUserDetails} />
          
 
         </Switch>
