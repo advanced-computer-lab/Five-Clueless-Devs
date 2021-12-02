@@ -15,10 +15,10 @@ const ViewUserDetails = () => {
 		setSent(true)
 		try {
             
-            console.log(user);
+            console.log(user.email);
 			//  BACKEND_URL + "users/search?userId=" + id)
                 await axios.post(BACKEND_URL + "users/send_mail?userId=" + id , {
-				text
+				text,to:user.email
 			})
 		} catch (error) {
             
@@ -50,8 +50,8 @@ const ViewUserDetails = () => {
     axios
       .get(BACKEND_URL + "users/search?userId=" + id)
       .then(res => {
-        console.log(res.data);
-        console.log(res.email);
+        //console.log(res.data);
+        //console.log(res.data[0].email);
         //currEmail=res.data.email;
         setUser(res.data[0] || {});
       })

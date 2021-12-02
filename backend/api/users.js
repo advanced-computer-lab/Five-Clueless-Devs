@@ -51,8 +51,9 @@ router.get('/search', (req, res) => {
 
 
 router.post('/send_mail', cors(), async (req, res) => {
-    User.find(req.query).then(user => console.log(user));
-	let { text } = req.body
+   // User.find(req.query).then(user => console.log(user));
+	let { text,to } = req.body
+    //console.log(to);
 	const transport = nodemailer.createTransport({
 		host: process.env.MAIL_HOST,
 		port: process.env.MAIL_PORT,
@@ -64,7 +65,7 @@ router.post('/send_mail', cors(), async (req, res) => {
 
 	await transport.sendMail({
 		from: process.env.MAIL_FROM,
-		to: "dado.said1@gmail.com",
+		to: to,
 		subject: "test email",
 		html: `<div className="email" style="
         border: 1px solid black;
