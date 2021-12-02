@@ -125,7 +125,7 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
                     console.log(err);
                 })
 
-            if (type == 'Departure') { 
+            if (type == 'Departure') {
                 setDeptSeats(selectedSeats);
                 setSeats([]);
                 setSelectedSeats([]);
@@ -148,24 +148,19 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
 
 
     const goBack = () => {
-        if (type === "Departure") {
-            setView(2);
-        }
-        else {
-            setSeats([]);
-            setSelectedSeats([]);
-            setType('Departure');
-        }
+        setSeats([]);
+        setSelectedSeats([]);
+        setType('Departure');
     }
 
     return (
         <div>
 
             <div className="dep-cont">
-
-                <IconButton onClick={goBack} style={{ marginBottom: 'auto' }}>
+                {type === 'Arrival' ? <IconButton onClick={goBack} style={{ marginBottom: 'auto' }}>
                     <ArrowBack />
-                </IconButton>
+                </IconButton> : null
+                }
 
                 <div className="dep-summary">
                     <Table size="small">
@@ -194,16 +189,12 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
                                 <TableCell>{flight?.departureDate?.substring(0, 10)}</TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell>Arrival Date</TableCell>
-                                <TableCell>{flight?.arrivalDate?.substring(0, 10)}</TableCell>
-                            </TableRow>
-                            <TableRow>
                                 <TableCell>Departure Time</TableCell>
                                 <TableCell>{flight?.departureTime}</TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell>Arrival Time</TableCell>
-                                <TableCell>{flight?.arrivalTime}</TableCell>
+                                <TableCell>Arrival Date</TableCell>
+                                <TableCell>{flight?.arrivalDate?.substring(0, 10)}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>Arrival Time</TableCell>
