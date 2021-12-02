@@ -86,6 +86,8 @@ const FlightCard = (props) => {
                         width="80px"
                         height="40px"
                     />
+                    <p className="flight-card-head">flight number</p>
+                    <p className="flight-card-date">{flight.flightId}</p>
                     <div className="middle-duration">
                         <img src="https://img.icons8.com/external-photo3ideastudio-lineal-photo3ideastudio/64/000000/external-flight-meeting-photo3ideastudio-lineal-photo3ideastudio.png"
                             alt="airplaneDuration"
