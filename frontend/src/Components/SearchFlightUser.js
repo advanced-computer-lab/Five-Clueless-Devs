@@ -15,6 +15,7 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Itinerary from './Itinerary';
 import FlightSeats from './FlightSeats/FlightSeats';
+import { set } from 'mongoose';
 
 
 
@@ -156,6 +157,11 @@ const SearchFlightUser = ({ location }) => {
     //             console.log(err);
     //         })
     // }, [flight])
+
+    useEffect((e) => { 
+        setResult([]);
+        setReturnResult([]);
+    }, [adultsNumber,childNumber,chosenClass]);
 
     const onChooseReturnDate = (e) => {
         setReturnDate(e.target.value);
