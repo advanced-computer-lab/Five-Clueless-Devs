@@ -179,7 +179,7 @@ const Confirmation = () => {
             .put(BACKEND_URL + 'flights/update?flightId=' + too, toflight)
             .then(res => {
                 console.log(res.data);
-                
+
               const  data={
                   UserID:id,
                   from:from,
@@ -207,10 +207,10 @@ const Confirmation = () => {
             
     };
     return(
-        <div>
+        /*<div>
               <Button variant="outlined" onClick={onSubmit}>Confirm</Button>
-            </div>
-    /* <div>
+            </div>*/
+     <div>
             <Dialog
               open={showConfirm}
               onClose={toggleDialog}
@@ -218,14 +218,14 @@ const Confirmation = () => {
               aria-describedby="alert-dialog-description"
             >
               <DialogTitle id="alert-dialog-title">
-                {"Are you sure you want to cancel the reservation?"}
+                {"Are you sure you want to reserve this flight?"}
               </DialogTitle>
               <DialogActions>
                 <Button onClick={toggleDialog} variant="text">back </Button>
-                <Button onClick={onSubmit} variant="text" color="error">cancel Reservation</Button>
+                <Button onClick={onSubmit} variant="text" color="error">Confirm</Button>
               </DialogActions>
             </Dialog>
-          </div> */
+          </div> 
     )
     }
         
