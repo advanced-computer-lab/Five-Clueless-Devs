@@ -18,6 +18,7 @@ import SearchFlightUser from './Components/SearchFlightUser';
 import ViewDetailsUser from './Components/ViewDetailsUser';
 import ReservedFlight from './Components/ReservedFlight';
 import ViewSummary from './Components/ViewSummary';
+import Confirmation from './Components/Confirmation';
 import ReservationCancel from './Components/ReservationCancel';
 function App() {
 
@@ -41,6 +42,9 @@ function App() {
           <Route path='/Reserved-flights' component={ReservedFlight} />
           <Route path='/summary/:idfrom/:idto' component={ViewSummary} />
           <Route path='/Resrevation-cancel' component={ReservationCancel} />
+          <Route path='/reserve' component={Confirmation} />
+
+
 
         </Switch>
       </Router>
