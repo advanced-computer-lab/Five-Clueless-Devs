@@ -9,7 +9,7 @@ import moment from 'moment';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 
 
-const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo }) => {
+const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDeptSeats, setRetSeats }) => {
 
     const history = useHistory();
 
@@ -125,13 +125,17 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo }) => 
                     console.log(err);
                 })
 
-            if (type == 'Departure') {
+            if (type == 'Departure') { 
+                setDeptSeats(selectedSeats);
                 setSeats([]);
                 setSelectedSeats([]);
                 setType('Arrival');
+            } else if (type === "Arrival") {
+                setRetSeats(selectedSeats)
             }
         }
     };
+
 
     const getDuration = () => {
         let depDate = moment(flight?.departureDate?.substring(0, 10) + "T" + flight?.departureTime + ":00");

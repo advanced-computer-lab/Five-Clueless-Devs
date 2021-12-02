@@ -73,6 +73,7 @@ const SearchFlightUser = ({ location }) => {
     const [deptFlightDeptTime, setDeptFlightDeptTime] = useState("");
     const [deptFlightArrivalTime, setDeptFlightArrivalTime] = useState("");
     const [deptFlightPrice, setDeptPrice] = useState(0);
+    const [deptSeats, setDeptSeats] = useState([]);
     const [selectedRetFlight, setSelectedRetFlight] = useState("");
     const [selectedRetFlightId, setRetSelectedId] = useState(0);
     const [retFlightDeptDate, setRetDeptDate] = useState("");
@@ -83,6 +84,7 @@ const SearchFlightUser = ({ location }) => {
     const [retFlightDeptTime, setRetFlightDeptTime] = useState("");
     const [retFlightArrivalTime, setRetFlightArrivalTime] = useState("");
     const [retFlightPrice, setRetPrice] = useState(0);
+    const [retSeats, setRetSeats] = useState([]);
     //info used in this component
     const [view, setView] = useState(1);
     const [chosenClass, setClass] = useState('Economy');
@@ -92,6 +94,7 @@ const SearchFlightUser = ({ location }) => {
     const [allFlights, setAll] = useState([]);
     const [returnFlightRes, setReturnResult] = useState([]);
     const [flightRes, setResult] = useState([]);
+
     const [flight, setFlight] = useState({
         flightId: '',
         from: '',
@@ -114,7 +117,7 @@ const SearchFlightUser = ({ location }) => {
     });
     const [errorMessage, setErrorMessage] = useState('');
     //counter for itinerary
-    const[forChosenSeats, setForChosenSeats] = useState(0);
+    const [forChosenSeats, setForChosenSeats] = useState(0);
 
     const [selectedSeats, setSelectedSeats] = useState([]);
 
@@ -761,8 +764,8 @@ const SearchFlightUser = ({ location }) => {
                 deptFlightDeptDate={deptFlightDeptDate} deptFlightArrivalDate={deptFlightArrivalDate} chosenClass={chosenClass} selectedDeptFlightId={selectedDeptFlightId}
                 deptFlightPrice={deptFlightPrice} retFlightPrice={retFlightPrice} retFlightDeptTime={retFlightDeptTime} retFlightDeptDate={retFlightDeptDate}
                 retFlightArrivalTime={retFlightArrivalTime}
-                retFlightArrivalDate={retFlightArrivalDate} retFlightId={selectedRetFlightId} numOfAdults={adultsNumber} numOfChildren={childNumber} 
-                forChosenSeats={forChosenSeats} selectDept={selectDept}/></div>
+                retFlightArrivalDate={retFlightArrivalDate} retFlightId={selectedRetFlightId} numOfAdults={adultsNumber} numOfChildren={childNumber}
+                forChosenSeats={forChosenSeats} selectDept={selectDept} /></div>
 
 
 
@@ -798,6 +801,8 @@ const SearchFlightUser = ({ location }) => {
                         maxSeats={adultsNumber + childNumber}
                         setView={(num) => setView(num)}
                         cabin={chosenClass}
+                        setDeptSeats={setDeptSeats}
+                        setRetSeats={setRetSeats}
                     />
                 </div>
             </>
@@ -948,11 +953,30 @@ const SearchFlightUser = ({ location }) => {
                         </Card>
                     </div>
                 </div>
-                <div><Itinerary deptFrom={deptFlightFrom} deptTo={deptFlightTo} deptFlightDeptTime={deptFlightDeptTime} deptFlightArrivalTime={deptFlightArrivalTime}
-                    deptFlightDeptDate={deptFlightDeptDate} deptFlightArrivalDate={deptFlightArrivalDate} chosenClass={chosenClass} selectedDeptFlightId={selectedDeptFlightId}
-                    deptFlightPrice={deptFlightPrice} retFlightPrice={retFlightPrice} retFlightDeptTime={retFlightDeptTime} retFlightDeptDate={retFlightDeptDate}
+                <div><Itinerary
+                    deptFrom={deptFlightFrom}
+                    deptTo={deptFlightTo}
+                    deptFlightDeptTime={deptFlightDeptTime}
+                    deptFlightArrivalTime={deptFlightArrivalTime}
+                    deptFlightDeptDate={deptFlightDeptDate}
+                    deptFlightArrivalDate={deptFlightArrivalDate}
+                    chosenClass={chosenClass}
+                    selectedDeptFlightId={selectedDeptFlightId}
+                    deptFlightPrice={deptFlightPrice}
+                    retFlightPrice={retFlightPrice}
+                    retFlightDeptTime={retFlightDeptTime}
+                    retFlightDeptDate={retFlightDeptDate}
                     retFlightArrivalTime={retFlightArrivalTime}
-                    retFlightArrivalDate={retFlightArrivalDate} retFlightId={selectedRetFlightId} numOfAdults={adultsNumber} numOfChildren={childNumber} /></div>
+                    retFlightArrivalDate={retFlightArrivalDate}
+                    retFlightId={selectedRetFlightId}
+                    numOfAdults={adultsNumber}
+                    numOfChildren={childNumber}
+                    deptSeats={deptSeats}
+                    retSeats={retSeats}
+
+                />
+
+                </div>
 
 
 
