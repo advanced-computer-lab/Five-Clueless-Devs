@@ -118,27 +118,27 @@ const ViewUserDetails = () => {
                 <TableRow>
                   {/* <th scope="row">1</th> */}
                   <TableCell>User ID</TableCell>
-                  <TableCell>{user.userId}</TableCell>
+                  <TableCell>{user?.userId}</TableCell>
                 </TableRow>
                 <TableRow>
                   {/* <th scope="row">2</th> */}
                   <TableCell>Username</TableCell>
-                  <TableCell>{user.username}</TableCell>
+                  <TableCell>{user?.username}</TableCell>
                 </TableRow>
                 <TableRow>
                   {/* <th scope="row">3</th> */}
                   <TableCell>password</TableCell>
-                  <TableCell>{user.password}</TableCell>
+                  <TableCell>{user?.password}</TableCell>
                 </TableRow>
                 <TableRow>
                   {/* <th scope="row">4</th> */}
                   <TableCell>email</TableCell>
-                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user?.email}</TableCell>
                 </TableRow>
                 <TableRow>
                   {/* <th scope="row">4</th> */}
                   <TableCell>reservations</TableCell>
-                  <TableCell>{user.reservations}</TableCell>
+                  <TableCell>{user?.reservations}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

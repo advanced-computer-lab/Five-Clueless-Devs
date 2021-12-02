@@ -33,7 +33,7 @@ const EditUser = () => {
         axios
             .get(BACKEND_URL + "users/search?userId=" + id)
             .then(res => {
-                console.log(res.data);
+                console.log(res.data[0]);
                 setUser(res.data[0]);
             })
             .catch(err => {
@@ -50,38 +50,21 @@ const EditUser = () => {
         axios
             .put(BACKEND_URL + 'users/update?userId=' + id, user)
             .then(res => {
-               // console.log(res.data);
-                history.push('/search');
+                history.push('/user-details/' + user?.userId);
+                console.log(res.data);
+               
             })
             .catch(err => {
                 console.log(err);
-                history.push('/');
             })
+            
     };
 
     useEffect(() => {
         getUser();
     }, []);
 
-    /*
-    const [ sent, setSent ] = useState(false)
-	const [ text, setText ] = useState("")
-    const handleSend = async (e) => {
-		setSent(true)
-		try {
-            
-            console.log(user);
-			//await axios.post("http://localhost:8082/send_mail", {
-                await axios.post(BACKEND_URL + 'users/send_mail' , {
-				text
-			})
-		} catch (error) {
-            
-			console.error(error)
-		}
-	}
-*/
-
+    
     return (
 
         <div className="Edit User">
@@ -96,12 +79,13 @@ const EditUser = () => {
                             <div className='criteria-form-group'>
                                 <div>
                                     <TextField
+                                        disabled
                                         id="outlined"
                                         label="User ID"
                                         className='form-control'
                                         name="userId"
-                                        value={user.userId}
-                                        onChange={(e) => onChange(e)}
+                                        value={user?.userId}
+                                       
                                     />
                                 </div>
                             </div>
@@ -113,7 +97,7 @@ const EditUser = () => {
                                             className='form-control'
                                             label='User Name'
                                             name="username"
-                                            value={user.username}
+                                            value={user?.username}
                                             onChange={(e) => onChange(e)}
                                         />
 
@@ -123,7 +107,7 @@ const EditUser = () => {
                                             label='Password'
                                             type="password"
                                             name="password"
-                                            value={user.password}
+                                            value={user?.password}
                                             onChange={(e) => onChange(e)}
                                         />
                                    
@@ -135,7 +119,7 @@ const EditUser = () => {
                                             className='form-control'
                                             label='First Name'
                                             name="firstName"
-                                            value={user.firstName}
+                                            value={user?.firstName}
                                             onChange={(e) => onChange(e)}
                                         />
 
@@ -144,7 +128,7 @@ const EditUser = () => {
                                             className='form-control'
                                             label='Last Name'
                                             name="lastName"
-                                            value={user.lastName}
+                                            value={user?.lastName}
                                             onChange={(e) => onChange(e)}
                                         />
                                    
@@ -157,7 +141,7 @@ const EditUser = () => {
                                         className='form-control'
                                         label='Home Address'
                                         name="homeAddress"
-                                        value={user.homeAddress}
+                                        value={user?.homeAddress}
                                         onChange={(e) => onChange(e)}
                                     />
 
@@ -166,7 +150,7 @@ const EditUser = () => {
                                         className='form-control'
                                         label='Country Code'
                                         name="countryCode"
-                                        value={user.countryCode}
+                                        value={user?.countryCode}
                                         onChange={(e) => onChange(e)}
                                     />
 
@@ -180,7 +164,7 @@ const EditUser = () => {
                                         className='form-control'
                                         label='Telephone number(s)'
                                         name="telephone"
-                                        value={user.telephone}
+                                        value={user?.telephone}
                                         onChange={(e) => onChange(e)}
                                     />
 
@@ -189,7 +173,7 @@ const EditUser = () => {
                                         className='form-control'
                                         label='Email Address'
                                         name="email"
-                                        value={user.email}
+                                        value={user?.email}
                                         onChange={(e) => onChange(e)}
                                     />
 
@@ -198,7 +182,7 @@ const EditUser = () => {
                                         className='form-control'
                                         label='Passport Number'
                                         name="passportNumber"
-                                        value={user.passportNumber}
+                                        value={user?.passportNumber}
                                         onChange={(e) => onChange(e)}
                                     />
                                 </div>
@@ -207,7 +191,7 @@ const EditUser = () => {
 
 
                             <div className='input-group-append'>
-                                    <Button variant="outlined" type="submit">Edit User</Button>
+                                    <Button onClick={onSubmit} variant="outlined" type="submit">Edit User</Button>
                                 </div>
                                 <div className="App">
 

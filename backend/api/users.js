@@ -51,10 +51,9 @@ router.get('/search', (req, res) => {
 
 
 router.post('/send_mail', cors(), async (req, res) => {
-   // User.find(req.query).then(user => console.log(user));
+   
 	let { text,to } = req.body
-    //console.log(to);
-	const transport = nodemailer.createTransport({
+    const transport = nodemailer.createTransport({
 		host: process.env.MAIL_HOST,
 		port: process.env.MAIL_PORT,
 		auth: {
@@ -84,9 +83,10 @@ router.post('/send_mail', cors(), async (req, res) => {
 })
 
 router.put('/update', (req, res) => {
-    console.log("User updated");
+    let { userId } = req.body
+    console.log("updating user with id: "+userId);
     User.findOneAndUpdate(req.query, req.body)
-        .then(console.log("updated succesfully"))
+        .then(res.status(200).json("updated succesfully"))
         .catch(err =>
             res.status(400).json({ error: 'Unable to update the Database' })
         );
