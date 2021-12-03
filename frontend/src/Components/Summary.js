@@ -10,7 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-const Itinerary = (props) => {
+const Summary = (props) => {
     const flight = props.flight;
 
     // const history = useHistory();
@@ -20,18 +20,12 @@ const Itinerary = (props) => {
     function createData(name, calories) {
         return { name, calories };
     }
-
-    const getSeats = (seatsList) =>{
-        let seats = seatsList?.map(s => s.number);
-        console.log(seatsList)
-        return seats?.join(', ');
-    }
     const rows = [
         createData('Flight Number', props.selectedDeptFlightId),
         createData('Departure Date and Time', props.deptFlightDeptTime + "   ,   " + props.deptFlightDeptDate.substring(0, 10)),
         createData('Arrival Date and Time', props.deptFlightArrivalTime + "  ,   " + props.deptFlightArrivalDate.substring(0, 10)),
         createData('Chosen Class', props.chosenClass),
-        createData('Chosen Seats', ` ${getSeats(props.deptSeats)}`),
+
         createData('Flight Price', props.deptFlightPrice),
 
     ];
@@ -40,9 +34,9 @@ const Itinerary = (props) => {
         createData('Departure Date and Time', props.retFlightDeptTime + "   ,   " + props.retFlightDeptDate.substring(0, 10)),
         createData('Arrival Date and Time', props.retFlightArrivalTime + "  ,   " + props.retFlightArrivalDate.substring(0, 10)),
         createData('Chosen Class', props.chosenClass),
-        createData('Chosen Seats', ` ${getSeats(props.retSeats)}`),
+
         createData('Flight Price', props.retFlightPrice),
-        
+
 
     ];
 
@@ -116,9 +110,10 @@ const Itinerary = (props) => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                    
+
                 <div>Total cost: <p> <span><b>EGP</b>{props.deptFlightPrice + props.retFlightPrice}</span></p> </div>
                 <p className="passenger-font">(for {props.numOfAdults + props.numOfChildren} passengers)</p>
+                <button class="confirm-res" onClick={props.selectDept}>Confirm Reservation</button>
             </div>
 
 
@@ -126,4 +121,4 @@ const Itinerary = (props) => {
     )
 };
 
-export default Itinerary;
+export default Summary;
