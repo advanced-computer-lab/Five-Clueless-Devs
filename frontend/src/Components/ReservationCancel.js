@@ -8,17 +8,13 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, Table
 
 const ReservationCancel = (props) => {
   const history = useHistory();
-  let from = -1;
-   from = props.from;
+  const from = props.from;
   const to = props.to;
   const userid = props.userid;
   const toSeats = props.toSeats;
   const fromSeats = props.fromSeats;
   const cabin = props.cabin;
   const reservationID = props.reservationId;
-  let fromflight={}
-  let toflight={}
-
 
   const fromObj = props.fromflight;
   const toObj = props.toflight;
@@ -27,25 +23,6 @@ const ReservationCancel = (props) => {
   let f;
   let t;
   //let{id,from,to}=useParams();
-<<<<<<< HEAD
-  // const [fromflight, setfromFlight] = useState({
-  //   availableEconomy: '',
-  //   availableBusiness: '',
-  //   availableFirst: '',
-  //   seatsBusiness: '',
-  //   seatsEconomy: '',
-  //   seatsFirst: ''
-  // });
-
-  // const [toflight, settoFlight] = useState({
-  //   availableEconomy: '',
-  //   availableBusiness: '',
-  //   availableFirst: '',
-  //   seatsBusiness: '',
-  //   seatsEconomy: '',
-  //   seatsFirst: ''
-  // });
-=======
 
   const [fromflight, setfromFlight] = useState({
     availableEconomy: '',
@@ -64,7 +41,6 @@ const ReservationCancel = (props) => {
     seatsEconomy: [],
     seatsFirst: []
   });
->>>>>>> 10bffe93cbbccf20077398d7174de6ecabef222f
   const [showConfirm, setConfirm] = useState(false);
 
   const toggleDialog = () => {
@@ -72,18 +48,7 @@ const ReservationCancel = (props) => {
   }
 
   useEffect(() => {
-<<<<<<< HEAD
-    console.log(props.toSeats)
-    console.log(props.fromSeats)
-    console.log(toSeats);
-    console.log(fromSeats);
-    console.log("helloooo")
-    OnCancel();
-    // OnCancel();
-  }, [from]);
-=======
   }, []);
->>>>>>> 10bffe93cbbccf20077398d7174de6ecabef222f
 
 
 
@@ -92,7 +57,6 @@ const ReservationCancel = (props) => {
     let SeatTo = [];
     let countFrom = 0;
     let countTo = 0;
- 
 
     for (let i = 0; i < fromSeats.length; i++) {
       if (fromSeats[i] == userid) {
@@ -118,19 +82,6 @@ const ReservationCancel = (props) => {
 
     switch (cabin) {
       case "Economy":
-<<<<<<< HEAD
-       
-         fromflight= { ...props.fromObject, availableEconomy: from.availableEconomy + countFrom, seatsEconomy: SeatFrom }
-         toflight= { ...props.toObject, availableEconomy: to.availableEconomy + countTo, seatsEconomy: SeatTo }
-        break;
-      case "First":
-         fromflight ={ ...fromflight, availableFirst: from.availableFirst + countFrom, seatsFirst: SeatFrom }
-         toflight ={ ...toflight, availableFirst: to.availableFirst + countTo, seatsFirst: SeatTo }
-        break;
-      case "Business":
-         fromflight=({ ...fromflight, availableBusiness: from.availableBusiness + countFrom, seatsBusiness: SeatFrom });
-         toflight= ({ ...toflight, availableBusiness: to.availableBusiness + countTo, seatsBusiness: SeatTo });
-=======
         // setfromFlight({ ...fromObj, availableEconomy: fromObj?.availableEconomy + countFrom, seatsEconomy: SeatFrom });
         // settoFlight({ ...toObj, availableEconomy: toObj?.availableEconomy + countTo, seatsEconomy: SeatTo });
 
@@ -149,7 +100,6 @@ const ReservationCancel = (props) => {
 
         f = { ...fromObj, availableBusiness: fromObj?.availableBusiness + countFrom, seatsBusiness: SeatFrom };
         t = { ...toObj, availableBusiness: toObj?.availableBusiness + countTo, seatsBusiness: SeatTo };
->>>>>>> 10bffe93cbbccf20077398d7174de6ecabef222f
         break;
       default:
         console.log("Something went wrong");
@@ -160,13 +110,8 @@ const ReservationCancel = (props) => {
     console.log(t);
   };
 
-<<<<<<< HEAD
-  const onSubmit = () => {
-   // e.preventDefault();
-=======
 
   const onSubmit = (e) => {
->>>>>>> 10bffe93cbbccf20077398d7174de6ecabef222f
     OnCancel();
     e.preventDefault();
     axios
@@ -197,24 +142,8 @@ const ReservationCancel = (props) => {
   };
   return (
     <div>
-      <Button variant="outlined" onClick={ OnCancel}>Cancel Reservation</Button>
+      <Button variant="outlined" onClick={onSubmit}>Cancel Reservation</Button>
     </div>
-    /* <div>
-            <Dialog
-              open={showConfirm}
-              onClose={toggleDialog}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title">
-                {"Are you sure you want to cancel the reservation?"}
-              </DialogTitle>
-              <DialogActions>
-                <Button onClick={toggleDialog} variant="text">back </Button>
-                <Button onClick={onSubmit} variant="text" color="error">cancel Reservation</Button>
-              </DialogActions>
-            </Dialog>
-          </div> */
   )
 }
 export default ReservationCancel;

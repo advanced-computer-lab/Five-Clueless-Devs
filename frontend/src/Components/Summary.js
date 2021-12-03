@@ -58,7 +58,10 @@ const Summary = (props) => {
 
         switch (cabin) {
             case "Economy":
+                console.log(numOfSeats)
+                console.log(deptFlight)
                 deptFlight = { ...deptFlight, availableEconomy: deptFlight.availableEconomy - numOfSeats };
+                console.log(deptFlight)
                 retFlight = { ...retFlight, availableEconomy: retFlight.availableEconomy - numOfSeats };
                 break;
             case "First":
