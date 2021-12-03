@@ -8,32 +8,36 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, Table
 
 const ReservationCancel = (props) => {
   const history = useHistory();
-  const from = props.from;
+  let from = -1;
+   from = props.from;
   const to = props.to;
   const userid = props.userid;
   const toSeats = props.toSeats;
   const fromSeats = props.fromSeats;
   const cabin = props.cabin;
   const reservationID = props.reservationId;
+  let fromflight={}
+  let toflight={}
+
 
   //let{id,from,to}=useParams();
-  const [fromflight, setfromFlight] = useState({
-    availableEconomy: '',
-    availableBusiness: '',
-    availableFirst: '',
-    seatsBusiness: '',
-    seatsEconomy: '',
-    seatsFirst: ''
-  });
+  // const [fromflight, setfromFlight] = useState({
+  //   availableEconomy: '',
+  //   availableBusiness: '',
+  //   availableFirst: '',
+  //   seatsBusiness: '',
+  //   seatsEconomy: '',
+  //   seatsFirst: ''
+  // });
 
-  const [toflight, settoFlight] = useState({
-    availableEconomy: '',
-    availableBusiness: '',
-    availableFirst: '',
-    seatsBusiness: '',
-    seatsEconomy: '',
-    seatsFirst: ''
-  });
+  // const [toflight, settoFlight] = useState({
+  //   availableEconomy: '',
+  //   availableBusiness: '',
+  //   availableFirst: '',
+  //   seatsBusiness: '',
+  //   seatsEconomy: '',
+  //   seatsFirst: ''
+  // });
   const [showConfirm, setConfirm] = useState(false);
 
   const toggleDialog = () => {
@@ -50,15 +54,17 @@ const ReservationCancel = (props) => {
     console.log(props.fromSeats)
     console.log(toSeats);
     console.log(fromSeats);
-    console.log("hello")
+    console.log("helloooo")
+    OnCancel();
     // OnCancel();
-  }, []);
+  }, [from]);
 
   const OnCancel = () => {
     let SeatFrom = [];
     let SeatTo = [];
     let countFrom = 0;
     let countTo = 0;
+ 
 
     for (let i = 0; i < fromSeats.length; i++) {
       if (fromSeats[i] == userid) {
@@ -82,16 +88,17 @@ const ReservationCancel = (props) => {
 
     switch (cabin) {
       case "Economy":
-        setfromFlight({ ...props.fromObject, availableEconomy: from.availableEconomy + countFrom, seatsEconomy: SeatFrom });
-        settoFlight({ ...props.toObject, availableEconomy: to.availableEconomy + countTo, seatsEconomy: SeatTo });
+       
+         fromflight= { ...props.fromObject, availableEconomy: from.availableEconomy + countFrom, seatsEconomy: SeatFrom }
+         toflight= { ...props.toObject, availableEconomy: to.availableEconomy + countTo, seatsEconomy: SeatTo }
         break;
       case "First":
-        setfromFlight({ ...fromflight, availableFirst: from.availableFirst + countFrom, seatsFirst: SeatFrom });
-        settoFlight({ ...toflight, availableFirst: to.availableFirst + countTo, seatsFirst: SeatTo });
+         fromflight ={ ...fromflight, availableFirst: from.availableFirst + countFrom, seatsFirst: SeatFrom }
+         toflight ={ ...toflight, availableFirst: to.availableFirst + countTo, seatsFirst: SeatTo }
         break;
       case "Business":
-        setfromFlight({ ...fromflight, availableBusiness: from.availableBusiness + countFrom, seatsBusiness: SeatFrom });
-        settoFlight({ ...toflight, availableBusiness: to.availableBusiness + countTo, seatsBusiness: SeatTo });
+         fromflight=({ ...fromflight, availableBusiness: from.availableBusiness + countFrom, seatsBusiness: SeatFrom });
+         toflight= ({ ...toflight, availableBusiness: to.availableBusiness + countTo, seatsBusiness: SeatTo });
         break;
       default:
         console.log("Something went wrong");
@@ -102,8 +109,8 @@ const ReservationCancel = (props) => {
     console.log(toflight)
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = () => {
+   // e.preventDefault();
     OnCancel();
     axios
       .put(BACKEND_URL + 'flights/update?flightId=' + from, fromflight)
@@ -137,7 +144,7 @@ const ReservationCancel = (props) => {
   };
   return (
     <div>
-      <Button variant="outlined" onClick={onSubmit}>Cancel Reservation</Button>
+      <Button variant="outlined" onClick={ OnCancel}>Cancel Reservation</Button>
     </div>
     /* <div>
             <Dialog
