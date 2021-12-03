@@ -8,6 +8,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, Table
 
 const ViewSummary = () => {
 
+  let Uid="10";
   const history = useHistory();
   const [fromflight, setfromFlight] = useState({
     flightId: '',
@@ -99,7 +100,7 @@ const getSummary = () =>{
           }
           //console.log(temp1);
           //console.log(temp2);
-          let Uid="10";
+   
           let SeatFrom=[];
           let SeatTo=[];
           for(let i=0;i<temp1.length;i++){
