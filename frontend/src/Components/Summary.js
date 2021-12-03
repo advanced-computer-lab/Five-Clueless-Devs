@@ -76,6 +76,8 @@ const Summary = (props) => {
                 console.log("Something went wrong");
         }
 
+        
+
 
         axios
             .put(BACKEND_URL + 'flights/update?flightId=' + deptFlight?.flightId, deptFlight)
