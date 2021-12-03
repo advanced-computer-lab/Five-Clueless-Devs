@@ -15,7 +15,6 @@ const ReservationCancel = (props) => {
   const fromSeats = props.fromSeats;
   const cabin = props.cabin;
   const reservationID = props.reservationId;
-
   //let{id,from,to}=useParams();
   const [fromflight, setfromFlight] = useState({
     availableEconomy: '',
@@ -40,16 +39,16 @@ const ReservationCancel = (props) => {
     setConfirm(!showConfirm);
   }
   useEffect(() => {
+    OnCancel();
     console.log(props.toSeats)
     console.log(props.fromSeats)
-  }, [props.toSeats]);
+  }, []);
 
   const OnCancel = () => {
     let SeatFrom = [];
     let SeatTo = [];
     let countFrom = 0;
     let countTo = 0;
-
     for (let i = 0; i < fromSeats.length; i++) {
       if (fromSeats[i] == userid) {
         SeatFrom[i] = null;
@@ -68,26 +67,30 @@ const ReservationCancel = (props) => {
       else {
         SeatTo[i] = toSeats[i];
       }
-    }
 
+    }
     switch (cabin) {
       case "Economy":
-        setfromFlight({ ...fromflight, availableEconomy: from.availableEconomy + countFrom, seatsEconomy: SeatFrom });
-        settoFlight({ ...toflight, availableEconomy: to.availableEconomy + countTo, seatsEconomy: SeatTo });
+        setfromFlight({ ...fromflight, availableEconomy: fromflight.availableEconomy + countFrom, seatsEconomy: SeatFrom });
+        settoFlight({ ...toflight, availableEconomy: toflight.availableEconomy + countTo, seatsEconomy: SeatTo });
         break;
       case "First":
-        setfromFlight({ ...fromflight, availableFirst: from.availableFirst + countFrom, seatsFirst: SeatFrom });
-        settoFlight({ ...toflight, availableFirst: to.availableFirst + countTo, seatsFirst: SeatTo });
+        setfromFlight({ ...fromflight, availableFirst: fromflight.availableFirst + countFrom, seatsFirst: SeatFrom });
+        settoFlight({ ...toflight, availableFirst: toflight.availableFirst + countTo, seatsFirst: SeatTo });
         break;
       case "Business":
-        setfromFlight({ ...fromflight, availableBusiness: from.availableBusiness + countFrom, seatsBusiness: SeatFrom });
-        settoFlight({ ...toflight, availableBusiness: to.availableBusiness + countTo, seatsBusiness: SeatTo });
+        setfromFlight({ ...fromflight, availableBusiness: fromflight.availableBusiness + countFrom, seatsBusiness: SeatFrom });
+        settoFlight({ ...toflight, availableBusiness: toflight.availableBusiness + countTo, seatsBusiness: SeatTo });
         break;
       default:
         console.log("Something went wrong");
     }
-  };
+    //setSeatsTO(SeatTo);
 
+    console.log(fromflight);
+    console.log(toflight);
+
+  };
   const onSubmit = (e) => {
     e.preventDefault();
     OnCancel();
@@ -95,31 +98,27 @@ const ReservationCancel = (props) => {
       .put(BACKEND_URL + 'flights/update?flightId=' + from, fromflight)
       .then(res => {
         console.log(res.data);
+        axios
+          .put(BACKEND_URL + 'flights/update?flightId=' + to, toflight)
+          .then(res => {
+            console.log(res.data);
+            axios
+              .delete(BACKEND_URL + "reservations/cancelReservation?_id=" + reservationID)
+              .then(res => {
+                history.push("/Reserved-flights");
+              })
+              .catch(err => {
+                console.log("Error form Cancel Resrevation");
+                console.log(err);
+              })
+          })
+          .catch(err => {
+            console.log(err);
+          })
       })
       .catch(err => {
         console.log(err);
       })
-
-    axios
-      .put(BACKEND_URL + 'flights/update?flightId=' + to, toflight)
-      .then(res => {
-        console.log(res.data);
-      })
-      .catch(err => {
-        console.log(err);
-      })
-
-    axios
-      .delete(BACKEND_URL + "reservations/cancelReservation?_id=" + reservationID)
-      .then(res => {
-        console.log(res);
-        //history.push("/Reserved-flights");
-      })
-      .catch(err => {
-        console.log("Error form Cancel Resrevation");
-        console.log(err);
-      })
-
   };
   return (
     <div>

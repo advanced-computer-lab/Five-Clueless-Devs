@@ -177,6 +177,7 @@ const ViewSummary = () => {
                 temp2 = temptoBusiness;
             }
             setToSeatsArray(temp2);
+            // console.log(temp2)
 
             let SeatTo = [];
 
@@ -391,8 +392,17 @@ const ViewSummary = () => {
             </Link>
             <br /> */}
             <div>
-              <ReservationCancel fromSeats={fromSeatsArray} toSeats={toSeatsArray}
-                from={fromflight?.flightId} to={toflight?.flightId} userid={Uid} cabin={reservation?.cabin} reservationId={reservationId} />
+              <ReservationCancel
+                fromSeats={fromSeatsArray}
+                toSeats={toSeatsArray}
+                from={fromflight?.flightId}
+                to={toflight?.flightId}
+                userid={Uid}
+                cabin={reservation?.cabin}
+                reservationId={reservationId}
+                fromflight={fromflight}
+                toflight={toflight}
+              />
             </div>
 
           </div>
