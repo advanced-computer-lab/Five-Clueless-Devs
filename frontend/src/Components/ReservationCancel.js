@@ -10,7 +10,11 @@ const ReservationCancel = (props) => {
     const history = useHistory();
     const from = props.from;
     const to = props.to;
-    const userid=props.id;
+    const userid=props.userid;
+    const toSeats=props.toSeats;
+    const fromSeats=props.fromSeats;
+    const cabin=props.cabin;
+    const reservationID=props.reservationId;
     //let{id,from,to}=useParams();
     const [fromflight, setfromFlight] = useState({
         availableEconomy: '',
@@ -35,95 +39,35 @@ const ReservationCancel = (props) => {
     setConfirm(!showConfirm);
   }
     useEffect(() => {
-        OnCancel();
+        //OnCancel();
+        console.log(props.toSeats)
+        console.log(props.fromSeats)
     }, []);
 const OnCancel = () => {
-    
-    
-    var tempFromEconomy=[];
-    var tempFromFirst=[];
-    var tempFromBusiness=[];
-    var temptoEconomy=[];
-    var temptoFirst=[];
-    var temptoBusiness=[];
-    
-    axios
-      .get(BACKEND_URL + "flights/search?flightId=" + from)
-      .then(res => {
-        //console.log(res.data[0]);
-        tempFromEconomy=[...res.data[0].seatsEconomy];
-        tempFromFirst=[...res.data[0].seatsFirst];
-        tempFromBusiness=[...res.data[0].seatsBusiness];
-
-         //console.log(tempFromEconomy);
-        // console.log(tempFromFirst);
-        // console.log(tempFromBusiness);
-        // setfromFlight(res.data[0] || {});
-        axios
-        .get(BACKEND_URL + "flights/search?flightId=" +to)
-        .then(res => {
-         // console.log(res.data[0]);
-          temptoEconomy=[...res.data[0].seatsEconomy];
-          temptoFirst=[...res.data[0].seatsFirst];
-          temptoBusiness=[...res.data[0].seatsBusiness];
-        //   settoFlight(res.data[0] || {});
-        })
-        .catch(err => {
-          console.log(err);
-        })
-       // console.log(tempFromEconomy);
-        axios.get(BACKEND_URL + "reservations/GetReservation?UserID="+userid+"&from="+from+"&to="+to)
-        .then(res => {
-        //    setReservation(res.data[0]);
-            var temp1=[];
-            var temp2=[];
-          console.log(res.data[0]._id);
-          //temp=[...res.data];
-          let cabinclass="";
-          //console.log(tempFromEconomy);
-          switch(res.data[0].cabin){
-              case "Economy":
-                  temp1=tempFromEconomy;
-                  temp2=temptoEconomy;
-                  cabinclass="Economy";
-                  break;
-              case "First":
-                  temp1=tempFromFirst;
-                  temp2=temptoFirst;
-                  cabinclass="First";
-                  break;
-              case "Business":
-                  temp1=tempFromBusiness;
-                  temp2=temptoBusiness;
-                  cabinclass="Business";
-          }
-          //console.log(temp1);
-          //console.log(temp2);
-          //let Uid="10";
           let SeatFrom=[];
           let SeatTo=[];
           let countFrom=0;
           let countTo=0;
-          for(let i=0;i<temp1.length;i++){
-              if(temp1[i]==userid){
+          for(let i=0;i<fromSeats.length;i++){
+              if(fromSeats[i]==userid){
                   SeatFrom[i]=null;
                   countFrom++;
               }
               else
-              SeatFrom[i]=temp1[i];
+              SeatFrom[i]=fromSeats[i];
           }
           //setSeatsFrom(SeatFrom);
           //console.log(SeatFrom);
-          for(let i=0;i<temp2.length;i++){
-            if(temp2[i]==userid){
+          for(let i=0;i<toSeats.length;i++){
+            if(toSeats[i]==userid){
                 SeatTo[i]=null;
                 countTo++;}
             else{
-                SeatTo[i]=temp2[i];
+                SeatTo[i]=toSeats[i];
             }
                 
             }
-        switch(cabinclass){
+        switch(cabin){
             case "Economy":
                 setfromFlight({...fromflight,availableEconomy:fromflight.availableEconomy+countFrom,seatsEconomy:SeatFrom});
                 settoFlight({...toflight,availableEconomy:toflight.availableEconomy+countTo,seatsEconomy:SeatTo});
@@ -140,14 +84,8 @@ const OnCancel = () => {
                 console.log("Something went wrong");
         }
         //setSeatsTO(SeatTo);
-        })
-        .catch(err => {
-          console.log(err);
-        })
-      })
-      .catch(err => {
-        console.log(err);
-      })
+        
+      
       
 
   };
@@ -162,7 +100,7 @@ const OnCancel = () => {
         .then(res => {
             console.log(res.data);
     axios
-        .delete(BACKEND_URL + "reservations/cancelReservation?UserID=" + userid+"&from"+from+"&to"+to)
+        .delete(BACKEND_URL + "reservations/cancelReservation?_id.=" + reservationID)
         .then(res => {
         history.push("/Reserved-flights");
       })
@@ -181,7 +119,7 @@ const OnCancel = () => {
 };
 return(
     <div>
-          <Button variant="outlined" onClick={onSubmit}>cancel</Button>
+          <Button variant="outlined" onClick={onSubmit}>Cancel Reservation</Button>
         </div>
 /* <div>
         <Dialog

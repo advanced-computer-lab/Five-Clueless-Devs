@@ -4,20 +4,21 @@ import '../App.css';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import ReservationCancel from './ReservationCancel';
 
 
 
 const ViewSummary = () => {
 
-  let Uid = 4;//localStorage.getItem('userId') || 10;
+  let Uid = localStorage.getItem('userId') || 10;
   console.log(Uid);
-  
+
   // david edited this part to add the send mail functionality
   let currEmail = "";
-  
+
   const [sent, setSent] = useState(false)
   const [text, setText] = useState("")
-  const [email,setEmail]= useState("")
+  const [email, setEmail] = useState("")
   const handleSend = async (e) => {
     setSent(true)
     try {
@@ -60,6 +61,8 @@ const ViewSummary = () => {
   const [seatsFrom, setSeatsFrom] = useState();
   const [seatsTO, setSeatsTO] = useState();
   const [bookingId, setBookingId] = useState("");
+  const [fromSeatsArray, setFromSeatsArray] = useState([]);
+  const [toSeatsArray, setToSeatsArray] = useState([]);
 
   // let { idfrom, idto } = useParams();
   let { reservationId } = useParams();
@@ -80,8 +83,9 @@ const ViewSummary = () => {
       })
   }, []);
 
-  const Tocancel = () => {
+  const toCancel = () => {
     console.log("cancel");
+
     handleSend();
   }
 
@@ -105,19 +109,19 @@ const ViewSummary = () => {
         var temp1 = [];
         var temp2 = [];
         console.log(res.data[0]._id);
-        switch (res.data[0].cabin) {
-          case "Economy":
-            temp1 = tempFromEconomy;
-            temp2 = temptoEconomy;
-            break;
-          case "First":
-            temp1 = tempFromFirst;
-            temp2 = temptoFirst;
-            break;
-          case "Business":
-            temp1 = tempFromBusiness;
-            temp2 = temptoBusiness;
-        }
+        // switch (res.data[0].cabin) {
+        //   case "Economy":
+        //     temp1 = tempFromEconomy;
+        //     temp2 = temptoEconomy;
+        //     break;
+        //   case "First":
+        //     temp1 = tempFromFirst;
+        //     temp2 = temptoFirst;
+        //     break;
+        //   case "Business":
+        //     temp1 = tempFromBusiness;
+        //     temp2 = temptoBusiness;
+        // }
 
 
 
@@ -138,6 +142,7 @@ const ViewSummary = () => {
               case "Business":
                 temp1 = tempFromBusiness;
             }
+            setFromSeatsArray(temp1);
 
             let SeatFrom = [];
             for (let i = 0; i < temp1.length; i++) {
@@ -172,6 +177,7 @@ const ViewSummary = () => {
               case "Business":
                 temp2 = temptoBusiness;
             }
+            setToSeatsArray(temp2);
 
             let SeatTo = [];
 
@@ -191,6 +197,7 @@ const ViewSummary = () => {
       .catch(err => {
         console.log(err);
       })
+    setText("Amount Refunded:" + reservation?.price)
   }
   const getSeatNumber = (i) => {
     let letter = String.fromCharCode('A'.charCodeAt(0) + i % 6);
@@ -385,7 +392,8 @@ const ViewSummary = () => {
             </Link>
             <br /> */}
             <div>
-              <Button variant="outlined" onClick={Tocancel}>Cancel Reserevation</Button>
+              <ReservationCancel fromSeats={fromSeatsArray} toSeats={toSeatsArray}
+                from={fromflight?.flightId} to={toflight?.flightId} userid={Uid} cabin={reservation?.cabin} reservationId={reservationId} />
             </div>
 
           </div>
