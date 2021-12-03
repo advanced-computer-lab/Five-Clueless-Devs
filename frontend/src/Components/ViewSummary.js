@@ -393,7 +393,8 @@ const ViewSummary = () => {
             <br /> */}
             <div>
               <ReservationCancel fromSeats={fromSeatsArray} toSeats={toSeatsArray}
-                from={fromflight?.flightId} to={toflight?.flightId} userid={Uid} cabin={reservation?.cabin} reservationId={reservationId} />
+                from={fromflight?.flightId} to={toflight?.flightId} userid={Uid} cabin={reservation?.cabin} reservationId={reservationId}
+                fromObject={fromflight} toObject={toflight} />
             </div>
 
           </div>

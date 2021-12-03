@@ -29,6 +29,7 @@ const SearchFlightCriteria = ({ location }) => {
   useEffect(() => {
 
     localStorage.setItem('userId', 50);
+
     
     axios
       .get(BACKEND_URL + "flights/search?")

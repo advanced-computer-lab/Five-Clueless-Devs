@@ -33,15 +33,6 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
     useEffect(() => {
         console.log("Print id: " + flight?.flightId);
         setFlight(from);
-        // axios
-        //     .get(BACKEND_URL + "flights/search?flightId=" + flightId)
-        //     .then(res => {
-        //         console.log(res.data);
-        //         setFlight(res.data[0] || {});
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //     })
     }, []);
 
     useEffect(() => {
@@ -117,22 +108,24 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
                     if (type === 'Arrival') {
                         setView(5);
                         setTo(tmpFlight);
+                        setRetSeats(selectedSeats)
                     } else {
                         setFrom(tmpFlight);
+                        setDeptSeats(selectedSeats);
+                        setSeats([]);
+                        setSelectedSeats([]);
+                        setType('Arrival');
                     }
                 })
                 .catch(err => {
                     console.log(err);
                 })
 
-            if (type == 'Departure') {
-                setDeptSeats(selectedSeats);
-                setSeats([]);
-                setSelectedSeats([]);
-                setType('Arrival');
-            } else if (type === "Arrival") {
-                setRetSeats(selectedSeats)
-            }
+            // if (type == 'Departure') {
+
+            // } else if (type === "Arrival") {
+               
+            // }
         }
     };
 
