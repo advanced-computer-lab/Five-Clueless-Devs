@@ -17,8 +17,16 @@ import EditUser from './Components/EditUser';
 import SearchFlightCriteria from './Components/SearchFlightCriteria';
 import Navbar from './Components/NavBar';
 import FlightSchedule from './Components/FlightSchedule';
-import SearchFlightUser from './Components/SearchFlightUser';
 
+import SearchFlightUser from './Components/SearchFlightUser';
+import FlightSeats from './Components/FlightSeats/FlightSeats';
+
+
+import ViewDetailsUser from './Components/ViewDetailsUser';
+import ReservedFlight from './Components/ReservedFlight';
+import ViewSummary from './Components/ViewSummary';
+import Confirmation from './Components/Confirmation';
+import ReservationCancel from './Components/ReservationCancel';
 function App() {
 
   return (
@@ -42,6 +50,17 @@ function App() {
           <Route path='/create-user' component={CreateUser} />
           <Route path='/user-details/:id' component={ViewUserDetails} />
          
+          
+          <Route path='/select-seats' component={FlightSeats} />
+          <Route path='/search-user' component={SearchFlightUser} />
+          
+          <Route path='/details-user/:id' component={ViewDetailsUser} />
+          <Route path='/Reserved-flights' component={ReservedFlight} />
+          <Route path='/summary/:idfrom/:idto' component={ViewSummary} />
+          <Route path='/Resrevation-cancel' component={ReservationCancel} />
+          <Route path='/reserve' component={Confirmation} />
+
+
 
         </Switch>
       </Router>

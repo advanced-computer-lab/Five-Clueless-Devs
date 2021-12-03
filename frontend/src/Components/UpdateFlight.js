@@ -23,7 +23,10 @@ const UpdateFlight = () => {
         availableBusiness: '',
         availableFirst: '',
         arrivalTerminal: '',
-        departureTerminal: ''
+        departureTerminal: '',
+        seatsEconomy: [],
+        seatsBusiness: [],
+        seatsFirst: []
     });
     let { id } = useParams();
 
@@ -42,6 +45,33 @@ const UpdateFlight = () => {
     }
 
     const onChange = (e) => {
+        if(e.target.name == 'availableEconomy'){
+            let tmp = flight.seatsEconomy;
+            let i = e.target.value*1 - flight.availableEconomy;
+            while(i > 0){
+                tmp.push(null);
+                i--;
+            }
+            setFlight({ ...flight, seatsEconomy: tmp })
+        }
+        else if(e.target.name == 'availableFirst'){
+            let tmp = flight.seatsFirst;
+            let i = e.target.value*1 - flight.availableFirst;
+            while(i > 0){
+                tmp.push(null);
+                i--;
+            }
+            setFlight({ ...flight, seatsFirst: tmp })
+        }
+        else if(e.target.name == 'availableBusiness'){
+            let tmp = flight.seatsBusiness;
+            let i = e.target.value*1 - flight.availableBusiness;
+            while(i > 0){
+                tmp.push(null);
+                i--;
+            }
+            setFlight({ ...flight, seatsBusiness: tmp })
+        }
         setFlight({ ...flight, [e.target.name]: e.target.value });
     };
 
@@ -97,10 +127,6 @@ const UpdateFlight = () => {
                                         value={flight.from}
                                         onChange={(e) => onChange(e)}
                                     />
-
-
-
-
 
                                     <TextField
                                         id="outlined"

@@ -66,14 +66,16 @@ class CreateUser extends Component {
                     email: '',
                     passportNumber: '',
                     isAdmin: false,
-                    reservations: '',
+                    reservations: ''
                 })
-                this.props.history.push('/create-user');
+               
             })
             .catch(err => {
                 console.log(err);
                 this.setState({['err']: 'error'})
             })
+            console.log(data.userId);
+            this.props.history.push('/user-details/'+ data.userId);
     };
 
     render() {

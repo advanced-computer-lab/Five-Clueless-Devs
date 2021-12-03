@@ -73,7 +73,7 @@ const FlightSchema = new mongoose.Schema({
     },
     duration: {
         type: String,
-        required: true
+        required: false
     },
 });
 

@@ -45,6 +45,8 @@ router.delete('/deleteFlight', (req, res) => {
     Flight.deleteOne({ ...req.query })
         .then(flight => res.json(flight))
         .catch(err => res.status(404).json(err));
-})
+});
+
+
 
 module.exports = router;
