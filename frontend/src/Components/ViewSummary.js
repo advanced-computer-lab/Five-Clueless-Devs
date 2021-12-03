@@ -11,7 +11,6 @@ import ReservationCancel from './ReservationCancel';
 const ViewSummary = () => {
 
   let Uid = localStorage.getItem('userId') || 10;
-  console.log(Uid);
 
   // david edited this part to add the send mail functionality
   let currEmail = "";
@@ -142,6 +141,7 @@ const ViewSummary = () => {
               case "Business":
                 temp1 = tempFromBusiness;
             }
+
             setFromSeatsArray(temp1);
 
             let SeatFrom = [];
@@ -178,6 +178,7 @@ const ViewSummary = () => {
                 temp2 = temptoBusiness;
             }
             setToSeatsArray(temp2);
+            // console.log(temp2)
 
             let SeatTo = [];
 
@@ -392,9 +393,18 @@ const ViewSummary = () => {
             </Link>
             <br /> */}
             <div>
-              <ReservationCancel fromSeats={fromSeatsArray} toSeats={toSeatsArray}
-                from={fromflight?.flightId} to={toflight?.flightId} userid={Uid} cabin={reservation?.cabin} reservationId={reservationId}
-                fromObject={fromflight} toObject={toflight} />
+              <ReservationCancel
+                fromSeats={fromSeatsArray}
+                toSeats={toSeatsArray}
+                from={fromflight?.flightId}
+                to={toflight?.flightId}
+                userid={Uid}
+                cabin={reservation?.cabin}
+                reservationId={reservationId}
+                fromflight={fromflight}
+                toflight={toflight}
+              />
+
             </div>
 
           </div>
