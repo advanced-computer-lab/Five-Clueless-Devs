@@ -17,11 +17,13 @@ const ReservedFlight = () => {
     }, []);
     //let { id } = useParams();
 
+    let Uid = localStorage.getItem('userId') || 10;
+
     const getReservetion = () => {
         let fromtemp = [];
         let totemp = [];
 
-        axios.get(BACKEND_URL + "reservations/GetReservation?UserID=" + 5)
+        axios.get(BACKEND_URL + "reservations/GetReservation?UserID=" + Uid)
             .then(res => {
                 var temp = [];
                 //  console.log(res.data);

@@ -8,7 +8,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, Table
 
 const ViewSummary = () => {
 
-  let Uid = "10";
+  let Uid = localStorage.getItem('userId') || 10;
   const history = useHistory();
   const [fromflight, setfromFlight] = useState({
     flightId: '',
@@ -64,9 +64,6 @@ const ViewSummary = () => {
         var temp1 = [];
         var temp2 = [];
         console.log(res.data[0]._id);
-        //temp=[...res.data];
-        let test = "Economy";
-        //console.log(tempFromEconomy);
         switch (res.data[0].cabin) {
           case "Economy":
             temp1 = tempFromEconomy;
@@ -80,51 +77,71 @@ const ViewSummary = () => {
             temp1 = tempFromBusiness;
             temp2 = temptoBusiness;
         }
-        //console.log(temp1);
-        //console.log(temp2);
 
-        let SeatFrom = [];
-        let SeatTo = [];
-        for (let i = 0; i < temp1.length; i++) {
-          if (temp1[i] == Uid) {
-            SeatFrom.push(getSeatNumber(i));
-          }
-        }
-        var seatFromAsString = SeatFrom.join(', ');
-        setSeatsFrom(seatFromAsString);
-        //console.log(SeatFrom);
-        for (let i = 0; i < temp2.length; i++) {
-          if (temp2[i] == Uid) {
-            SeatTo.push(getSeatNumber(i));
-          }
-        }
-        var seatToAsString = SeatTo.join(', ');
-        setSeatsTO(seatToAsString);
-
+       
 
         axios
           .get(BACKEND_URL + "flights/search?flightId=" + res.data[0].from)
-          .then(res => {
-            //console.log(res.data[0]);
-            tempFromEconomy = [...res.data[0].seatsEconomy];
-            tempFromFirst = [...res.data[0].seatsFirst];
-            tempFromBusiness = [...res.data[0].seatsBusiness];
+          .then(resFrom => {
+            tempFromEconomy = [...resFrom.data[0].seatsEconomy];
+            tempFromFirst = [...resFrom.data[0].seatsFirst];
+            tempFromBusiness = [...resFrom.data[0].seatsBusiness];
 
-            //console.log(tempFromEconomy);
-            // console.log(tempFromFirst);
-            // console.log(tempFromBusiness);
-            setfromFlight(res.data[0] || {})
+            switch (res.data[0].cabin) {
+              case "Economy":
+                temp1 = tempFromEconomy;
+                break;
+              case "First":
+                temp1 = tempFromFirst;
+                break;
+              case "Business":
+                temp1 = tempFromBusiness;
+            }
+
+            let SeatFrom = [];
+            for (let i = 0; i < temp1.length; i++) {
+              if (temp1[i] == Uid) {
+                SeatFrom.push(getSeatNumber(i));
+              }
+            }
+            console.log(SeatFrom)
+            var seatFromAsString = SeatFrom.join(', ');
+            setSeatsFrom(seatFromAsString);
+            setfromFlight(resFrom.data[0] || {})
           }).catch(err => {
             console.log(err);
           })
+
+
         axios
           .get(BACKEND_URL + "flights/search?flightId=" + res.data[0].to)
-          .then(res => {
+          .then(resTo => {
             // console.log(res.data[0]);
-            temptoEconomy = [...res.data[0].seatsEconomy];
-            temptoFirst = [...res.data[0].seatsFirst];
-            temptoBusiness = [...res.data[0].seatsBusiness];
-            settoFlight(res.data[0] || {});
+            temptoEconomy = [...resTo.data[0].seatsEconomy];
+            temptoFirst = [...resTo.data[0].seatsFirst];
+            temptoBusiness = [...resTo.data[0].seatsBusiness];
+
+            switch (res.data[0].cabin) {
+              case "Economy":
+                temp2 = temptoEconomy;
+                break;
+              case "First":
+                temp2 = temptoFirst;
+                break;
+              case "Business":
+                temp2 = temptoBusiness;
+            }
+
+            let SeatTo = [];
+
+            for (let i = 0; i < temp2.length; i++) {
+              if (temp2[i] == Uid) {
+                SeatTo.push(getSeatNumber(i));
+              }
+            }
+            var seatToAsString = SeatTo.join(', ');
+            setSeatsTO(seatToAsString);
+            settoFlight(resTo.data[0] || {});
           })
           .catch(err => {
             console.log(err);
@@ -186,8 +203,8 @@ const ViewSummary = () => {
           </div>
         </div>
         <div>
-          <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", margin:"10px" }}>
-            <div style={{margin:"0 25px"}}>
+          <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", margin: "10px" }}>
+            <div style={{ margin: "0 25px" }}>
               <Table sx={{ maxWidth: 500 }} className="table table-hover table-dark">
                 <h1> Departure Flight </h1>
                 <TableBody>
@@ -209,12 +226,12 @@ const ViewSummary = () => {
                   <TableRow>
                     {/* <th scope="row">4</th> */}
                     <TableCell>Departure Date</TableCell>
-                    <TableCell>{fromflight?.departureDate.substring(0, 10)}</TableCell>
+                    <TableCell>{fromflight?.departureDate?.substring(0, 10)}</TableCell>
                   </TableRow>
                   <TableRow>
                     {/* <th scope="row">5</th> */}
                     <TableCell>Arrival Date</TableCell>
-                    <TableCell>{fromflight?.arrivalDate.substring(0, 10)}</TableCell>
+                    <TableCell>{fromflight?.arrivalDate?.substring(0, 10)}</TableCell>
                   </TableRow>
                   <TableRow>
                     {/* <th scope="row">6</th> */}
@@ -249,7 +266,7 @@ const ViewSummary = () => {
                 </TableBody>
               </Table>
             </div>
-            <div style={{margin:"0 25px"}}>
+            <div style={{ margin: "0 25px" }}>
               <Table>
                 <h1> Return Flight </h1>
                 <TableBody>
@@ -271,12 +288,12 @@ const ViewSummary = () => {
                   <TableRow>
                     {/* <th scope="row">4</th> */}
                     <TableCell>Departure Date</TableCell>
-                    <TableCell>{toflight.departureDate.substring(0, 10)}</TableCell>
+                    <TableCell>{toflight.departureDate?.substring(0, 10)}</TableCell>
                   </TableRow>
                   <TableRow>
                     {/* <th scope="row">5</th> */}
                     <TableCell>Arrival Date</TableCell>
-                    <TableCell>{toflight.arrivalDate.substring(0, 10)}</TableCell>
+                    <TableCell>{toflight.arrivalDate?.substring(0, 10)}</TableCell>
                   </TableRow>
                   <TableRow>
                     {/* <th scope="row">6</th> */}

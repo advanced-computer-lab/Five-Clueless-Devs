@@ -53,7 +53,7 @@ const Summary = (props) => {
         let retFlight = props.retFlight;
 
         //-------------------------------
-        let id = 5;
+        let Uid = localStorage.getItem('userId') || 10;
         //-------------------------------
 
         switch (cabin) {
