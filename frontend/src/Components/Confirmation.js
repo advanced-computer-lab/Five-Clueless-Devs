@@ -36,6 +36,7 @@ const Confirmation = () => {
     seatsEconomy: '',
     seatsFirst: ''
   });
+
   const [showConfirm, setConfirm] = useState(false);
 
   const toggleDialog = () => {
@@ -73,9 +74,6 @@ const Confirmation = () => {
         tempAvailableF = res.data[0].availableFirst;
         console.log(tempFromEconomy);
         console.log(tempAvailableE);
-        // console.log(tempFromFirst);
-        // console.log(tempFromBusiness);
-        // setfromFlight(res.data[0] || {});
         axios
           .get(BACKEND_URL + "flights/search?flightId=" + too)
           .then(res => {
@@ -88,7 +86,6 @@ const Confirmation = () => {
             temptoAvailableF = res.data[0].availableFirst;
             console.log(temptoEconomy);
             console.log(temptoAvailableE);
-            //   settoFlight(res.data[0] || {});
           })
           .catch(err => {
             console.log(err);

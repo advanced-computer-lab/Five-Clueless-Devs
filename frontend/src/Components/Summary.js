@@ -9,6 +9,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import axios from 'axios';
+import { BACKEND_URL } from '../API/URLS';
 
 const Summary = (props) => {
     const flight = props.flight;
@@ -36,9 +38,80 @@ const Summary = (props) => {
         createData('Chosen Class', props.chosenClass),
 
         createData('Flight Price', props.retFlightPrice),
-
-
     ];
+
+    const onConfirm = (e) => {
+        let numOfAdults = props.numOfAdults
+        let numOfChildren = props.numOfChildren;
+        let numOfSeats = numOfAdults + numOfChildren;
+        console.log(props)
+        let cabin = props.chosenClass;
+
+        let deptFlight = props.deptFlight;
+        let retFlight = props.retFlight;
+
+        //-------------------------------
+        let id = 5;
+        //-------------------------------
+
+        switch (cabin) {
+            case "Economy":
+                deptFlight = { ...deptFlight, availableEconomy: deptFlight.availableEconomy - numOfSeats };
+                retFlight = { ...retFlight, availableEconomy: retFlight.availableEconomy - numOfSeats };
+                break;
+            case "First":
+                deptFlight = { ...deptFlight, availableFirst: deptFlight.availableEconomy - numOfSeats };
+                retFlight = { ...retFlight, availableFirst: retFlight.availableEconomy - numOfSeats };
+                break;
+            case "Business":
+                deptFlight = { ...deptFlight, availableBusiness: deptFlight.availableEconomy - numOfSeats };
+                retFlight = { ...retFlight, availableBusiness: retFlight.availableEconomy - numOfSeats };
+                break;
+            default:
+                console.log("Something went wrong");
+        }
+
+
+        axios
+            .put(BACKEND_URL + 'flights/update?flightId=' + deptFlight?.flightId, deptFlight)
+            .then(res => {
+                console.log(res.data);
+
+                axios
+                    .put(BACKEND_URL + 'flights/update?flightId=' + retFlight?.flightId, retFlight)
+                    .then(res => {
+                        console.log(res.data);
+
+                        const data = {
+                            UserID: id,
+                            from: deptFlight?.flightId,
+                            to: retFlight?.flightId,
+                            cabin: cabin
+                        }
+                        axios
+                            .post(BACKEND_URL + "reservations/createReservation", data)
+                            .then(res => {
+                                console.log("reservation")
+                                console.log(res.data);
+                                props.setBookingNum(res.data._id);
+                                props.selectDept();
+                            })
+                            .catch(err => {
+                                console.log("Error from Confirm Resrevation: " + err);
+                            })
+
+
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
 
     return (
         <div className="itinerary-container">
@@ -113,11 +186,11 @@ const Summary = (props) => {
 
                 <div>Total cost: <p> <span><b>EGP</b>{props.deptFlightPrice + props.retFlightPrice}</span></p> </div>
                 <p className="passenger-font">(for {props.numOfAdults + props.numOfChildren} passengers)</p>
-                <button class="confirm-res" onClick={props.selectDept}>Confirm Reservation</button>
+
+                <button className="confirm-res" onClick={onConfirm}>Confirm Reservation</button>
             </div>
 
-
-        </div >
+        </div>
     )
 };
 

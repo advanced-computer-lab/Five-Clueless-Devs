@@ -15,7 +15,7 @@ router.get('/test', (req, res) => res.send('reservation route testing!'));
 router.post('/createReservation', (req, res) => {  
     console.log('YOU ADDED A Reservation');
     Reservations.create({ ...req.body })
-        .then(Reservations => res.json({ msg: 'Reservation added successfully' }))
+        .then(Reservations => res.json(Reservations))
         .catch(err => res.status(400).json({ error: 'Unable to add reservation' }));
 });
 router.delete('/cancelReservation', (req, res) => {
