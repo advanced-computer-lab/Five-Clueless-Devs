@@ -19,6 +19,9 @@ const ReservationSchema = new mongoose.Schema({
     type:String ,
     required:true
   },
+  price:{
+    type:Number
+  }
 });
 
 module.exports = Reservation = mongoose.model('reservation', ReservationSchema);

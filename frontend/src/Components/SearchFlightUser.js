@@ -95,6 +95,8 @@ const SearchFlightUser = ({ location }) => {
     const [returnFlightRes, setReturnResult] = useState([]);
     const [flightRes, setResult] = useState([]);
 
+    const [bookingNum, setBookingNum] = useState();
+
     const [flight, setFlight] = useState({
         flightId: '',
         from: '',
@@ -323,7 +325,7 @@ const SearchFlightUser = ({ location }) => {
                 .get(BACKEND_URL + "flights/searchUser?" + usp.toString() + "&" + numberAndClass)
                 .then(res => {
                     if (!Array.isArray(res.data) || !res.data.length) {
-                        setView(5);
+                        setView(6);
                     }
                     else {
                         setView(1);
@@ -341,7 +343,7 @@ const SearchFlightUser = ({ location }) => {
                 .get(BACKEND_URL + "flights/searchUser?" + uspReturn.toString() + "&" + numberAndClass)
                 .then(res => {
                     if (!Array.isArray(res.data) || !res.data.length) {
-                        setView(5);
+                        setView(6);
                     }
                     else {
                         setView(1);
@@ -760,12 +762,32 @@ const SearchFlightUser = ({ location }) => {
                     </Card>
                 </div>
             </div>
-            <div><Summary deptFrom={deptFlightFrom} deptTo={deptFlightTo} deptFlightDeptTime={deptFlightDeptTime} deptFlightArrivalTime={deptFlightArrivalTime}
-                deptFlightDeptDate={deptFlightDeptDate} deptFlightArrivalDate={deptFlightArrivalDate} chosenClass={chosenClass} selectedDeptFlightId={selectedDeptFlightId}
-                deptFlightPrice={deptFlightPrice} retFlightPrice={retFlightPrice} retFlightDeptTime={retFlightDeptTime} retFlightDeptDate={retFlightDeptDate}
+            <div><Summary
+                deptFrom={deptFlightFrom}
+                deptTo={deptFlightTo}
+                deptFlightDeptTime={deptFlightDeptTime}
+                deptFlightArrivalTime={deptFlightArrivalTime}
+                deptFlightDeptDate={deptFlightDeptDate}
+                deptFlightArrivalDate={deptFlightArrivalDate}
+                chosenClass={chosenClass}
+                selectedDeptFlightId={selectedDeptFlightId}
+                deptFlightPrice={deptFlightPrice}
+                retFlightPrice={retFlightPrice}
+                retFlightDeptTime={retFlightDeptTime}
+                retFlightDeptDate={retFlightDeptDate}
                 retFlightArrivalTime={retFlightArrivalTime}
-                retFlightArrivalDate={retFlightArrivalDate} retFlightId={selectedRetFlightId} numOfAdults={adultsNumber} numOfChildren={childNumber}
-                forChosenSeats={forChosenSeats} selectDept={selectDept} /></div>
+                retFlightArrivalDate={retFlightArrivalDate}
+                retFlightId={selectedRetFlightId}
+                
+                numOfAdults={adultsNumber}
+                numOfChildren={childNumber}
+                selectDept={selectDept}
+
+                deptFlight = {selectedDeptFlight}
+                retFlight = {selectedRetFlight}
+                setBookingNum = {setBookingNum}
+            />
+            </div>
 
 
 
@@ -857,7 +879,7 @@ const SearchFlightUser = ({ location }) => {
                                     <Typography variant="body2" color="text.secondary">
                                         Duration: {getDuration(selectedDeptFlight)}
                                     </Typography>
-                                    
+
                                 </CardContent>
                             </CardActionArea>
                         </Card>
@@ -892,7 +914,7 @@ const SearchFlightUser = ({ location }) => {
                                     <Typography variant="body2" color="text.secondary">
                                         Duration: {getDuration(selectedRetFlight)}
                                     </Typography>
-                                   
+
                                 </CardContent>
                             </CardActionArea>
                         </Card>
@@ -969,6 +991,7 @@ const SearchFlightUser = ({ location }) => {
                     numOfChildren={childNumber}
                     deptSeats={deptSeats}
                     retSeats={retSeats}
+                    bookingNum = {bookingNum}
 
                 />
 

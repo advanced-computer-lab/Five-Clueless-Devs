@@ -56,7 +56,8 @@ function App() {
           
           <Route path='/details-user/:id' component={ViewDetailsUser} />
           <Route path='/Reserved-flights' component={ReservedFlight} />
-          <Route path='/summary/:idfrom/:idto' component={ViewSummary} />
+          {/* <Route path='/summary/:idfrom/:idto' component={ViewSummary} /> */}
+          <Route path='/summary/:reservationId' component={ViewSummary} />
           <Route path='/Resrevation-cancel' component={ReservationCancel} />
           <Route path='/reserve' component={Confirmation} />
 
