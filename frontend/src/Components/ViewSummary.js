@@ -8,7 +8,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, Table
 
 const ViewSummary = () => {
 
-  let Uid = "10";
+  let Uid = "50";  //HAS TO BE DYNAMIC -----------!_!_!_!__!@_!@_#_!@#_@!#_!@_#@_!@#_@!#_!
   const history = useHistory();
   const [fromflight, setfromFlight] = useState({
     flightId: '',
@@ -35,6 +35,7 @@ const ViewSummary = () => {
   const [reservation, setReservation] = useState();
   const [seatsFrom, setSeatsFrom] = useState();
   const [seatsTO, setSeatsTO] = useState();
+  const [bookingId, setBookingId] = useState("");
   let { idfrom, idto } = useParams();
   useEffect(() => {
     getSummary();
@@ -54,6 +55,18 @@ const ViewSummary = () => {
     var temptoBusiness = [];
 
     axios
+      .get(BACKEND_URL + "flights/search?flightId=" + idto)
+      .then(res => {
+        // console.log(res.data[0]);
+        temptoEconomy = [...res.data[0].seatsEconomy];
+        temptoFirst = [...res.data[0].seatsFirst];
+        temptoBusiness = [...res.data[0].seatsBusiness];
+        settoFlight(res.data[0] || {});
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    axios
       .get(BACKEND_URL + "flights/search?flightId=" + idfrom)
       .then(res => {
         //console.log(res.data[0]);
@@ -65,25 +78,16 @@ const ViewSummary = () => {
         // console.log(tempFromFirst);
         // console.log(tempFromBusiness);
         setfromFlight(res.data[0] || {});
-        axios
-          .get(BACKEND_URL + "flights/search?flightId=" + idto)
-          .then(res => {
-            // console.log(res.data[0]);
-            temptoEconomy = [...res.data[0].seatsEconomy];
-            temptoFirst = [...res.data[0].seatsFirst];
-            temptoBusiness = [...res.data[0].seatsBusiness];
-            settoFlight(res.data[0] || {});
-          })
-          .catch(err => {
-            console.log(err);
-          })
+
         // console.log(tempFromEconomy);
         axios.get(BACKEND_URL + "reservations/GetReservation?UserID=" + Uid + "&from=" + idfrom + "&to=" + idto)
           .then(res => {
             setReservation(res.data[0]);
+            console.log(res.data);
             var temp1 = [];
             var temp2 = [];
             console.log(res.data[0]._id);
+            setBookingId(res.data[0]._id);
             //temp=[...res.data];
             let test = "Economy";
             //console.log(tempFromEconomy);
@@ -291,13 +295,19 @@ const ViewSummary = () => {
                 </TableRow>
                 <TableRow>
                   {/* <th scope="row">12</th> */}
+                  <TableCell>Cabin Class</TableCell>
+                  <TableCell>{reservation?.cabin}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">12</th> */}
                   <TableCell>Seats</TableCell>
                   <TableCell>{seatsTO}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
           </div>
-          <div>{reservation?.price}</div>
+          <div>Booking Number: <span>{bookingId}</span></div>
+          <div>Total Price: EGP <span>{reservation?.price}</span></div>
         </div>
 
         <div className="row">
@@ -310,7 +320,7 @@ const ViewSummary = () => {
             </Link>
             <br /> */}
             <div>
-              <Button variant="outlined" onClick={Tocancel}>cancel Resrevation</Button>
+              <Button variant="outlined" onClick={Tocancel}>Cancel Reserevation</Button>
             </div>
 
           </div>

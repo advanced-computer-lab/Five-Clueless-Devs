@@ -16,12 +16,12 @@ const ReservedFlight = () => {
         getReservetion();
     }, []);
     //let { id } = useParams();
-
+    let Uid = 50;
     const getReservetion = () => {
         let fromtemp = [];
         let totemp = [];
 
-        axios.get(BACKEND_URL + "reservations/GetReservation?UserID=" + 5)
+        axios.get(BACKEND_URL + "reservations/GetReservation?UserID=" + Uid)
             .then(res => {
                 var temp = [];
                 //  console.log(res.data);

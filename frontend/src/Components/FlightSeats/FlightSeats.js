@@ -17,7 +17,7 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
     const [errMsg, setErrMsg] = useState("");
 
     //must get it from the previous step
-    const userId = 1;
+    const userId = 50;
 
     //-----------------------------------
 
