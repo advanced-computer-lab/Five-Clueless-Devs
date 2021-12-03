@@ -8,7 +8,8 @@ const ReservedFlightCard = (props) => {
     const toflight = props.to;
     const history = useHistory();
     const handleClick = () => {
-        history.push(`/summary/${fromflight.flightId}/${toflight.flightId}`)
+        // history.push(`/summary/${fromflight.flightId}/${toflight.flightId}`)
+        history.push(`/summary/${props.resevationId}`)
        console.log("entered");
     }
 
