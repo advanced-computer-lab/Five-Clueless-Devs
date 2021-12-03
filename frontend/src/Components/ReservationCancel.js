@@ -6,9 +6,12 @@ import { BACKEND_URL } from '../API/URLS';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
 
 
-const ReservationCancel = () => {
+const ReservationCancel = (props) => {
     const history = useHistory();
-
+    const from = props.from;
+    const to = props.to;
+    const userid=props.id;
+    //let{id,from,to}=useParams();
     const [fromflight, setfromFlight] = useState({
         availableEconomy: '',
         availableBusiness: '',
@@ -35,7 +38,7 @@ const ReservationCancel = () => {
         OnCancel();
     }, []);
 const OnCancel = () => {
-    //let{id,from,to}=useParams();
+    
     
     var tempFromEconomy=[];
     var tempFromFirst=[];
@@ -45,7 +48,7 @@ const OnCancel = () => {
     var temptoBusiness=[];
     
     axios
-      .get(BACKEND_URL + "flights/search?flightId=" + 2)
+      .get(BACKEND_URL + "flights/search?flightId=" + from)
       .then(res => {
         //console.log(res.data[0]);
         tempFromEconomy=[...res.data[0].seatsEconomy];
@@ -57,7 +60,7 @@ const OnCancel = () => {
         // console.log(tempFromBusiness);
         // setfromFlight(res.data[0] || {});
         axios
-        .get(BACKEND_URL + "flights/search?flightId=" +8)
+        .get(BACKEND_URL + "flights/search?flightId=" +to)
         .then(res => {
          // console.log(res.data[0]);
           temptoEconomy=[...res.data[0].seatsEconomy];
@@ -69,7 +72,7 @@ const OnCancel = () => {
           console.log(err);
         })
        // console.log(tempFromEconomy);
-        axios.get(BACKEND_URL + "reservations/GetReservation?UserID="+10+"&from="+2+"&to="+8)
+        axios.get(BACKEND_URL + "reservations/GetReservation?UserID="+userid+"&from="+from+"&to="+to)
         .then(res => {
         //    setReservation(res.data[0]);
             var temp1=[];
@@ -102,7 +105,7 @@ const OnCancel = () => {
           let countFrom=0;
           let countTo=0;
           for(let i=0;i<temp1.length;i++){
-              if(temp1[i]==10){
+              if(temp1[i]==userid){
                   SeatFrom[i]=null;
                   countFrom++;
               }
@@ -112,7 +115,7 @@ const OnCancel = () => {
           //setSeatsFrom(SeatFrom);
           //console.log(SeatFrom);
           for(let i=0;i<temp2.length;i++){
-            if(temp2[i]==10){
+            if(temp2[i]==userid){
                 SeatTo[i]=null;
                 countTo++;}
             else{
@@ -151,15 +154,15 @@ const OnCancel = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     axios
-        .put(BACKEND_URL + 'flights/update?flightId=' + 2, fromflight)
+        .put(BACKEND_URL + 'flights/update?flightId=' +from, fromflight)
         .then(res => {
             console.log(res.data);
     axios
-        .put(BACKEND_URL + 'flights/update?flightId=' + 8, toflight)
+        .put(BACKEND_URL + 'flights/update?flightId=' + to, toflight)
         .then(res => {
             console.log(res.data);
     axios
-        .delete(BACKEND_URL + "reservations/cancelReservation?UserID=" + 10+"&from"+2+"&to"+8)
+        .delete(BACKEND_URL + "reservations/cancelReservation?UserID=" + userid+"&from"+from+"&to"+to)
         .then(res => {
         history.push("/Reserved-flights");
       })
@@ -178,7 +181,7 @@ const OnCancel = () => {
 };
 return(
     <div>
-          <Button variant="outlined" onClick={onSubmit}>Search</Button>
+          <Button variant="outlined" onClick={onSubmit}>cancel</Button>
         </div>
 /* <div>
         <Dialog
