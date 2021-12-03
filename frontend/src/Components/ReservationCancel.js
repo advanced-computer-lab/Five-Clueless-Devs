@@ -113,6 +113,7 @@ const ReservationCancel = (props) => {
 
   const onSubmit = (e) => {
     OnCancel();
+    props.handleSend(e);
     e.preventDefault();
     axios
       .put(BACKEND_URL + 'flights/update?flightId=' + from, f)

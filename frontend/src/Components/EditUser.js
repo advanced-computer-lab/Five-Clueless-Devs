@@ -4,13 +4,16 @@ import '../App.css';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
 import TextField from '@mui/material/TextField';
-import { Button } from '@mui/material';
-import './SearchFlightCriteria.css';   // create one for users
 
+import './SearchFlightCriteria.css';   // create one for users
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
 
 const EditUser = () => {
     const history = useHistory();
-
+    const [showConfirm, setConfirm] = useState(false);
+    const toggleDialog = () => {
+        setConfirm(!showConfirm);
+    }
     const [user, setUser] = useState({
         userId: '',
         username: '',
@@ -52,19 +55,19 @@ const EditUser = () => {
             .then(res => {
                 history.push('/user-details/' + user?.userId);
                 console.log(res.data);
-               
+
             })
             .catch(err => {
                 console.log(err);
             })
-            
+
     };
 
     useEffect(() => {
         getUser();
     }, []);
 
-    
+
     return (
 
         <div className="Edit User">
@@ -72,7 +75,7 @@ const EditUser = () => {
                 <div className="row">
 
                     <div className="col-md-8 m-auto">
-                        <h1 className="display-4 text-center" style={{margin:"10px 0"}}>Edit User</h1>
+                        <h1 className="display-4 text-center" style={{ margin: "10px 0" }}>Edit User</h1>
 
 
                         <form noValidate onSubmit={onSubmit}>
@@ -85,58 +88,58 @@ const EditUser = () => {
                                         className='form-control'
                                         name="userId"
                                         value={user?.userId}
-                                       
+
                                     />
                                 </div>
                             </div>
 
 
                             <div className='form-group'>
-                                <div>     
-                                <TextField
-                                            className='form-control'
-                                            label='User Name'
-                                            name="username"
-                                            value={user?.username}
-                                            onChange={(e) => onChange(e)}
-                                        />
+                                <div>
+                                    <TextField
+                                        className='form-control'
+                                        label='User Name'
+                                        name="username"
+                                        value={user?.username}
+                                        onChange={(e) => onChange(e)}
+                                    />
 
-                                   
-                                       <TextField
-                                            className='form-control'
-                                            label='Password'
-                                            type="password"
-                                            name="password"
-                                            value={user?.password}
-                                            onChange={(e) => onChange(e)}
-                                        />
-                                   
-                                </div>
-                            </div>
-                            <div className='form-group'>
-                                <div>     
-                                <TextField
-                                            className='form-control'
-                                            label='First Name'
-                                            name="firstName"
-                                            value={user?.firstName}
-                                            onChange={(e) => onChange(e)}
-                                        />
 
-                                   
-                                       <TextField
-                                            className='form-control'
-                                            label='Last Name'
-                                            name="lastName"
-                                            value={user?.lastName}
-                                            onChange={(e) => onChange(e)}
-                                        />
-                                   
+                                    {/* <TextField
+                                        className='form-control'
+                                        label='Password'
+                                        type="password"
+                                        name="password"
+                                        value={user?.password}
+                                        onChange={(e) => onChange(e)}
+                                    /> */}
+
                                 </div>
                             </div>
                             <div className='form-group'>
                                 <div>
-                                <TextField
+                                    <TextField
+                                        className='form-control'
+                                        label='First Name'
+                                        name="firstName"
+                                        value={user?.firstName}
+                                        onChange={(e) => onChange(e)}
+                                    />
+
+
+                                    <TextField
+                                        className='form-control'
+                                        label='Last Name'
+                                        name="lastName"
+                                        value={user?.lastName}
+                                        onChange={(e) => onChange(e)}
+                                    />
+
+                                </div>
+                            </div>
+                            <div className='form-group'>
+                                <div>
+                                    <TextField
                                         id="outlined"
                                         className='form-control'
                                         label='Home Address'
@@ -154,7 +157,7 @@ const EditUser = () => {
                                         onChange={(e) => onChange(e)}
                                     />
 
-                                    
+
                                 </div>
                             </div>
                             <div className='form-group'>
@@ -191,25 +194,35 @@ const EditUser = () => {
 
 
                             <div className='input-group-append'>
-                                    <Button onClick={onSubmit} variant="outlined" type="submit">Edit User</Button>
-                                </div>
-                                <div className="App">
+                                <Button style={{ marginRight: "10px" }} onClick={() => history.push('/user-details/' + localStorage.getItem("userId"))} variant="outlined">Back</Button>
+                                <Button onClick={toggleDialog} variant="outlined" >Edit User</Button>
 
-			{/*!sent ? (
-				<form onClick={handleSend}>
-					<button type="button">Send Email</button>
-				</form>
-			) : (
-				<h1>Email Sent</h1>
-            )*/}
-		</div>
-    
-                    </form>
+                            </div>
+                            <div>
+
+                                <Dialog
+                                    open={showConfirm}
+                                    onClose={toggleDialog}
+                                    aria-labelledby="alert-dialog-title"
+                                    aria-describedby="alert-dialog-description"
+                                >
+                                    <DialogTitle id="alert-dialog-title">
+                                        {"Are you sure you want to delete this user?"}
+                                    </DialogTitle>
+                                    <DialogActions>
+                                        <Button onClick={toggleDialog} variant="text">Cancel </Button>
+                                        <Button onClick={ onSubmit} variant="text" type="submit" >Confirm Edit</Button>
+                                    </DialogActions>
+                                </Dialog>
+
+                            </div>
+
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-        
+
     );
 }
 

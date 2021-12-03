@@ -60,6 +60,7 @@ router.post('/send_mail', cors(), async (req, res) => {
 			user: process.env.MAIL_USER,
 			pass: process.env.MAIL_PASS
 		}
+        
 	})
 
 	await transport.sendMail({

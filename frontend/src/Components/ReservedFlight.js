@@ -88,22 +88,22 @@ const ReservedFlight = () => {
     return (
         <div>
             <div className="flight-schedule">
-                <h2> Reserved Flight </h2>
-                {
+                <h2> Reserved Flights </h2>
+                {fromId?.length > 0 ?
+
                     fromId.map((from, index) =>
                         <div key={index}>
-                            <ReservedFlightCard userId={Uid} from={from} to={toId[index]} resevationId={ReservationId[index] } />
+                            <ReservedFlightCard userId={Uid} from={from} to={toId[index]} resevationId={ReservationId[index]} />
                         </div>
-
                     )
+                    :
+                    <div className="no-search"> <img src="https://img.icons8.com/external-kiranshastry-gradient-kiranshastry/64/000000/external-search-airport-kiranshastry-gradient-kiranshastry.png" />
+                        <h1>You haven't made any reservations yet!</h1></div>
                 }
             </div>
 
         </div>
-        //   <div>
-        //   <Button variant="outlined" onClick={getReservetion}>Search</Button>
-        // </div>
-    )
+        )
 };
 
 

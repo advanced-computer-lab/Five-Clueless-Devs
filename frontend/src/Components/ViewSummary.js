@@ -403,8 +403,12 @@ const ViewSummary = () => {
                 reservationId={reservationId}
                 fromflight={fromflight}
                 toflight={toflight}
+                handleSend={handleSend}
               />
 
+            </div>
+            <div>
+              <Button variant="outlined" onClick={handleSend}>send email man</Button>
             </div>
 
           </div>
