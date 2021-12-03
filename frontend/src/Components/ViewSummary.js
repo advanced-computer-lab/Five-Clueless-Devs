@@ -141,6 +141,7 @@ const ViewSummary = () => {
               case "Business":
                 temp1 = tempFromBusiness;
             }
+
             setFromSeatsArray(temp1);
 
             let SeatFrom = [];
@@ -403,6 +404,7 @@ const ViewSummary = () => {
                 fromflight={fromflight}
                 toflight={toflight}
               />
+
             </div>
 
           </div>

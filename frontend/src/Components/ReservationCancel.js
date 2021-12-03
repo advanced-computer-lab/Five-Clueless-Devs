@@ -15,40 +15,49 @@ const ReservationCancel = (props) => {
   const fromSeats = props.fromSeats;
   const cabin = props.cabin;
   const reservationID = props.reservationId;
+
+  const fromObj = props.fromflight;
+  const toObj = props.toflight;
+
+
+  let f;
+  let t;
   //let{id,from,to}=useParams();
+
   const [fromflight, setfromFlight] = useState({
     availableEconomy: '',
     availableBusiness: '',
     availableFirst: '',
-    seatsBusiness: '',
-    seatsEconomy: '',
-    seatsFirst: ''
+    seatsBusiness: [],
+    seatsEconomy: [],
+    seatsFirst: []
   });
 
   const [toflight, settoFlight] = useState({
     availableEconomy: '',
     availableBusiness: '',
     availableFirst: '',
-    seatsBusiness: '',
-    seatsEconomy: '',
-    seatsFirst: ''
+    seatsBusiness: [],
+    seatsEconomy: [],
+    seatsFirst: []
   });
   const [showConfirm, setConfirm] = useState(false);
 
   const toggleDialog = () => {
     setConfirm(!showConfirm);
   }
+
   useEffect(() => {
-    OnCancel();
-    console.log(props.toSeats)
-    console.log(props.fromSeats)
   }, []);
+
+
 
   const OnCancel = () => {
     let SeatFrom = [];
     let SeatTo = [];
     let countFrom = 0;
     let countTo = 0;
+
     for (let i = 0; i < fromSeats.length; i++) {
       if (fromSeats[i] == userid) {
         SeatFrom[i] = null;
@@ -57,8 +66,8 @@ const ReservationCancel = (props) => {
       else
         SeatFrom[i] = fromSeats[i];
     }
-    //setSeatsFrom(SeatFrom);
-    //console.log(SeatFrom);
+
+    console.log(SeatFrom);
     for (let i = 0; i < toSeats.length; i++) {
       if (toSeats[i] == userid) {
         SeatTo[i] = null;
@@ -67,39 +76,50 @@ const ReservationCancel = (props) => {
       else {
         SeatTo[i] = toSeats[i];
       }
-
     }
+
+    console.log(cabin);
+
     switch (cabin) {
       case "Economy":
-        setfromFlight({ ...fromflight, availableEconomy: fromflight.availableEconomy + countFrom, seatsEconomy: SeatFrom });
-        settoFlight({ ...toflight, availableEconomy: toflight.availableEconomy + countTo, seatsEconomy: SeatTo });
+        // setfromFlight({ ...fromObj, availableEconomy: fromObj?.availableEconomy + countFrom, seatsEconomy: SeatFrom });
+        // settoFlight({ ...toObj, availableEconomy: toObj?.availableEconomy + countTo, seatsEconomy: SeatTo });
+
+        f = { ...fromObj, availableEconomy: fromObj?.availableEconomy + countFrom, seatsEconomy: SeatFrom };
+        t = { ...toObj, availableEconomy: toObj?.availableEconomy + countTo, seatsEconomy: SeatTo }
         break;
       case "First":
-        setfromFlight({ ...fromflight, availableFirst: fromflight.availableFirst + countFrom, seatsFirst: SeatFrom });
-        settoFlight({ ...toflight, availableFirst: toflight.availableFirst + countTo, seatsFirst: SeatTo });
+        // setfromFlight({ ...fromObj, availableFirst: fromObj?.availableFirst + countFrom, seatsFirst: SeatFrom });
+        // settoFlight({ ...toObj, availableFirst: toObj?.availableFirst + countTo, seatsFirst: SeatTo });
+        f = { ...fromObj, availableFirst: fromObj?.availableFirst + countFrom, seatsFirst: SeatFrom };
+        t = { ...toObj, availableFirst: toObj?.availableFirst + countTo, seatsFirst: SeatTo };
         break;
       case "Business":
-        setfromFlight({ ...fromflight, availableBusiness: fromflight.availableBusiness + countFrom, seatsBusiness: SeatFrom });
-        settoFlight({ ...toflight, availableBusiness: toflight.availableBusiness + countTo, seatsBusiness: SeatTo });
+        // setfromFlight({ ...fromObj, availableBusiness: fromObj?.availableBusiness + countFrom, seatsBusiness: SeatFrom });
+        // settoFlight({ ...toObj, availableBusiness: toObj?.availableBusiness + countTo, seatsBusiness: SeatTo });
+
+        f = { ...fromObj, availableBusiness: fromObj?.availableBusiness + countFrom, seatsBusiness: SeatFrom };
+        t = { ...toObj, availableBusiness: toObj?.availableBusiness + countTo, seatsBusiness: SeatTo };
         break;
       default:
         console.log("Something went wrong");
     }
-    //setSeatsTO(SeatTo);
 
-    console.log(fromflight);
-    console.log(toflight);
 
+    console.log(f);
+    console.log(t);
   };
+
+
   const onSubmit = (e) => {
-    e.preventDefault();
     OnCancel();
+    e.preventDefault();
     axios
-      .put(BACKEND_URL + 'flights/update?flightId=' + from, fromflight)
+      .put(BACKEND_URL + 'flights/update?flightId=' + from, f)
       .then(res => {
         console.log(res.data);
         axios
-          .put(BACKEND_URL + 'flights/update?flightId=' + to, toflight)
+          .put(BACKEND_URL + 'flights/update?flightId=' + to, t)
           .then(res => {
             console.log(res.data);
             axios
