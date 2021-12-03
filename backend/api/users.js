@@ -35,12 +35,12 @@ router.post('/createAdmin', (req, res) => {
 });
 
 router.post('/createUser', (req, res) => {
-   currEmail=req.body.email;
-   console.log(currEmail);
-    User.create({ ...req.body , isAdmin:"false" })
+    currEmail = req.body.email;
+    console.log(currEmail);
+    User.create({ ...req.body, isAdmin: "false" })
         .then(console.log('User added successfully'))
         .catch(err => res.status(400).json({ error: 'Unable to add User' }));
-    
+
 });
 
 router.get('/search', (req, res) => {
@@ -51,22 +51,23 @@ router.get('/search', (req, res) => {
 
 
 router.post('/send_mail', cors(), async (req, res) => {
-   
-	let { text,to } = req.body
-    const transport = nodemailer.createTransport({
-		host: process.env.MAIL_HOST,
-		port: process.env.MAIL_PORT,
-		auth: {
-			user: process.env.MAIL_USER,
-			pass: process.env.MAIL_PASS
-		}
-	})
 
-	await transport.sendMail({
-		from: process.env.MAIL_FROM,
-		to: to,
-		subject: "test email",
-		html: `<div className="email" style="
+    let { text, to } = req.body
+    const transport = nodemailer.createTransport({
+        host: process.env.MAIL_HOST,
+        port: process.env.MAIL_PORT,
+        auth: {
+            user: process.env.MAIL_USER,
+            pass: process.env.MAIL_PASS
+        }
+    })
+
+    
+    let info = await transport.sendMail({
+            from: process.env.MAIL_FROM,
+            to: to,
+            subject: "test email",
+            html: `<div className="email" style="
         border: 1px solid black;
         padding: 20px;
         font-family: sans-serif;
@@ -78,13 +79,14 @@ router.post('/send_mail', cors(), async (req, res) => {
     
         <p>All the best, Five clueless devs!</p>
          </div>
-    `
-	})
+    `})
+    console.log("Message sent: %s", info.messageId);  
 })
+
 
 router.put('/update', (req, res) => {
     let { userId } = req.body
-    console.log("updating user with id: "+userId);
+    console.log("updating user with id: " + userId);
     User.findOneAndUpdate(req.query, req.body)
         .then(res.status(200).json("updated succesfully"))
         .catch(err =>
