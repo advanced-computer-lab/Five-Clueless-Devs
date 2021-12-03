@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import '../App.css';
 import "./Itinerary.css";
@@ -11,6 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
+import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 
 const Summary = (props) => {
     const flight = props.flight;
@@ -21,6 +22,12 @@ const Summary = (props) => {
     // }
     function createData(name, calories) {
         return { name, calories };
+    }
+
+    const [showConfirm, setConfirm] = useState(false);
+
+    const toggleDialog = () => {
+      setConfirm(!showConfirm);
     }
     const rows = [
         createData('Flight Number', props.selectedDeptFlightId),
@@ -45,7 +52,7 @@ const Summary = (props) => {
         let numOfChildren = props.numOfChildren;
         let numOfSeats = numOfAdults + numOfChildren;
         let priceOfDept = props.deptFlightPrice;
-        let priceOfRet  = props.retFlightPrice;
+        let priceOfRet = props.retFlightPrice;
         console.log(props)
         let cabin = props.chosenClass;
 
@@ -73,7 +80,7 @@ const Summary = (props) => {
                 console.log("Something went wrong");
         }
 
-        
+
 
 
         axios
@@ -192,7 +199,24 @@ const Summary = (props) => {
                 <div>Total cost: <p> <span><b>EGP</b>{props.deptFlightPrice + props.retFlightPrice}</span></p> </div>
                 <p className="passenger-font">(for {props.numOfAdults + props.numOfChildren} passengers)</p>
 
-                <button className="confirm-res" onClick={onConfirm}>Confirm Reservation</button>
+                <button className="confirm-res" onClick={toggleDialog}>Confirm Reservation</button>
+
+                <div>
+                    <Dialog
+                        open={showConfirm}
+                        onClose={toggleDialog}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            {"Are you sure you want to confirm the reservation?"}
+                        </DialogTitle>
+                        <DialogActions>
+                            <Button onClick={toggleDialog} variant="text">back </Button>
+                            <Button onClick={onConfirm} variant="text" color="success">Confirm Reservation</Button>
+                        </DialogActions>
+                    </Dialog>
+                </div>
             </div>
 
         </div>

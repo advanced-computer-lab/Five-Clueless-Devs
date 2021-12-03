@@ -142,7 +142,24 @@ const ReservationCancel = (props) => {
   };
   return (
     <div>
-      <Button variant="outlined" onClick={onSubmit}>Cancel Reservation</Button>
+      <Button variant="outlined" onClick={toggleDialog}>Cancel Reservation</Button>
+
+     <div>
+        <Dialog
+          open={showConfirm}
+          onClose={toggleDialog}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Are you sure you want to cancel the reservation?"}
+          </DialogTitle>
+          <DialogActions>
+            <Button onClick={toggleDialog} variant="text">back </Button>
+            <Button onClick={onSubmit} variant="text" color="error">cancel Reservation</Button>
+          </DialogActions>
+        </Dialog>
+      </div> 
     </div>
   )
 }
