@@ -11,7 +11,8 @@ const Confirmation = () => {
    const from = props.from;
    const too = props.to;
    const cabinClass = props.cabin;*/
-  let id = 10;
+  
+  let Uid = localStorage.getItem('userId') || 10;
   let from = 79;
   let too = 8;
   let cabinClass = "Economy";
@@ -179,7 +180,7 @@ const Confirmation = () => {
             console.log(res.data);
 
             const data = {
-              UserID: id,
+              UserID: Uid,
               from: from,
               to: too,
               cabin: cabinClass

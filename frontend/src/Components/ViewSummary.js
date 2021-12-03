@@ -8,7 +8,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, Table
 
 const ViewSummary = () => {
 
-  let Uid = "50";  //HAS TO BE DYNAMIC -----------!_!_!_!__!@_!@_#_!@#_@!#_!@_#@_!@#_@!#_!
+  let Uid = localStorage.getItem('userId') || 10;
   const history = useHistory();
   const [fromflight, setfromFlight] = useState({
     flightId: '',
@@ -36,7 +36,9 @@ const ViewSummary = () => {
   const [seatsFrom, setSeatsFrom] = useState();
   const [seatsTO, setSeatsTO] = useState();
   const [bookingId, setBookingId] = useState("");
-  let { idfrom, idto } = useParams();
+ 
+  // let { idfrom, idto } = useParams();
+  let { reservationId } = useParams();
   useEffect(() => {
     getSummary();
   }, []);
@@ -54,69 +56,87 @@ const ViewSummary = () => {
     var temptoFirst = [];
     var temptoBusiness = [];
 
-    axios
-      .get(BACKEND_URL + "flights/search?flightId=" + idto)
-      .then(res => {
-        // console.log(res.data[0]);
-        temptoEconomy = [...res.data[0].seatsEconomy];
-        temptoFirst = [...res.data[0].seatsFirst];
-        temptoBusiness = [...res.data[0].seatsBusiness];
-        settoFlight(res.data[0] || {});
-      })
-      .catch(err => {
-        console.log(err);
-      })
-    axios
-      .get(BACKEND_URL + "flights/search?flightId=" + idfrom)
-      .then(res => {
-        //console.log(res.data[0]);
-        tempFromEconomy = [...res.data[0].seatsEconomy];
-        tempFromFirst = [...res.data[0].seatsFirst];
-        tempFromBusiness = [...res.data[0].seatsBusiness];
 
-        //console.log(tempFromEconomy);
-        // console.log(tempFromFirst);
-        // console.log(tempFromBusiness);
-        setfromFlight(res.data[0] || {});
 
-        // console.log(tempFromEconomy);
-        axios.get(BACKEND_URL + "reservations/GetReservation?UserID=" + Uid + "&from=" + idfrom + "&to=" + idto)
-          .then(res => {
-            setReservation(res.data[0]);
-            console.log(res.data);
-            var temp1 = [];
-            var temp2 = [];
-            console.log(res.data[0]._id);
-            setBookingId(res.data[0]._id);
-            //temp=[...res.data];
-            let test = "Economy";
-            //console.log(tempFromEconomy);
+    // console.log(tempFromEconomy);
+    // axios.get(BACKEND_URL + "reservations/GetReservation?UserID=" + Uid + "&from=" + idfrom + "&to=" + idto)
+    axios.get(BACKEND_URL + "reservations/GetReservation?_id=" + reservationId)
+      .then(res => {
+        setReservation(res.data[0]);
+        setBookingId(reservationId.toUpperCase())
+        var temp1 = [];
+        var temp2 = [];
+        console.log(res.data[0]._id);
+        switch (res.data[0].cabin) {
+          case "Economy":
+            temp1 = tempFromEconomy;
+            temp2 = temptoEconomy;
+            break;
+          case "First":
+            temp1 = tempFromFirst;
+            temp2 = temptoFirst;
+            break;
+          case "Business":
+            temp1 = tempFromBusiness;
+            temp2 = temptoBusiness;
+        }
+
+       
+
+        axios
+          .get(BACKEND_URL + "flights/search?flightId=" + res.data[0].from)
+          .then(resFrom => {
+            tempFromEconomy = [...resFrom.data[0].seatsEconomy];
+            tempFromFirst = [...resFrom.data[0].seatsFirst];
+            tempFromBusiness = [...resFrom.data[0].seatsBusiness];
+
             switch (res.data[0].cabin) {
               case "Economy":
                 temp1 = tempFromEconomy;
-                temp2 = temptoEconomy;
                 break;
               case "First":
                 temp1 = tempFromFirst;
-                temp2 = temptoFirst;
                 break;
               case "Business":
                 temp1 = tempFromBusiness;
-                temp2 = temptoBusiness;
             }
-            //console.log(temp1);
-            //console.log(temp2);
 
             let SeatFrom = [];
-            let SeatTo = [];
             for (let i = 0; i < temp1.length; i++) {
               if (temp1[i] == Uid) {
                 SeatFrom.push(getSeatNumber(i));
               }
             }
+            console.log(SeatFrom)
             var seatFromAsString = SeatFrom.join(', ');
             setSeatsFrom(seatFromAsString);
-            //console.log(SeatFrom);
+            setfromFlight(resFrom.data[0] || {})
+          }).catch(err => {
+            console.log(err);
+          })
+
+
+        axios
+          .get(BACKEND_URL + "flights/search?flightId=" + res.data[0].to)
+          .then(resTo => {
+            // console.log(res.data[0]);
+            temptoEconomy = [...resTo.data[0].seatsEconomy];
+            temptoFirst = [...resTo.data[0].seatsFirst];
+            temptoBusiness = [...resTo.data[0].seatsBusiness];
+
+            switch (res.data[0].cabin) {
+              case "Economy":
+                temp2 = temptoEconomy;
+                break;
+              case "First":
+                temp2 = temptoFirst;
+                break;
+              case "Business":
+                temp2 = temptoBusiness;
+            }
+
+            let SeatTo = [];
+
             for (let i = 0; i < temp2.length; i++) {
               if (temp2[i] == Uid) {
                 SeatTo.push(getSeatNumber(i));
@@ -124,6 +144,7 @@ const ViewSummary = () => {
             }
             var seatToAsString = SeatTo.join(', ');
             setSeatsTO(seatToAsString);
+            settoFlight(resTo.data[0] || {});
           })
           .catch(err => {
             console.log(err);
@@ -132,7 +153,6 @@ const ViewSummary = () => {
       .catch(err => {
         console.log(err);
       })
-
   }
   const getSeatNumber = (i) => {
     let letter = String.fromCharCode('A'.charCodeAt(0) + i % 6);
@@ -186,125 +206,132 @@ const ViewSummary = () => {
           </div>
         </div>
         <div>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <Table sx={{ maxWidth: 500 }} className="table table-hover table-dark">
-              <h1> Departure Flight </h1>
-              <TableBody>
-                <TableRow>
-                  {/* <th scope="row">1</th> */}
-                  <TableCell>Departure Flight ID</TableCell>
-                  <TableCell>{fromflight?.flightId}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">2</th> */}
-                  <TableCell>Departure Country</TableCell>
-                  <TableCell>{fromflight?.from}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">3</th> */}
-                  <TableCell>Destination</TableCell>
-                  <TableCell>{fromflight?.to}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">4</th> */}
-                  <TableCell>Departure Date</TableCell>
-                  <TableCell>{fromflight?.departureDate.substring(0, 10)}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">5</th> */}
-                  <TableCell>Arrival Date</TableCell>
-                  <TableCell>{fromflight?.arrivalDate.substring(0, 10)}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">6</th> */}
-                  <TableCell>Departure Time</TableCell>
-                  <TableCell>{fromflight?.departureTime}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">7</th> */}
-                  <TableCell>Arrival Time</TableCell>
-                  <TableCell>{fromflight?.arrivalTime}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">11</th> */}
-                  <TableCell>Departure Terminal</TableCell>
-                  <TableCell>{fromflight?.departureTerminal}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">12</th> */}
-                  <TableCell>Arrival Terminal</TableCell>
-                  <TableCell>{fromflight?.arrivalTerminal}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">12</th> */}
-                  <TableCell>Cabin Class</TableCell>
-                  <TableCell>{reservation?.cabin}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">12</th> */}
-                  <TableCell>Seats</TableCell>
-                  <TableCell>{seatsFrom}</TableCell>
-                </TableRow>
-              </TableBody>
-              <h1> Return Flight </h1>
-              <TableBody>
-                <TableRow>
-                  {/* <th scope="row">1</th> */}
-                  <TableCell>Return Flight ID</TableCell>
-                  <TableCell>{toflight.flightId}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">2</th> */}
-                  <TableCell>Departure Country</TableCell>
-                  <TableCell>{toflight.from}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">3</th> */}
-                  <TableCell>Destination</TableCell>
-                  <TableCell>{toflight.to}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">4</th> */}
-                  <TableCell>Departure Date</TableCell>
-                  <TableCell>{toflight.departureDate.substring(0, 10)}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">5</th> */}
-                  <TableCell>Arrival Date</TableCell>
-                  <TableCell>{toflight.arrivalDate.substring(0, 10)}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">6</th> */}
-                  <TableCell>Departure Time</TableCell>
-                  <TableCell>{toflight.departureTime}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">7</th> */}
-                  <TableCell>Arrival Time</TableCell>
-                  <TableCell>{toflight.arrivalTime}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">11</th> */}
-                  <TableCell>Departure Terminal</TableCell>
-                  <TableCell>{toflight.departureTerminal}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">12</th> */}
-                  <TableCell>Arrival Terminal</TableCell>
-                  <TableCell>{toflight.arrivalTerminal}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">12</th> */}
-                  <TableCell>Cabin Class</TableCell>
-                  <TableCell>{reservation?.cabin}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">12</th> */}
-                  <TableCell>Seats</TableCell>
-                  <TableCell>{seatsTO}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
+          <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", margin: "10px" }}>
+            <div style={{ margin: "0 25px" }}>
+              <Table sx={{ maxWidth: 500 }} className="table table-hover table-dark">
+                <h1> Departure Flight </h1>
+                <TableBody>
+                  <TableRow>
+                    {/* <th scope="row">1</th> */}
+                    <TableCell>Departure Flight ID</TableCell>
+                    <TableCell>{fromflight?.flightId}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">2</th> */}
+                    <TableCell>Departure Country</TableCell>
+                    <TableCell>{fromflight?.from}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">3</th> */}
+                    <TableCell>Destination</TableCell>
+                    <TableCell>{fromflight?.to}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">4</th> */}
+                    <TableCell>Departure Date</TableCell>
+                    <TableCell>{fromflight?.departureDate?.substring(0, 10)}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">5</th> */}
+                    <TableCell>Arrival Date</TableCell>
+                    <TableCell>{fromflight?.arrivalDate?.substring(0, 10)}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">6</th> */}
+                    <TableCell>Departure Time</TableCell>
+                    <TableCell>{fromflight?.departureTime}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">7</th> */}
+                    <TableCell>Arrival Time</TableCell>
+                    <TableCell>{fromflight?.arrivalTime}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">11</th> */}
+                    <TableCell>Departure Terminal</TableCell>
+                    <TableCell>{fromflight?.departureTerminal}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">12</th> */}
+                    <TableCell>Arrival Terminal</TableCell>
+                    <TableCell>{fromflight?.arrivalTerminal}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">12</th> */}
+                    <TableCell>Cabin Class</TableCell>
+                    <TableCell>{reservation?.cabin}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">12</th> */}
+                    <TableCell>Seats</TableCell>
+                    <TableCell>{seatsFrom}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+            <div style={{ margin: "0 25px" }}>
+              <Table>
+                <h1> Return Flight </h1>
+                <TableBody>
+                  <TableRow>
+                    {/* <th scope="row">1</th> */}
+                    <TableCell>Return Flight ID</TableCell>
+                    <TableCell>{toflight.flightId}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">2</th> */}
+                    <TableCell>Departure Country</TableCell>
+                    <TableCell>{toflight.from}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">3</th> */}
+                    <TableCell>Destination</TableCell>
+                    <TableCell>{toflight.to}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">4</th> */}
+                    <TableCell>Departure Date</TableCell>
+                    <TableCell>{toflight.departureDate?.substring(0, 10)}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">5</th> */}
+                    <TableCell>Arrival Date</TableCell>
+                    <TableCell>{toflight.arrivalDate?.substring(0, 10)}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">6</th> */}
+                    <TableCell>Departure Time</TableCell>
+                    <TableCell>{toflight.departureTime}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">7</th> */}
+                    <TableCell>Arrival Time</TableCell>
+                    <TableCell>{toflight.arrivalTime}</TableCell>
+                  </TableRow>
+                  
+                  <TableRow>
+                    {/* <th scope="row">11</th> */}
+                    <TableCell>Departure Terminal</TableCell>
+                    <TableCell>{toflight.departureTerminal}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">12</th> */}
+                    <TableCell>Arrival Terminal</TableCell>
+                    <TableCell>{toflight.arrivalTerminal}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">12</th> */}
+                    <TableCell>Cabin Class</TableCell>
+                    <TableCell>{reservation?.cabin}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    {/* <th scope="row">12</th> */}
+                    <TableCell>Seats</TableCell>
+                    <TableCell>{seatsTO}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
           </div>
           <div>Booking Number: <span>{bookingId}</span></div>
           <div>Total Price: EGP <span>{reservation?.price}</span></div>
