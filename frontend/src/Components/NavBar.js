@@ -17,7 +17,7 @@ const Navbar = () => {
   return (
     <AppBar position="static" style={{ alignItems: 'flex-start' }}>
       <Toolbar>
-        <Button className="admin" color="inherit" onClick={(e) => history.push('/user-details/' + localStorage.getItem("userId"))}>View Profile</Button>
+      {userId ?  <Button className="admin" color="inherit" onClick={(e) => history.push('/user-details/' + localStorage.getItem("userId"))}>View Profile</Button>:null}
         <Button className="admin" color="inherit" onClick={(e) => history.push('/Reserved-flights')}>View Reservations</Button>
         <Button className="admin" color="inherit" onClick={(e) => history.push('/')}>Search for Flights</Button>
 
