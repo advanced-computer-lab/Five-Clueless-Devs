@@ -53,7 +53,7 @@ const Summary = (props) => {
         let retFlight = props.retFlight;
 
         //-------------------------------
-        let Uid = localStorage.getItem('userId') || 10;
+        let userId = localStorage.getItem('userId') || 10;
         //-------------------------------
 
         switch (cabin) {
@@ -85,7 +85,7 @@ const Summary = (props) => {
                         console.log(res.data);
 
                         const data = {
-                            UserID: id,
+                            UserID: userId,
                             from: deptFlight?.flightId,
                             to: retFlight?.flightId,
                             cabin: cabin,
