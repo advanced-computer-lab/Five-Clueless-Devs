@@ -18,6 +18,7 @@ const ReservedFlight = () => {
     //let { id } = useParams();
 
     let Uid = localStorage.getItem('userId') || 10;
+    console.log(Uid);
 
     const getReservetion = () => {
         let fromtemp = [];
@@ -91,7 +92,7 @@ const ReservedFlight = () => {
                 {
                     fromId.map((from, index) =>
                         <div key={index}>
-                            <ReservedFlightCard from={from} to={toId[index]} resevationId={ReservationId[index]} />
+                            <ReservedFlightCard userId={Uid} from={from} to={toId[index]} resevationId={ReservationId[index] } />
                         </div>
 
                     )
