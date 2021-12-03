@@ -16,7 +16,7 @@ import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 const Summary = (props) => {
     const flight = props.flight;
 
-    // const history = useHistory();
+    const history = useHistory();
     // const handleClick = () => {
     //     history.push(`/details/${flight.flightId}`)
     // }
@@ -46,6 +46,18 @@ const Summary = (props) => {
 
         createData('Flight Price', props.retFlightPrice),
     ];
+    
+    let userId = localStorage.getItem('userId');
+
+    const clickConfirm = () =>{
+        if(userId){
+            toggleDialog();
+        }else{
+            history.push('/login');
+        }
+    }
+
+
 
     const onConfirm = (e) => {
         let numOfAdults = props.numOfAdults
@@ -60,12 +72,15 @@ const Summary = (props) => {
         let retFlight = props.retFlight;
 
         //-------------------------------
-        let userId = localStorage.getItem('userId') || 10;
+        
         //-------------------------------
 
         switch (cabin) {
             case "Economy":
+                console.log(numOfSeats)
+                console.log(deptFlight)
                 deptFlight = { ...deptFlight, availableEconomy: deptFlight.availableEconomy - numOfSeats };
+                console.log(deptFlight)
                 retFlight = { ...retFlight, availableEconomy: retFlight.availableEconomy - numOfSeats };
                 break;
             case "First":
@@ -199,7 +214,7 @@ const Summary = (props) => {
                 <div>Total cost: <p> <span><b>EGP</b>{props.deptFlightPrice + props.retFlightPrice}</span></p> </div>
                 <p className="passenger-font">(for {props.numOfAdults + props.numOfChildren} passengers)</p>
 
-                <button className="confirm-res" onClick={toggleDialog}>Confirm Reservation</button>
+                <button className="confirm-res" onClick={clickConfirm}>Confirm Reservation</button>
 
                 <div>
                     <Dialog

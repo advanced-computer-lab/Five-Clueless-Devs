@@ -54,20 +54,20 @@ router.post('/send_mail', cors(), async (req, res) => {
 
     let { text, to } = req.body
     const transport = nodemailer.createTransport({
-        host: process.env.MAIL_HOST,
-        port: process.env.MAIL_PORT,
-        auth: {
-            user: process.env.MAIL_USER,
-            pass: process.env.MAIL_PASS
-        }
-    })
+		host: process.env.MAIL_HOST,
+		port: process.env.MAIL_PORT,
+		auth: {
+			user: process.env.MAIL_USER,
+			pass: process.env.MAIL_PASS
+		}
+        
+	})
 
-    
-    let info = await transport.sendMail({
-            from: process.env.MAIL_FROM,
-            to: to,
-            subject: "test email",
-            html: `<div className="email" style="
+	await transport.sendMail({
+		from: process.env.MAIL_FROM,
+		to: to,
+		subject: "test email",
+		html: `<div className="email" style="
         border: 1px solid black;
         padding: 20px;
         font-family: sans-serif;

@@ -17,7 +17,7 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
     const [errMsg, setErrMsg] = useState("");
 
     //must get it from the previous step
-    let userId = localStorage.getItem('userId') || 10;
+    let userId = localStorage.getItem('userId');
 
     //-----------------------------------
 

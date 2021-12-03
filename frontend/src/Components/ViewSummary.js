@@ -10,7 +10,7 @@ import ReservationCancel from './ReservationCancel';
 
 const ViewSummary = () => {
 
-  let Uid = localStorage.getItem('userId') || 10;
+  let Uid = localStorage.getItem('userId');
 
   // david edited this part to add the send mail functionality
   let currEmail = "";
@@ -407,7 +407,10 @@ const ViewSummary = () => {
               />
 
             </div>
-            {/* <button onClick={handleSend}>send mail</button> */}
+            <div>
+              <Button variant="outlined" onClick={handleSend}>send email man</Button>
+            </div>
+
           </div>
         </div>
       </div>

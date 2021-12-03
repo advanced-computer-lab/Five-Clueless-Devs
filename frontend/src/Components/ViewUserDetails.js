@@ -8,40 +8,40 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, Table
 
 const ViewUserDetails = () => {
 
-    const [ sent, setSent ] = useState(false)
-	const [ text, setText ] = useState("")
+  const [sent, setSent] = useState(false)
+  const [text, setText] = useState("")
 
-    const handleSend = async (e) => {
-		setSent(true)
-		try {
-            
-            console.log(user.email);
-			//  BACKEND_URL + "users/search?userId=" + id)
-                await axios.post(BACKEND_URL + "users/send_mail?userId=" + id , {
-				text,to:user.email
-			})
-		} catch (error) {
-            
-			console.error(error)
-		}
-	}
+  const handleSend = async (e) => {
+    setSent(true)
+    try {
+
+      console.log(user.email);
+      //  BACKEND_URL + "users/search?userId=" + id)
+      await axios.post(BACKEND_URL + "users/send_mail?userId=" + id, {
+        text, to: user.email
+      })
+    } catch (error) {
+
+      console.error(error)
+    }
+  }
 
 
 
   const history = useHistory();
   const [user, setUser] = useState({
-        userId: '',
-        username: '',
-        password: '',
-        firstName: '',
-        lastName: '',
-        homeAddress: '',
-        countryCode: '',
-        telephone: '',
-        email: '',
-        passportNumber: '',
-        isAdmin: '',
-        reservations: ''
+    userId: '',
+    username: '',
+    password: '',
+    firstName: '',
+    lastName: '',
+    homeAddress: '',
+    countryCode: '',
+    telephone: '',
+    email: '',
+    passportNumber: '',
+    isAdmin: '',
+    reservations: ''
   });
   let { id } = useParams();
 
@@ -125,21 +125,46 @@ const ViewUserDetails = () => {
                   <TableCell>Username</TableCell>
                   <TableCell>{user?.username}</TableCell>
                 </TableRow>
-                <TableRow>
-                  {/* <th scope="row">3</th> */}
+                {/* <TableRow>
+                  
                   <TableCell>password</TableCell>
                   <TableCell>{user?.password}</TableCell>
-                </TableRow>
+                </TableRow> */}
                 <TableRow>
                   {/* <th scope="row">4</th> */}
-                  <TableCell>email</TableCell>
+                  <TableCell>Email</TableCell>
                   <TableCell>{user?.email}</TableCell>
                 </TableRow>
                 <TableRow>
-                  {/* <th scope="row">4</th> */}
-                  <TableCell>reservations</TableCell>
-                  <TableCell>{user?.reservations}</TableCell>
+                  {/* <th scope="row">1</th> */}
+                  <TableCell>First Name</TableCell>
+                  <TableCell>{user?.firstName}</TableCell>
                 </TableRow>
+                <TableRow>
+                  {/* <th scope="row">1</th> */}
+                  <TableCell>Last Name</TableCell>
+                  <TableCell>{user?.lastName}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">1</th> */}
+                  <TableCell>Home Address</TableCell>
+                  <TableCell>{user?.homeAddress}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">1</th> */}
+                  <TableCell>Telephone Number</TableCell>
+                  <TableCell>{user?.telephone}</TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <th scope="row">1</th> */}
+                  <TableCell>Passport Number</TableCell>
+                  <TableCell>{user?.passportNumber}</TableCell>
+                </TableRow>
+
+                {/* <th scope="row">4</th> */}
+
+
+
               </TableBody>
             </Table>
           </div>
@@ -159,7 +184,12 @@ const ViewUserDetails = () => {
               onClick={() => history.push(`/edit-user/${id}`)}
               variant="outlined"
               style={{ marginRight: "10px" }}
-            > Edit </Button>
+            > Edit Information </Button>
+            <Button
+              onClick={() => history.push(`/Reserved-flights`)}
+              variant="outlined"
+              style={{ marginRight: "10px" }}
+            > View Reservations </Button>
 
             {/*showDelete ? <Button onClick={setConfirmButton} variant="outlined" color="error">Delete </Button> : null*/}
             {/* {showConfirm ? <Button onClick={onDeleteConfirm} variant="outlined" color="error">Confirm</Button> : null} */}
@@ -170,7 +200,7 @@ const ViewUserDetails = () => {
 
 
       <div>
-          
+
         <Dialog
           open={showConfirm}
           onClose={toggleDialog}
@@ -185,10 +215,10 @@ const ViewUserDetails = () => {
             <Button onClick={onDeleteConfirm} variant="text" color="error">Delete</Button>
           </DialogActions>
         </Dialog>
-         
+
       </div>
 
-      <div className="App">
+      {/* <div className="App">
 
 			{!sent ? (
 				<form onClick={handleSend}>
@@ -197,7 +227,7 @@ const ViewUserDetails = () => {
 			) : (
 				<h1>Email Sent</h1>
 			)}
-		</div>
+		</div> */}
 
     </div>
   )

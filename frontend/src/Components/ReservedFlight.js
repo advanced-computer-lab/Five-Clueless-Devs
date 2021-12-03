@@ -103,10 +103,7 @@ const ReservedFlight = () => {
             </div>
 
         </div>
-        //   <div>
-        //   <Button variant="outlined" onClick={getReservetion}>Search</Button>
-        // </div>
-    )
+        )
 };
 
 

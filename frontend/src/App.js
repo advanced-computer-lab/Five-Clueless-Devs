@@ -27,6 +27,7 @@ import ReservedFlight from './Components/ReservedFlight';
 import ViewSummary from './Components/ViewSummary';
 import Confirmation from './Components/Confirmation';
 import ReservationCancel from './Components/ReservationCancel';
+import Login from './Components/Login';
 function App() {
 
   return (
@@ -35,7 +36,11 @@ function App() {
       <Router>
         <Navbar />
         <Switch>
-          <Route exact path="/" component={SearchFlightCriteria} />
+
+        <Route exact path="/" component={SearchFlightUser} />
+
+
+          <Route exact path="/admin-search" component={SearchFlightCriteria} />
 
 
           <Route path='/create-flight' component={CreateFlight} />
@@ -49,18 +54,18 @@ function App() {
           <Route path='/edit-user/:id' component={EditUser} />
           <Route path='/create-user' component={CreateUser} />
           <Route path='/user-details/:id' component={ViewUserDetails} />
-         
-          
+
+
           <Route path='/select-seats' component={FlightSeats} />
           <Route path='/search-user' component={SearchFlightUser} />
-          
+
           <Route path='/details-user/:id' component={ViewDetailsUser} />
           <Route path='/Reserved-flights' component={ReservedFlight} />
           {/* <Route path='/summary/:idfrom/:idto' component={ViewSummary} /> */}
           <Route path='/summary/:reservationId' component={ViewSummary} />
           <Route path='/Resrevation-cancel' component={ReservationCancel} />
           <Route path='/reserve' component={Confirmation} />
-
+          <Route path='/login' component={Login} />
 
 
         </Switch>
