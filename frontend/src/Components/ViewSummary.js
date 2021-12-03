@@ -11,7 +11,6 @@ import ReservationCancel from './ReservationCancel';
 const ViewSummary = () => {
 
   let Uid = localStorage.getItem('userId') || 10;
-  console.log(Uid);
 
   // david edited this part to add the send mail functionality
   let currEmail = "";
