@@ -40,6 +40,7 @@ const ReservationCancel = (props) => {
   }
     useEffect(() => {
         //OnCancel();
+        console.log(props);
         console.log(props.toSeats)
         console.log(props.fromSeats)
     }, []);
