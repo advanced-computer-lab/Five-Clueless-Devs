@@ -778,14 +778,14 @@ const SearchFlightUser = ({ location }) => {
                 retFlightArrivalTime={retFlightArrivalTime}
                 retFlightArrivalDate={retFlightArrivalDate}
                 retFlightId={selectedRetFlightId}
-                
+
                 numOfAdults={adultsNumber}
                 numOfChildren={childNumber}
                 selectDept={selectDept}
 
-                deptFlight = {selectedDeptFlight}
-                retFlight = {selectedRetFlight}
-                setBookingNum = {setBookingNum}
+                deptFlight={selectedDeptFlight}
+                retFlight={selectedRetFlight}
+                setBookingNum={setBookingNum}
             />
             </div>
 
@@ -991,7 +991,7 @@ const SearchFlightUser = ({ location }) => {
                     numOfChildren={childNumber}
                     deptSeats={deptSeats}
                     retSeats={retSeats}
-                    bookingNum = {bookingNum}
+                    bookingNum={bookingNum}
 
                 />
 
