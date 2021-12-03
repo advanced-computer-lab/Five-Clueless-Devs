@@ -8,7 +8,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, Table
 
 const ViewSummary = () => {
 
-  let Uid="10";
+  let Uid = "10";
   const history = useHistory();
   const [fromflight, setfromFlight] = useState({
     flightId: '',
@@ -32,143 +32,143 @@ const ViewSummary = () => {
     arrivalTerminal: '',
     departureTerminal: ''
   });
-  const[reservation,setReservation]=useState();
-  const[seatsFrom,setSeatsFrom]=useState();
-  const[seatsTO,setSeatsTO]=useState();
-  let { idfrom,idto } = useParams();
+  const [reservation, setReservation] = useState();
+  const [seatsFrom, setSeatsFrom] = useState();
+  const [seatsTO, setSeatsTO] = useState();
+  let { idfrom, idto } = useParams();
   useEffect(() => {
     getSummary();
-}, []);
+  }, []);
 
-const Tocancel=()=>{
+  const Tocancel = () => {
     console.log("cancel")
-}
+  }
 
-const getSummary = () =>{
+  const getSummary = () => {
     //console.log("Print id: " + { id });
-    var tempFromEconomy=[];
-    var tempFromFirst=[];
-    var tempFromBusiness=[];
-    var temptoEconomy=[];
-    var temptoFirst=[];
-    var temptoBusiness=[];
-    
+    var tempFromEconomy = [];
+    var tempFromFirst = [];
+    var tempFromBusiness = [];
+    var temptoEconomy = [];
+    var temptoFirst = [];
+    var temptoBusiness = [];
+
     axios
       .get(BACKEND_URL + "flights/search?flightId=" + idfrom)
       .then(res => {
         //console.log(res.data[0]);
-        tempFromEconomy=[...res.data[0].seatsEconomy];
-        tempFromFirst=[...res.data[0].seatsFirst];
-        tempFromBusiness=[...res.data[0].seatsBusiness];
+        tempFromEconomy = [...res.data[0].seatsEconomy];
+        tempFromFirst = [...res.data[0].seatsFirst];
+        tempFromBusiness = [...res.data[0].seatsBusiness];
 
-         //console.log(tempFromEconomy);
+        //console.log(tempFromEconomy);
         // console.log(tempFromFirst);
         // console.log(tempFromBusiness);
         setfromFlight(res.data[0] || {});
         axios
-        .get(BACKEND_URL + "flights/search?flightId=" + idto)
-        .then(res => {
-         // console.log(res.data[0]);
-          temptoEconomy=[...res.data[0].seatsEconomy];
-          temptoFirst=[...res.data[0].seatsFirst];
-          temptoBusiness=[...res.data[0].seatsBusiness];
-          settoFlight(res.data[0] || {});
-        })
-        .catch(err => {
-          console.log(err);
-        })
-       // console.log(tempFromEconomy);
-        axios.get(BACKEND_URL + "reservations/GetReservation?UserID=5&from="+idfrom+"&to="+idto)
-        .then(res => {
-           setReservation(res.data[0]);
-            var temp1=[];
-            var temp2=[];
-          console.log(res.data[0]._id);
-          //temp=[...res.data];
-          let test="Economy";
-          //console.log(tempFromEconomy);
-          switch(res.data[0].cabin){
+          .get(BACKEND_URL + "flights/search?flightId=" + idto)
+          .then(res => {
+            // console.log(res.data[0]);
+            temptoEconomy = [...res.data[0].seatsEconomy];
+            temptoFirst = [...res.data[0].seatsFirst];
+            temptoBusiness = [...res.data[0].seatsBusiness];
+            settoFlight(res.data[0] || {});
+          })
+          .catch(err => {
+            console.log(err);
+          })
+        // console.log(tempFromEconomy);
+        axios.get(BACKEND_URL + "reservations/GetReservation?UserID=" + Uid + "&from=" + idfrom + "&to=" + idto)
+          .then(res => {
+            setReservation(res.data[0]);
+            var temp1 = [];
+            var temp2 = [];
+            console.log(res.data[0]._id);
+            //temp=[...res.data];
+            let test = "Economy";
+            //console.log(tempFromEconomy);
+            switch (res.data[0].cabin) {
               case "Economy":
-                  temp1=tempFromEconomy;
-                  temp2=temptoEconomy;
-                  break;
+                temp1 = tempFromEconomy;
+                temp2 = temptoEconomy;
+                break;
               case "First":
-                  temp1=tempFromFirst;
-                  temp2=temptoFirst;
-                  break;
+                temp1 = tempFromFirst;
+                temp2 = temptoFirst;
+                break;
               case "Business":
-                  temp1=tempFromBusiness;
-                  temp2=temptoBusiness;
-          }
-          //console.log(temp1);
-          //console.log(temp2);
-   
-          let SeatFrom=[];
-          let SeatTo=[];
-          for(let i=0;i<temp1.length;i++){
-              if(temp1[i]==Uid){
-                  SeatFrom.push(getSeatNumber(i));
-              }
-          }
-          var seatFromAsString = SeatFrom.join(', ');
-          setSeatsFrom(seatFromAsString);
-          //console.log(SeatFrom);
-          for(let i=0;i<temp2.length;i++){
-            if(temp2[i]==Uid){
-                SeatTo.push(getSeatNumber(i));
+                temp1 = tempFromBusiness;
+                temp2 = temptoBusiness;
             }
-        }
-        var seatToAsString = SeatTo.join(', ');
-        setSeatsTO(seatToAsString);
-        })
-        .catch(err => {
-          console.log(err);
-        })
+            //console.log(temp1);
+            //console.log(temp2);
+
+            let SeatFrom = [];
+            let SeatTo = [];
+            for (let i = 0; i < temp1.length; i++) {
+              if (temp1[i] == Uid) {
+                SeatFrom.push(getSeatNumber(i));
+              }
+            }
+            var seatFromAsString = SeatFrom.join(', ');
+            setSeatsFrom(seatFromAsString);
+            //console.log(SeatFrom);
+            for (let i = 0; i < temp2.length; i++) {
+              if (temp2[i] == Uid) {
+                SeatTo.push(getSeatNumber(i));
+              }
+            }
+            var seatToAsString = SeatTo.join(', ');
+            setSeatsTO(seatToAsString);
+          })
+          .catch(err => {
+            console.log(err);
+          })
       })
       .catch(err => {
         console.log(err);
       })
-     
+
   }
   const getSeatNumber = (i) => {
     let letter = String.fromCharCode('A'.charCodeAt(0) + i % 6);
     let num = Math.floor(i / 6 + 1);
     return `${num}${letter}`
-}
+  }
 
 
 
-//   const onDeleteConfirm = () => {
-//     axios
-//       .delete(BACKEND_URL + "flights/deleteFlight?flightId=" + id)
-//       .then(res => {
-//         history.push("/search");
-//       })
-//       .catch(err => {
-//         console.log("Error form ViewFlightDetails_deleteClick");
-//         console.log(err);
-//       })
-//   };
-//   const [showConfirm, setConfirm] = useState(false);
-//   const setConfirmButton = () => {
-//     setConfirm(true)
-//     // setDelete(false)
-//   };
+  //   const onDeleteConfirm = () => {
+  //     axios
+  //       .delete(BACKEND_URL + "flights/deleteFlight?flightId=" + id)
+  //       .then(res => {
+  //         history.push("/search");
+  //       })
+  //       .catch(err => {
+  //         console.log("Error form ViewFlightDetails_deleteClick");
+  //         console.log(err);
+  //       })
+  //   };
+  //   const [showConfirm, setConfirm] = useState(false);
+  //   const setConfirmButton = () => {
+  //     setConfirm(true)
+  //     // setDelete(false)
+  //   };
 
-//   const [showDelete, setDelete] = useState(true);
-//   const setDeleteButton = () => {
-//     showDelete(false)
-//   };
+  //   const [showDelete, setDelete] = useState(true);
+  //   const setDeleteButton = () => {
+  //     showDelete(false)
+  //   };
 
-//   const toggleDialog = () => {
-//     setConfirm(!showConfirm);
-//   }
+  //   const toggleDialog = () => {
+  //     setConfirm(!showConfirm);
+  //   }
 
 
   return (
-        // <div>
-        //   <Button variant="outlined" onClick={getSummary}>Search</Button>
-        // </div>
+    // <div>
+    //   <Button variant="outlined" onClick={getSummary}>Search</Button>
+    // </div>
     <div className="ViewFlight">
       <div className="container">
         <div className="row">
@@ -184,7 +184,7 @@ const getSummary = () =>{
         <div>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
             <Table sx={{ maxWidth: 500 }} className="table table-hover table-dark">
-        <h1> Departure Flight </h1>
+              <h1> Departure Flight </h1>
               <TableBody>
                 <TableRow>
                   {/* <th scope="row">1</th> */}
@@ -243,7 +243,7 @@ const getSummary = () =>{
                 </TableRow>
               </TableBody>
               <h1> Return Flight </h1>
-            <TableBody>
+              <TableBody>
                 <TableRow>
                   {/* <th scope="row">1</th> */}
                   <TableCell>Return Flight ID</TableCell>
@@ -297,6 +297,7 @@ const getSummary = () =>{
               </TableBody>
             </Table>
           </div>
+          <div>{reservation?.price}</div>
         </div>
 
         <div className="row">
@@ -308,8 +309,8 @@ const getSummary = () =>{
               Edit Flights
             </Link>
             <br /> */}
-             <div>
-           <Button variant="outlined" onClick={Tocancel}>cancel Resrevation</Button>
+            <div>
+              <Button variant="outlined" onClick={Tocancel}>cancel Resrevation</Button>
             </div>
 
           </div>
