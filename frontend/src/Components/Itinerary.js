@@ -21,7 +21,7 @@ const Itinerary = (props) => {
         return { name, calories };
     }
 
-    const getSeats = (seatsList) =>{
+    const getSeats = (seatsList) => {
         let seats = seatsList?.map(s => s.number);
         console.log(seatsList)
         return seats?.join(', ');
@@ -42,7 +42,7 @@ const Itinerary = (props) => {
         createData('Chosen Class', props.chosenClass),
         createData('Chosen Seats', ` ${getSeats(props.retSeats)}`),
         createData('Flight Price', props.retFlightPrice),
-        
+
 
     ];
 
@@ -116,13 +116,14 @@ const Itinerary = (props) => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                    
+
+                <div>Booking Number: <p> <span>{props.bookingNum.toUpperCase()}</span></p> </div>
                 <div>Total cost: <p> <span><b>EGP</b>{props.deptFlightPrice + props.retFlightPrice}</span></p> </div>
                 <p className="passenger-font">(for {props.numOfAdults + props.numOfChildren} passengers)</p>
             </div>
 
 
-        </div >
+        </div>
     )
 };
 

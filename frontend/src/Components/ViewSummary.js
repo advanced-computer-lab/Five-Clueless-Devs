@@ -38,9 +38,11 @@ const ViewSummary = () => {
   useEffect(() => {
     getSummary();
 }, []);
+
 const Tocancel=()=>{
     console.log("cancel")
 }
+
 const getSummary = () =>{
     //console.log("Print id: " + { id });
     var tempFromEconomy=[];
@@ -181,14 +183,6 @@ const getSummary = () =>{
         <div>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
             <Table sx={{ maxWidth: 500 }} className="table table-hover table-dark">
-              {/* <thead>
-          <TableRow>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
-          </TableRow>
-        </thead> */}
         <h1> Departure Flight </h1>
               <TableBody>
                 <TableRow>

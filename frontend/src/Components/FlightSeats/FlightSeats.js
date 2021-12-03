@@ -97,15 +97,15 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
             let remSeats = freeSeats.length;
 
             if (cabin === 'Economy') {
-                setFlight({ ...flight, availableEconomy: remSeats, seatsEconomy: tmpSeats });
+                setFlight({ ...flight, seatsEconomy: tmpSeats });
                 tmpFlight = { ...tmpFlight, seatsEconomy: tmpSeats }
             }
             else if (cabin === 'Business') {
-                setFlight({ ...flight, availableBusiness: remSeats, seatsBusiness: tmpSeats });
+                setFlight({ ...flight, seatsBusiness: tmpSeats });
                 tmpFlight = { ...tmpFlight, seatsBusiness: tmpSeats }
             }
             else if (cabin === 'First') {
-                setFlight({ ...flight, availableSeats: remSeats, seatsFirst: tmpSeats });
+                setFlight({ ...flight, seatsFirst: tmpSeats });
                 tmpFlight = { ...tmpFlight, seatsFirst: tmpSeats }
             }
 
