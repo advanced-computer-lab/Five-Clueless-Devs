@@ -16,16 +16,33 @@ const ViewSummary = () => {
   let currEmail = "";
 
   const [sent, setSent] = useState(false)
-  const [text, setText] = useState("")
-  const [email, setEmail] = useState("")
+  // const [refundedAmount, setRefundedAmount] = useState("")
+  // const [deptFlightId, setDeptFlightId] = useState("")
+  // const [retFlightId, setRetFlightId] = useState("")
+  // const [deptFrom, setDeptFrom] = useState("")
+  // const [deptTo, setDeptTo] = useState("")
+  // const [retFrom, setRetFrom] = useState("")
+  // const [retTo, setRetTo] = useState("")
+  const [email, setEmail] = useState("");
+  let deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo, refundedAmount, bookingNumber;
   const handleSend = async (e) => {
+    refundedAmount = reservation?.price
+    deptFlightId = fromflight?.flightId
+    retFlightId = toflight?.flightId
+    deptFrom = fromflight?.from
+    deptTo = fromflight?.to
+    retFrom = toflight?.from
+    retTo = toflight?.to
+    bookingNumber = bookingId
+
+    
     setSent(true)
     try {
 
       console.log(email);
       //  BACKEND_URL + "users/search?userId=" + id)
       await axios.post(BACKEND_URL + "users/send_mail?userId=" + Uid, {
-        text, to: email
+        deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo, refundedAmount, bookingNumber, to: email
       })
     } catch (error) {
 
@@ -105,6 +122,7 @@ const ViewSummary = () => {
       .then(res => {
         setReservation(res.data[0]);
         setBookingId(reservationId.toUpperCase())
+
         var temp1 = [];
         var temp2 = [];
         console.log(res.data[0]._id);
@@ -198,7 +216,7 @@ const ViewSummary = () => {
       .catch(err => {
         console.log(err);
       })
-    setText("Amount Refunded:" + reservation?.price)
+
   }
   const getSeatNumber = (i) => {
     let letter = String.fromCharCode('A'.charCodeAt(0) + i % 6);
@@ -407,9 +425,9 @@ const ViewSummary = () => {
               />
 
             </div>
-            <div>
+            {/* <div>
               <Button variant="outlined" onClick={handleSend}>send email man</Button>
-            </div>
+            </div> */}
 
           </div>
         </div>

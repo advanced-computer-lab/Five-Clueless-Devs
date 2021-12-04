@@ -207,7 +207,7 @@ const EditUser = () => {
                                     aria-describedby="alert-dialog-description"
                                 >
                                     <DialogTitle id="alert-dialog-title">
-                                        {"Are you sure you want to delete this user?"}
+                                        {"Are you sure you want to edit this user?"}
                                     </DialogTitle>
                                     <DialogActions>
                                         <Button onClick={toggleDialog} variant="text">Cancel </Button>
