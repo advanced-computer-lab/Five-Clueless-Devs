@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import '../App.css';
 import "./Itinerary.css";
@@ -11,16 +11,23 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
+import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 
 const Summary = (props) => {
     const flight = props.flight;
 
-    // const history = useHistory();
+    const history = useHistory();
     // const handleClick = () => {
     //     history.push(`/details/${flight.flightId}`)
     // }
     function createData(name, calories) {
         return { name, calories };
+    }
+
+    const [showConfirm, setConfirm] = useState(false);
+
+    const toggleDialog = () => {
+      setConfirm(!showConfirm);
     }
     const rows = [
         createData('Flight Number', props.selectedDeptFlightId),
@@ -39,13 +46,25 @@ const Summary = (props) => {
 
         createData('Flight Price', props.retFlightPrice),
     ];
+    
+    let userId = localStorage.getItem('userId');
+
+    const clickConfirm = () =>{
+        if(userId){
+            toggleDialog();
+        }else{
+            history.push('/login');
+        }
+    }
+
+
 
     const onConfirm = (e) => {
         let numOfAdults = props.numOfAdults
         let numOfChildren = props.numOfChildren;
         let numOfSeats = numOfAdults + numOfChildren;
         let priceOfDept = props.deptFlightPrice;
-        let priceOfRet  = props.retFlightPrice;
+        let priceOfRet = props.retFlightPrice;
         console.log(props)
         let cabin = props.chosenClass;
 
@@ -53,12 +72,15 @@ const Summary = (props) => {
         let retFlight = props.retFlight;
 
         //-------------------------------
-        let userId = localStorage.getItem('userId') || 10;
+        
         //-------------------------------
 
         switch (cabin) {
             case "Economy":
+                console.log(numOfSeats)
+                console.log(deptFlight)
                 deptFlight = { ...deptFlight, availableEconomy: deptFlight.availableEconomy - numOfSeats };
+                console.log(deptFlight)
                 retFlight = { ...retFlight, availableEconomy: retFlight.availableEconomy - numOfSeats };
                 break;
             case "First":
@@ -72,6 +94,8 @@ const Summary = (props) => {
             default:
                 console.log("Something went wrong");
         }
+
+
 
 
         axios
@@ -190,7 +214,24 @@ const Summary = (props) => {
                 <div>Total cost: <p> <span><b>EGP</b>{props.deptFlightPrice + props.retFlightPrice}</span></p> </div>
                 <p className="passenger-font">(for {props.numOfAdults + props.numOfChildren} passengers)</p>
 
-                <button className="confirm-res" onClick={onConfirm}>Confirm Reservation</button>
+                <button className="confirm-res" onClick={clickConfirm}>Confirm Reservation</button>
+
+                <div>
+                    <Dialog
+                        open={showConfirm}
+                        onClose={toggleDialog}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            {"Are you sure you want to confirm the reservation?"}
+                        </DialogTitle>
+                        <DialogActions>
+                            <Button onClick={toggleDialog} variant="text">back </Button>
+                            <Button onClick={onConfirm} variant="text" color="success">Confirm Reservation</Button>
+                        </DialogActions>
+                    </Dialog>
+                </div>
             </div>
 
         </div>

@@ -17,7 +17,7 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
     const [errMsg, setErrMsg] = useState("");
 
     //must get it from the previous step
-    let userId = localStorage.getItem('userId') || 10;
+    let userId = localStorage.getItem('userId');
 
     //-----------------------------------
 
@@ -33,15 +33,6 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
     useEffect(() => {
         console.log("Print id: " + flight?.flightId);
         setFlight(from);
-        // axios
-        //     .get(BACKEND_URL + "flights/search?flightId=" + flightId)
-        //     .then(res => {
-        //         console.log(res.data);
-        //         setFlight(res.data[0] || {});
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //     })
     }, []);
 
     useEffect(() => {
@@ -97,16 +88,16 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
             let remSeats = freeSeats.length;
 
             if (cabin === 'Economy') {
-                setFlight({ ...flight, seatsEconomy: tmpSeats });
-                tmpFlight = { ...tmpFlight, seatsEconomy: tmpSeats }
+                setFlight({  seatsEconomy: tmpSeats });
+                tmpFlight = {  seatsEconomy: tmpSeats }
             }
             else if (cabin === 'Business') {
-                setFlight({ ...flight, seatsBusiness: tmpSeats });
-                tmpFlight = { ...tmpFlight, seatsBusiness: tmpSeats }
+                setFlight({  seatsBusiness: tmpSeats });
+                tmpFlight = { seatsBusiness: tmpSeats }
             }
             else if (cabin === 'First') {
-                setFlight({ ...flight, seatsFirst: tmpSeats });
-                tmpFlight = { ...tmpFlight, seatsFirst: tmpSeats }
+                setFlight({ seatsFirst: tmpSeats });
+                tmpFlight = { seatsFirst: tmpSeats }
             }
 
             let id = flight?.flightId;
@@ -117,22 +108,24 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
                     if (type === 'Arrival') {
                         setView(5);
                         setTo(tmpFlight);
+                        setRetSeats(selectedSeats)
                     } else {
                         setFrom(tmpFlight);
+                        setDeptSeats(selectedSeats);
+                        setSeats([]);
+                        setSelectedSeats([]);
+                        setType('Arrival');
                     }
                 })
                 .catch(err => {
                     console.log(err);
                 })
 
-            if (type == 'Departure') {
-                setDeptSeats(selectedSeats);
-                setSeats([]);
-                setSelectedSeats([]);
-                setType('Arrival');
-            } else if (type === "Arrival") {
-                setRetSeats(selectedSeats)
-            }
+            // if (type == 'Departure') {
+
+            // } else if (type === "Arrival") {
+               
+            // }
         }
     };
 
