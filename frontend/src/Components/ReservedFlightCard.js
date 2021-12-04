@@ -4,6 +4,8 @@ import '../App.css';
 import "./FlightCard.css";
 
 const ReservedFlightCard = (props) => {
+    const userId =props.userId;
+    console.log(userId);
     const fromflight = props.from;
     const toflight = props.to;
     const history = useHistory();

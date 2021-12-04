@@ -6,9 +6,33 @@ import { BACKEND_URL } from '../API/URLS';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
 
 
+
 const ViewSummary = () => {
 
-  let Uid = localStorage.getItem('userId') || 10;
+  let Uid = 4;//localStorage.getItem('userId') || 10;
+  console.log(Uid);
+  
+  // david edited this part to add the send mail functionality
+  let currEmail = "";
+  
+  const [sent, setSent] = useState(false)
+  const [text, setText] = useState("")
+  const [email,setEmail]= useState("")
+  const handleSend = async (e) => {
+    setSent(true)
+    try {
+
+      console.log(email);
+      //  BACKEND_URL + "users/search?userId=" + id)
+      await axios.post(BACKEND_URL + "users/send_mail?userId=" + Uid, {
+        text, to: email
+      })
+    } catch (error) {
+
+      console.error(error)
+    }
+  }
+
   const history = useHistory();
   const [fromflight, setfromFlight] = useState({
     flightId: '',
@@ -36,15 +60,29 @@ const ViewSummary = () => {
   const [seatsFrom, setSeatsFrom] = useState();
   const [seatsTO, setSeatsTO] = useState();
   const [bookingId, setBookingId] = useState("");
- 
+
   // let { idfrom, idto } = useParams();
   let { reservationId } = useParams();
   useEffect(() => {
     getSummary();
+
+    axios
+      .get(BACKEND_URL + "users/search?userId=" + Uid)
+      .then(res => {
+        console.log(res.data);
+        setEmail(res.data[0].email);
+        console.log(currEmail);
+
+
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }, []);
 
   const Tocancel = () => {
-    console.log("cancel")
+    console.log("cancel");
+    handleSend();
   }
 
   const getSummary = () => {
@@ -81,7 +119,7 @@ const ViewSummary = () => {
             temp2 = temptoBusiness;
         }
 
-       
+
 
         axios
           .get(BACKEND_URL + "flights/search?flightId=" + res.data[0].from)
@@ -308,7 +346,7 @@ const ViewSummary = () => {
                     <TableCell>Arrival Time</TableCell>
                     <TableCell>{toflight.arrivalTime}</TableCell>
                   </TableRow>
-                  
+
                   <TableRow>
                     {/* <th scope="row">11</th> */}
                     <TableCell>Departure Terminal</TableCell>
