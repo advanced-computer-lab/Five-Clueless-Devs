@@ -9,7 +9,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, Table
 
 const ViewSummary = () => {
 
-  let Uid = 4;//localStorage.getItem('userId') || 10;
+  let Uid = localStorage.getItem('userId') || 10;
   console.log(Uid);
   
   // david edited this part to add the send mail functionality
@@ -191,6 +191,7 @@ const ViewSummary = () => {
       .catch(err => {
         console.log(err);
       })
+      setText("Refunded :"+reservation?.price);
   }
   const getSeatNumber = (i) => {
     let letter = String.fromCharCode('A'.charCodeAt(0) + i % 6);
