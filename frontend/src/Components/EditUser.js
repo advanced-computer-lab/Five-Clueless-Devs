@@ -211,7 +211,7 @@ const EditUser = () => {
                                     </DialogTitle>
                                     <DialogActions>
                                         <Button onClick={toggleDialog} variant="text">Cancel </Button>
-                                        <Button onClick={ onSubmit} variant="text" type="submit" >Confirm Edit</Button>
+                                        <Button onClick={ onSubmit} variant="text" type="submit" color="success" >Confirm Edit</Button>
                                     </DialogActions>
                                 </Dialog>
 
