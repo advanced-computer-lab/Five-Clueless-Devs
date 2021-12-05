@@ -26,6 +26,8 @@ const SearchFlightUser = ({ location }) => {
 
     const moment = require('moment')
     const getDuration = (flight) => {
+        console.log('----duraton----')
+        console.log(flight);
         let depDate = moment(flight?.departureDate?.substring(0, 10) + "T" + flight?.departureTime + ":00");
         let arrDate = moment(flight?.arrivalDate?.substring(0, 10) + "T" + flight?.arrivalTime + ":00");
         let durationInMins = arrDate.diff(depDate, 'minutes');

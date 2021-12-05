@@ -60,6 +60,8 @@ const FlightCard = (props) => {
         props.passDeptFlightDeptDate(flight.departureDate)
         props.passDeptFlightArrivalDate(flight.arrivalDate)
         props.passDeptFlightPrice(checkTotal())
+
+        console.log(flight);
         props.passSelectedDeptFlight(flight);
         console.log(flight.flightId);
     }
