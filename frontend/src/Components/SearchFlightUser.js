@@ -123,7 +123,7 @@ const SearchFlightUser = ({ location }) => {
 
     const [selectedSeats, setSelectedSeats] = useState([]);
 
-
+    let saved = null;
     useEffect(() => {
         axios
             .get(BACKEND_URL + "flights/search?")
@@ -137,7 +137,47 @@ const SearchFlightUser = ({ location }) => {
             .catch(err => {
                 console.log(err);
             })
+
+            saved = localStorage.getItem('saved');
+            if(saved !== null){
+                saved = JSON.parse(saved);
+                console.log('got saved data');
+                 localStorage.removeItem('saved');
+                 setSavedData();
+                 setView(3);
+            } 
+
     }, []);
+
+
+    const setSavedData = () =>{
+        setDeptFlightFrom(saved.deptFlightFrom);
+        setDeptFlightTo(saved.deptFlightTo);
+        setDeptFlightDeptTime(saved.deptFlightDeptTime);
+        setDeptFlightArrivalTime(saved.deptFlightArrivalTime);
+        setDeptDeptDate(saved.deptFlightDeptDate);
+        setDeptArrivalDate(saved.deptFlightArrivalDate);
+        
+        setClass(saved.chosenClass);
+        
+        setDeptSelectedId(saved.selectedDeptFlightId);
+        setDeptPrice(saved.deptFlightPrice);
+        setRetPrice(saved.retFlightPrice);
+        setRetFlightDeptTime(saved.retFlightDeptTime);
+        setRetDeptDate(saved.retFlightDeptDate);
+        setRetFlightArrivalTime(saved.retFlightArrivalTime);
+        setRetArrivalDate(saved.retFlightArrivalDate);
+       
+        setRetSelectedId(saved.selectedRetFlightId);
+
+        setAdultNumber(saved.adultsNumber);
+        setChildNumber(saved.childNumber);
+       
+       // selectDept={selectDept}
+
+       setSelectedDeptFlight(saved.selectedDeptFlight);
+       setSelectedRetFlight(saved.selectedRetFlight);
+    }
 
     // useEffect((e) => {
     //     const usp = new URLSearchParams(flight);
@@ -762,7 +802,34 @@ const SearchFlightUser = ({ location }) => {
                     </Card>
                 </div>
             </div>
-            <div><Summary
+            <div>
+            {saved? 
+                <Summary
+                deptFlightFrom={saved.deptFrom}
+                deptFlightTo = {saved.deptTo}
+                deptFlightDeptTime={saved.deptFlightDeptTime}
+                deptFlightArrivalTime={saved.deptFlightArrivalTime}
+                deptFlightDeptDate={saved.deptFlightDeptDate}
+                deptFlightArrivalDate={saved.deptFlightArrivalDate}
+                chosenClass={saved.chosenClass}
+                selectedDeptFlightId={saved.selectedDeptFlightId}
+                deptFlightPrice={saved.deptFlightPrice}
+                retFlightPrice={saved.retFlightPrice}
+                retFlightDeptTime={saved.retFlightDeptTime}
+                retFlightDeptDate={saved.retFlightDeptDate}
+                retFlightArrivalTime={saved.retFlightArrivalTime}
+                retFlightArrivalDate={saved.retFlightArrivalDate}
+                retFlightId={saved.selectedRetFlightId}
+
+                adultsNumber={saved.numOfAdults}
+                childNumber={saved.numOfChildren}
+                selectDept={selectDept}
+
+                deptFlight={saved.deptFlight}
+                retFlight={saved.retFlight}
+                setBookingNum={setBookingNum}
+
+            />:  <Summary
                 deptFrom={deptFlightFrom}
                 deptTo={deptFlightTo}
                 deptFlightDeptTime={deptFlightDeptTime}
@@ -787,14 +854,8 @@ const SearchFlightUser = ({ location }) => {
                 retFlight={selectedRetFlight}
                 setBookingNum={setBookingNum}
             />
+            }
             </div>
-
-
-
-
-
-
-
 
 
         </>);
