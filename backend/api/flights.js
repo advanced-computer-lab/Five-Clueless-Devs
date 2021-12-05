@@ -24,7 +24,14 @@ router.get('/search', (req, res) => {
         .then(flight => res.json(flight))
         .catch(err => res.status(404).json({ nobookfound: 'No flights found' }));
 });
-
+router.get('/searchUser', (req, res) => {
+    const queryObj = {...req.query};
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|eq|ne)\b/g, match => `$${match}`);
+    Flight.find(JSON.parse(queryStr))
+        .then(flight => res.json(flight))
+        .catch(err => res.status(404).json({ nobookfound: 'No flights found' }));
+});
 //PUT: Update flight details
 router.put('/update', (req, res) => {
     Flight.findOneAndUpdate(req.query, req.body)
@@ -38,6 +45,8 @@ router.delete('/deleteFlight', (req, res) => {
     Flight.deleteOne({ ...req.query })
         .then(flight => res.json(flight))
         .catch(err => res.status(404).json(err));
-})
+});
+
+
 
 module.exports = router;

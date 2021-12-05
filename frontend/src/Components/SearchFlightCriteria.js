@@ -27,6 +27,7 @@ const SearchFlightCriteria = ({ location }) => {
   });
 
   useEffect(() => {
+
     axios
       .get(BACKEND_URL + "flights/search?")
       .then(res => {

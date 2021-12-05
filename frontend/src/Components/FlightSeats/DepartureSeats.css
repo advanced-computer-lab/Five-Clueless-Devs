@@ -1,0 +1,13 @@
+.dep-cont{
+    display: flex;
+    margin: 25px;
+    align-items: center;
+    justify-content: center;
+}
+
+.dep-summary{
+    min-width: 250px;
+    text-align: left;
+    margin: 0 50px 0 5px;
+    border: 1px solid rgba(224, 224, 224, 1);;
+}

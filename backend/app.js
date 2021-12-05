@@ -4,7 +4,9 @@ const connectDB = require('./config/db.js');
 
 const app = express();
 
-var cors = require('cors');
+const cors = require('cors');
+
+
 
 
 // Connect Database
@@ -28,8 +30,8 @@ app.use('/api/users', userRouter);
 const flightRouter = require('./api/flights');
 app.use('/api/flights', flightRouter);
 
-
-
+const reservationRouter = require('./api/reservations');
+app.use('/api/reservations', reservationRouter);
 
 const port = process.env.PORT || 8082;
 
