@@ -655,13 +655,20 @@ const SearchFlightUser = ({ location }) => {
                     <div className="list">
 
                         {
-                            returnFlightRes.map((flight, k) =>
-                                <ReturnFlightCard flight={flight} data={selectDept} numOfChildren={childNumber} numOfAdults={adultsNumber} chosenClass={chosenClass} key={k}
-                                    passRetId={setRetSelectedId} passRetFrom={setRetFlightFrom}
-                                    passRetTo={setRetFlightTo} passRetDuration={setRetFlightDuration} passRetFlightDeptTime={setRetFlightDeptTime}
-                                    passRetFlightArrivalTime={setRetFlightArrivalTime} passRetFlightPrice={setRetPrice} passRetFlightDate={setRetDeptDate}
-                                    passRetFlightArrivalDate={setRetArrivalDate} passSelectedRetFlight={setSelectedRetFlight} />
-                            )}
+                            returnFlightRes.length > 0 ?
+                                returnFlightRes.map((flight, k) =>
+                                    <ReturnFlightCard flight={flight} data={selectDept} numOfChildren={childNumber} numOfAdults={adultsNumber} chosenClass={chosenClass} key={k}
+                                        passRetId={setRetSelectedId} passRetFrom={setRetFlightFrom}
+                                        passRetTo={setRetFlightTo} passRetDuration={setRetFlightDuration} passRetFlightDeptTime={setRetFlightDeptTime}
+                                        passRetFlightArrivalTime={setRetFlightArrivalTime} passRetFlightPrice={setRetPrice} passRetFlightDate={setRetDeptDate}
+                                        passRetFlightArrivalDate={setRetArrivalDate} passSelectedRetFlight={setSelectedRetFlight} />
+                                ) 
+                                :
+                                <div className="no-search">
+                                    <img src="https://img.icons8.com/external-kiranshastry-gradient-kiranshastry/64/000000/external-search-airport-kiranshastry-gradient-kiranshastry.png" />
+                                    <h1>Sorry, No Return Flights Found</h1>
+                                </div>
+                        }
 
                     </div>
 
