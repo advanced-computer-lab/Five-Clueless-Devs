@@ -139,6 +139,14 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
         return `${durHours} hours and ${durationInMins} minutes`;
     }
 
+    const getBaggage = () =>{
+        if(type == "Departure"){
+            return from?.baggageAllowance;
+        }else{
+            return to?.baggageAllowance;
+        }
+    }
+
 
     const goBack = () => {
         setSeats([]);
@@ -199,15 +207,11 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
                             </TableRow>
                             <TableRow>
                                 <TableCell>Cabin Class</TableCell>
-                                <TableCell>{'Economy'}</TableCell>
+                                <TableCell>{cabin}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>Baggage Allowance</TableCell>
-                                <TableCell>{'One 23kg Bag'}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Price</TableCell>
-                                <TableCell>{'10000 EGP'}</TableCell>
+                                <TableCell>{getBaggage()}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>Max Number Of Seats</TableCell>
