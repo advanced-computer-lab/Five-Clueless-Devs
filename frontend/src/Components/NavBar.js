@@ -23,7 +23,7 @@ const Navbar = () => {
 
         {userId ? <Button className="admin" color="inherit" onClick={(e) => {
           localStorage.removeItem('userId');
-          window.location.reload();
+          history.push('/');
         }}>Logout</Button> : <Button className="admin" color="inherit" onClick={(e) => history.push("/login")}>Login</Button>}
 
         <div className="ayesm">

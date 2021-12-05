@@ -17,11 +17,13 @@ import Itinerary from './Itinerary';
 import Summary from './Summary';
 import FlightSeats from './FlightSeats/FlightSeats';
 import { set } from 'mongoose';
+import { useHistory } from "react-router";
+import "./Itinerary.css";
 
 
 
 const SearchFlightUser = ({ location }) => {
-    // const history = useHistory();
+     const history = useHistory();
     // useState hooks for input and language
 
     const moment = require('moment')
@@ -256,6 +258,7 @@ const SearchFlightUser = ({ location }) => {
     }
     const editDept = () => {
         setView(1);
+        setReturnResult([]);
     }
     const editRet = () => {
         setView(2);
@@ -306,7 +309,8 @@ const SearchFlightUser = ({ location }) => {
         } else {
             setErrorSame("");
         }
-        if (flight.departureDate > returnDate) {
+        
+        if (returnDate && flight.departureDate && flight.departureDate > returnDate) {
             // alert("Departure date cannot be later than return date")
             setErrorDate("Departure date cannot be later than return date")
             goAhead = false;
@@ -1047,6 +1051,7 @@ const SearchFlightUser = ({ location }) => {
                     bookingNum={bookingNum}
 
                 />
+                <div><button className="confirm-res" style={{marginBottom:"20px"}} onClick={(e) => history.push('/Reserved-flights')}>View Reservations</button></div>
 
                 </div>
 
