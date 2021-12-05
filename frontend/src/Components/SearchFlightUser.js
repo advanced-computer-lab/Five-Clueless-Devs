@@ -138,28 +138,28 @@ const SearchFlightUser = ({ location }) => {
                 console.log(err);
             })
 
-            saved = localStorage.getItem('saved');
-            if(saved !== null){
-                saved = JSON.parse(saved);
-                console.log('got saved data');
-                 localStorage.removeItem('saved');
-                 setSavedData();
-                 setView(3);
-            } 
+        saved = localStorage.getItem('saved');
+        if (saved !== null) {
+            saved = JSON.parse(saved);
+            console.log('got saved data');
+            localStorage.removeItem('saved');
+            setSavedData();
+            setView(3);
+        }
 
     }, []);
 
 
-    const setSavedData = () =>{
+    const setSavedData = () => {
         setDeptFlightFrom(saved.deptFlightFrom);
         setDeptFlightTo(saved.deptFlightTo);
         setDeptFlightDeptTime(saved.deptFlightDeptTime);
         setDeptFlightArrivalTime(saved.deptFlightArrivalTime);
         setDeptDeptDate(saved.deptFlightDeptDate);
         setDeptArrivalDate(saved.deptFlightArrivalDate);
-        
+
         setClass(saved.chosenClass);
-        
+
         setDeptSelectedId(saved.selectedDeptFlightId);
         setDeptPrice(saved.deptFlightPrice);
         setRetPrice(saved.retFlightPrice);
@@ -167,16 +167,16 @@ const SearchFlightUser = ({ location }) => {
         setRetDeptDate(saved.retFlightDeptDate);
         setRetFlightArrivalTime(saved.retFlightArrivalTime);
         setRetArrivalDate(saved.retFlightArrivalDate);
-       
+
         setRetSelectedId(saved.selectedRetFlightId);
 
         setAdultNumber(saved.adultsNumber);
         setChildNumber(saved.childNumber);
-       
-       // selectDept={selectDept}
 
-       setSelectedDeptFlight(saved.selectedDeptFlight);
-       setSelectedRetFlight(saved.selectedRetFlight);
+        // selectDept={selectDept}
+
+        setSelectedDeptFlight(saved.selectedDeptFlight);
+        setSelectedRetFlight(saved.selectedRetFlight);
     }
 
     // useEffect((e) => {
@@ -299,17 +299,29 @@ const SearchFlightUser = ({ location }) => {
             })
         //clearAll(e);
     };
+
+
+    const [errorSame, setErrorSame] = useState("");
+    const [errorDate, setErrorDate] = useState("");
     // function for handling form submit
     const submitAction = (e) => {
+        e.preventDefault();
         var goAhead = true;
         if (flight.to == flight.from) {
-            alert("From and To need to be different")
+            //alert("From and To need to be different")
+            setErrorSame("From and To need to be different");
             goAhead = false;
+        }else{
+            setErrorSame("");
         }
         if (flight.departureDate > returnDate) {
-            alert("Departure date cannot be later than return date")
+           // alert("Departure date cannot be later than return date")
+            setErrorDate("Departure date cannot be later than return date")
             goAhead = false;
+        }else{
+            setErrorDate("")
         }
+        
         if (goAhead) {
             console.log("This is the flight:")
 
@@ -435,7 +447,7 @@ const SearchFlightUser = ({ location }) => {
 
                                                 // onChange={(e) => onChange(e)}
 
-                                                renderInput={(params) => <TextField {...params} required label="From" />}
+                                                renderInput={(params) => <TextField {...params} error = {errorSame !== ""} required label="From" />}
                                                 // name="to"
                                                 // value={flight.to}
                                                 onChange={handleChangeFrom}
@@ -450,7 +462,14 @@ const SearchFlightUser = ({ location }) => {
 
                                                 // onChange={(e) => onChange(e)}
 
-                                                renderInput={(params) => <TextField {...params} required label="To" />}
+                                                renderInput={(params) =>
+                                                    <TextField
+                                                        {...params}
+                                                        required
+                                                        label="To"
+                                                        error = {errorSame !== ""}
+                                                        helperText = {errorSame}
+                                                    />}
                                                 // name="to"
                                                 // value={flight.to}
                                                 onChange={handleChangeTo}
@@ -468,6 +487,8 @@ const SearchFlightUser = ({ location }) => {
                                                 name="departureDate"
                                                 value={flight.departureDate}
                                                 onChange={(e) => onChange(e)}
+                                                error = {errorDate !== ""}
+                                                helperText = {errorDate}
                                             />
                                         </span>
                                         <span className={returnDate === "" ? "criteria-hide" : ""}>
@@ -480,6 +501,7 @@ const SearchFlightUser = ({ location }) => {
                                                 name="returnDate"
                                                 value={returnDate}
                                                 onChange={(e) => onChooseReturnDate(e)}
+                                                error = {errorDate !== ""}
                                             />
                                         </span>
                                         <div>
@@ -803,58 +825,58 @@ const SearchFlightUser = ({ location }) => {
                 </div>
             </div>
             <div>
-            {saved? 
-                <Summary
-                deptFlightFrom={saved.deptFrom}
-                deptFlightTo = {saved.deptTo}
-                deptFlightDeptTime={saved.deptFlightDeptTime}
-                deptFlightArrivalTime={saved.deptFlightArrivalTime}
-                deptFlightDeptDate={saved.deptFlightDeptDate}
-                deptFlightArrivalDate={saved.deptFlightArrivalDate}
-                chosenClass={saved.chosenClass}
-                selectedDeptFlightId={saved.selectedDeptFlightId}
-                deptFlightPrice={saved.deptFlightPrice}
-                retFlightPrice={saved.retFlightPrice}
-                retFlightDeptTime={saved.retFlightDeptTime}
-                retFlightDeptDate={saved.retFlightDeptDate}
-                retFlightArrivalTime={saved.retFlightArrivalTime}
-                retFlightArrivalDate={saved.retFlightArrivalDate}
-                retFlightId={saved.selectedRetFlightId}
+                {saved ?
+                    <Summary
+                        deptFlightFrom={saved.deptFrom}
+                        deptFlightTo={saved.deptTo}
+                        deptFlightDeptTime={saved.deptFlightDeptTime}
+                        deptFlightArrivalTime={saved.deptFlightArrivalTime}
+                        deptFlightDeptDate={saved.deptFlightDeptDate}
+                        deptFlightArrivalDate={saved.deptFlightArrivalDate}
+                        chosenClass={saved.chosenClass}
+                        selectedDeptFlightId={saved.selectedDeptFlightId}
+                        deptFlightPrice={saved.deptFlightPrice}
+                        retFlightPrice={saved.retFlightPrice}
+                        retFlightDeptTime={saved.retFlightDeptTime}
+                        retFlightDeptDate={saved.retFlightDeptDate}
+                        retFlightArrivalTime={saved.retFlightArrivalTime}
+                        retFlightArrivalDate={saved.retFlightArrivalDate}
+                        retFlightId={saved.selectedRetFlightId}
 
-                adultsNumber={saved.numOfAdults}
-                childNumber={saved.numOfChildren}
-                selectDept={selectDept}
+                        adultsNumber={saved.numOfAdults}
+                        childNumber={saved.numOfChildren}
+                        selectDept={selectDept}
 
-                deptFlight={saved.deptFlight}
-                retFlight={saved.retFlight}
-                setBookingNum={setBookingNum}
+                        deptFlight={saved.deptFlight}
+                        retFlight={saved.retFlight}
+                        setBookingNum={setBookingNum}
 
-            />:  <Summary
-                deptFrom={deptFlightFrom}
-                deptTo={deptFlightTo}
-                deptFlightDeptTime={deptFlightDeptTime}
-                deptFlightArrivalTime={deptFlightArrivalTime}
-                deptFlightDeptDate={deptFlightDeptDate}
-                deptFlightArrivalDate={deptFlightArrivalDate}
-                chosenClass={chosenClass}
-                selectedDeptFlightId={selectedDeptFlightId}
-                deptFlightPrice={deptFlightPrice}
-                retFlightPrice={retFlightPrice}
-                retFlightDeptTime={retFlightDeptTime}
-                retFlightDeptDate={retFlightDeptDate}
-                retFlightArrivalTime={retFlightArrivalTime}
-                retFlightArrivalDate={retFlightArrivalDate}
-                retFlightId={selectedRetFlightId}
+                    /> : <Summary
+                        deptFrom={deptFlightFrom}
+                        deptTo={deptFlightTo}
+                        deptFlightDeptTime={deptFlightDeptTime}
+                        deptFlightArrivalTime={deptFlightArrivalTime}
+                        deptFlightDeptDate={deptFlightDeptDate}
+                        deptFlightArrivalDate={deptFlightArrivalDate}
+                        chosenClass={chosenClass}
+                        selectedDeptFlightId={selectedDeptFlightId}
+                        deptFlightPrice={deptFlightPrice}
+                        retFlightPrice={retFlightPrice}
+                        retFlightDeptTime={retFlightDeptTime}
+                        retFlightDeptDate={retFlightDeptDate}
+                        retFlightArrivalTime={retFlightArrivalTime}
+                        retFlightArrivalDate={retFlightArrivalDate}
+                        retFlightId={selectedRetFlightId}
 
-                numOfAdults={adultsNumber}
-                numOfChildren={childNumber}
-                selectDept={selectDept}
+                        numOfAdults={adultsNumber}
+                        numOfChildren={childNumber}
+                        selectDept={selectDept}
 
-                deptFlight={selectedDeptFlight}
-                retFlight={selectedRetFlight}
-                setBookingNum={setBookingNum}
-            />
-            }
+                        deptFlight={selectedDeptFlight}
+                        retFlight={selectedRetFlight}
+                        setBookingNum={setBookingNum}
+                    />
+                }
             </div>
 
 
@@ -1231,8 +1253,6 @@ const SearchFlightUser = ({ location }) => {
 
                                     <div className="no-search"> <img src="https://img.icons8.com/external-kiranshastry-gradient-kiranshastry/64/000000/external-search-airport-kiranshastry-gradient-kiranshastry.png" />
                                         <h1>Sorry, No Results Found</h1></div>
-
-
 
                                 </div>
                             </div>
