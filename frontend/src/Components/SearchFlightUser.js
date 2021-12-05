@@ -479,7 +479,7 @@ const SearchFlightUser = ({ location }) => {
                                         </div>
                                         <span className={flight.departureDate === "" ? "criteria-hide" : ""}>
                                             <TextField
-                                                //required
+                                                required
                                                 id="dateInput"
                                                 type="date"
                                                 className='form-control'
@@ -493,7 +493,7 @@ const SearchFlightUser = ({ location }) => {
                                         </span>
                                         <span className={returnDate === "" ? "criteria-hide" : ""}>
                                             <TextField
-                                                // required
+                                                required
                                                 id="dateInput"
                                                 type='date'
                                                 className='form-control'
