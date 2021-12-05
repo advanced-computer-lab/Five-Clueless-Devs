@@ -24,6 +24,7 @@ class CreateFlight extends Component {
             availableFirst: '',
             arrivalTerminal: '',
             departureTerminal: '',
+            baggageAllowance: '',
             err: ''
         };
     }
@@ -47,7 +48,8 @@ class CreateFlight extends Component {
             availableBusiness: this.state.availableBusiness,
             availableFirst: this.state.availableFirst,
             departureTerminal: this.state.departureTerminal,
-            arrivalTerminal: this.state.arrivalTerminal
+            arrivalTerminal: this.state.arrivalTerminal,
+            baggageAllowance: this.state.baggageAllowance
 
         };
 
@@ -66,13 +68,14 @@ class CreateFlight extends Component {
                     availableBusiness: '',
                     availableFirst: '',
                     arrivalTerminal: '',
-                    departureTerminal: ''
+                    departureTerminal: '',
+                    baggageAllowance: ''
                 })
                 this.props.history.push('/search');
             })
             .catch(err => {
                 console.log(err);
-                this.setState({['err']: 'error'})
+                this.setState({ ['err']: 'error' })
             })
     };
 
@@ -223,6 +226,16 @@ class CreateFlight extends Component {
                                             label='First Class Seats'
                                             name="availableFirst"
                                             value={this.state.availableFirst}
+                                            onChange={this.onChange}
+                                        />
+                                    </div>
+                                    <div>
+                                        <TextField
+                                            id="outlined"
+                                            className='form-control'
+                                            label='Baggage Allowance'
+                                            name="baggageAllowance"
+                                            value={this.state.baggageAllowance}
                                             onChange={this.onChange}
                                         />
                                     </div>
