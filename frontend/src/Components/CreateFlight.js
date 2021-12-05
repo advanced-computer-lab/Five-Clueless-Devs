@@ -25,6 +25,7 @@ class CreateFlight extends Component {
             arrivalTerminal: '',
             departureTerminal: '',
             baggageAllowance: '',
+            price:'',
             err: ''
         };
     }
@@ -49,7 +50,8 @@ class CreateFlight extends Component {
             availableFirst: this.state.availableFirst,
             departureTerminal: this.state.departureTerminal,
             arrivalTerminal: this.state.arrivalTerminal,
-            baggageAllowance: this.state.baggageAllowance
+            baggageAllowance: this.state.baggageAllowance,
+            price: this.state.price
 
         };
 
@@ -69,7 +71,8 @@ class CreateFlight extends Component {
                     availableFirst: '',
                     arrivalTerminal: '',
                     departureTerminal: '',
-                    baggageAllowance: ''
+                    baggageAllowance: '',
+                    price:''
                 })
                 this.props.history.push('/search');
             })
@@ -236,6 +239,14 @@ class CreateFlight extends Component {
                                             label='Baggage Allowance'
                                             name="baggageAllowance"
                                             value={this.state.baggageAllowance}
+                                            onChange={this.onChange}
+                                        />
+                                         <TextField
+                                            id="outlined"
+                                            className='form-control'
+                                            label='Price'
+                                            name="price"
+                                            value={this.state.price}
                                             onChange={this.onChange}
                                         />
                                     </div>
