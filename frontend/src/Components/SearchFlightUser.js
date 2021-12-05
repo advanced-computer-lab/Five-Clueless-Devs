@@ -17,11 +17,13 @@ import Itinerary from './Itinerary';
 import Summary from './Summary';
 import FlightSeats from './FlightSeats/FlightSeats';
 import { set } from 'mongoose';
+import { useHistory } from "react-router";
+import "./Itinerary.css";
 
 
 
 const SearchFlightUser = ({ location }) => {
-    // const history = useHistory();
+     const history = useHistory();
     // useState hooks for input and language
 
     const moment = require('moment')
@@ -256,6 +258,7 @@ const SearchFlightUser = ({ location }) => {
     }
     const editDept = () => {
         setView(1);
+        setReturnResult([]);
     }
     const editRet = () => {
         setView(2);
@@ -306,7 +309,8 @@ const SearchFlightUser = ({ location }) => {
         } else {
             setErrorSame("");
         }
-        if (flight.departureDate > returnDate) {
+        
+        if (returnDate && flight.departureDate && flight.departureDate > returnDate) {
             // alert("Departure date cannot be later than return date")
             setErrorDate("Departure date cannot be later than return date")
             goAhead = false;
@@ -654,14 +658,21 @@ const SearchFlightUser = ({ location }) => {
 
                     <div className="list">
 
-                        {
-                            returnFlightRes.map((flight, k) =>
-                                <ReturnFlightCard flight={flight} data={selectDept} numOfChildren={childNumber} numOfAdults={adultsNumber} chosenClass={chosenClass} key={k}
-                                    passRetId={setRetSelectedId} passRetFrom={setRetFlightFrom}
-                                    passRetTo={setRetFlightTo} passRetDuration={setRetFlightDuration} passRetFlightDeptTime={setRetFlightDeptTime}
-                                    passRetFlightArrivalTime={setRetFlightArrivalTime} passRetFlightPrice={setRetPrice} passRetFlightDate={setRetDeptDate}
-                                    passRetFlightArrivalDate={setRetArrivalDate} passSelectedRetFlight={setSelectedRetFlight} />
-                            )}
+                    {
+                            returnFlightRes.length > 0 ?
+                                returnFlightRes.map((flight, k) =>
+                                    <ReturnFlightCard flight={flight} data={selectDept} numOfChildren={childNumber} numOfAdults={adultsNumber} chosenClass={chosenClass} key={k}
+                                        passRetId={setRetSelectedId} passRetFrom={setRetFlightFrom}
+                                        passRetTo={setRetFlightTo} passRetDuration={setRetFlightDuration} passRetFlightDeptTime={setRetFlightDeptTime}
+                                        passRetFlightArrivalTime={setRetFlightArrivalTime} passRetFlightPrice={setRetPrice} passRetFlightDate={setRetDeptDate}
+                                        passRetFlightArrivalDate={setRetArrivalDate} passSelectedRetFlight={setSelectedRetFlight} />
+                                ) 
+                                :
+                                <div className="no-search">
+                                    <img src="https://img.icons8.com/external-kiranshastry-gradient-kiranshastry/64/000000/external-search-airport-kiranshastry-gradient-kiranshastry.png" />
+                                    <h1>Sorry, No Return Flights Found</h1>
+                                </div>
+                        }
 
                     </div>
 
@@ -1040,6 +1051,7 @@ const SearchFlightUser = ({ location }) => {
                     bookingNum={bookingNum}
 
                 />
+                <div><button className="confirm-res" style={{marginBottom:"20px"}} onClick={(e) => history.push('/Reserved-flights')}>View Reservations</button></div>
 
                 </div>
 
