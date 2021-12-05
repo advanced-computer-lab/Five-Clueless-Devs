@@ -321,7 +321,7 @@ const SearchFlightUser = ({ location }) => {
         }else{
             setErrorDate("")
         }
-        
+
         if (goAhead) {
             console.log("This is the flight:")
 
@@ -479,7 +479,7 @@ const SearchFlightUser = ({ location }) => {
                                         </div>
                                         <span className={flight.departureDate === "" ? "criteria-hide" : ""}>
                                             <TextField
-                                               // required
+                                                //required
                                                 id="dateInput"
                                                 type="date"
                                                 className='form-control'
