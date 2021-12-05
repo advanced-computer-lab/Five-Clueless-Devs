@@ -26,6 +26,9 @@ class CreateFlight extends Component {
             departureTerminal: '',
             baggageAllowance: '',
             price:'',
+            seatsEconomy: [],
+            seatsBusiness: [],
+            seatsFirst: [],
             err: ''
         };
     }
@@ -36,6 +39,21 @@ class CreateFlight extends Component {
 
     onSubmit = e => {
         e.preventDefault();
+
+        let seatsEconomy1 = [];
+        let seatsBusiness1 = [];
+        let seatsFirst1 = [];
+
+        for(let i = 0; i < this.state.availableEconomy*1; i++){
+            seatsEconomy1.push(null);
+        }
+
+        for(let i = 0; i < this.state.availableBusiness*1; i++){
+            seatsBusiness1.push(null);
+        }
+        for(let i = 0; i < this.state.availableFirst*1; i++){
+            seatsFirst1.push(null);
+        }
 
         const data = {
             flightId: this.state.flightId,
@@ -51,8 +69,10 @@ class CreateFlight extends Component {
             departureTerminal: this.state.departureTerminal,
             arrivalTerminal: this.state.arrivalTerminal,
             baggageAllowance: this.state.baggageAllowance,
-            price: this.state.price
-
+            price: this.state.price,
+            seatsEconomy: seatsEconomy1,
+            seatsBusiness: seatsBusiness1,
+            seatsFirst: seatsFirst1
         };
 
         axios
@@ -72,6 +92,9 @@ class CreateFlight extends Component {
                     arrivalTerminal: '',
                     departureTerminal: '',
                     baggageAllowance: '',
+                    seatsEconomy: [],
+                    seatsBusiness: [],
+                    seatsFirst: [],
                     price:''
                 })
                 this.props.history.push('/search');
