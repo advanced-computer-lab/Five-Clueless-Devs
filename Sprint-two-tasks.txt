@@ -1,0 +1,9 @@
+Hazem Hisham: Worked on frontend and backend for flights search and reservation process.
+
+Youssef Kersha: Front end and backend for seats and seat picker.
+
+David Said: Backend and frontend for creating/editing users. Backend and frontend for sending mails to users after cancellation.
+
+Mariam Eissa: Backend and front end of View details for departure and arrival flights. Backend and front end of Confirm reserving a flight.
+
+May Magdy: Backend and front end to view user reserved flights. Backend and front end of reserved flight summary. Backend to cancel a reservation.

@@ -9,7 +9,7 @@ import ReservedFlightCard from './ReservedFlightCard';
 
 
 const ReservedFlight = () => {
-    const [Reservation, setReservation] = useState();
+    const [ReservationId, setReservationId] = useState();
     const [fromId, setfromId] = useState([]);
     const [toId, settoId] = useState([]);
     useEffect(() => {
@@ -17,14 +17,18 @@ const ReservedFlight = () => {
     }, []);
     //let { id } = useParams();
 
+    let Uid = localStorage.getItem('userId');
+    console.log(Uid);
+
     const getReservetion = () => {
         let fromtemp = [];
         let totemp = [];
 
-        axios.get(BACKEND_URL + "reservations/GetReservation?UserID=" + 5)
+        axios.get(BACKEND_URL + "reservations/GetReservation?UserID=" + Uid)
             .then(res => {
                 var temp = [];
                 //  console.log(res.data);
+                let resTemp = []
                 temp = [...res.data];
                 var from = [];
                 res.data.map((reservation) => {
@@ -34,6 +38,12 @@ const ReservedFlight = () => {
                 temp.map((reservation) => {
                     to.push(reservation.to);
                 })
+                let reservations = []
+                temp.map((reservation) => {
+                    reservations.push(reservation._id);
+                })
+                setReservationId(reservations);
+
                 //console.log(from);
                 //console.log(to);
                 for (let i = 0; i < from.length; i++) {
@@ -42,7 +52,6 @@ const ReservedFlight = () => {
                         .then(res => {
                             //console.log(res.data[0]);
                             fromtemp[i] = (res.data[0]);
-                           
                             let t = [...fromtemp];
                             t[i] = res.data[0]
                             setfromId(t);
@@ -79,22 +88,22 @@ const ReservedFlight = () => {
     return (
         <div>
             <div className="flight-schedule">
-                <h2> Reserved Flight </h2>
-                {
+                <h2> Reserved Flights </h2>
+                {fromId?.length > 0 ?
+
                     fromId.map((from, index) =>
                         <div key={index}>
-                            <ReservedFlightCard from={from} to={toId[index]} />
+                            <ReservedFlightCard userId={Uid} from={from} to={toId[index]} resevationId={ReservationId[index]} />
                         </div>
-
                     )
+                    :
+                    <div className="no-search"> <img src="https://img.icons8.com/external-kiranshastry-gradient-kiranshastry/64/000000/external-search-airport-kiranshastry-gradient-kiranshastry.png" />
+                        <h1>You haven't made any reservations yet!</h1></div>
                 }
             </div>
 
         </div>
-        //   <div>
-        //   <Button variant="outlined" onClick={getReservetion}>Search</Button>
-        // </div>
-    )
+        )
 };
 
 
