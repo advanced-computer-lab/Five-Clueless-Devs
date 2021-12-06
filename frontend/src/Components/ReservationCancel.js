@@ -58,7 +58,7 @@ const OnCancel = () => {
          //console.log(tempFromEconomy);
         // console.log(tempFromFirst);
         // console.log(tempFromBusiness);
-        // setfromFlight(res.data[0] || {});
+        setfromFlight(res.data[0] || {});
         axios
         .get(BACKEND_URL + "flights/search?flightId=" +to)
         .then(res => {
@@ -66,7 +66,7 @@ const OnCancel = () => {
           temptoEconomy=[...res.data[0].seatsEconomy];
           temptoFirst=[...res.data[0].seatsFirst];
           temptoBusiness=[...res.data[0].seatsBusiness];
-        //   settoFlight(res.data[0] || {});
+           settoFlight(res.data[0] || {});
         })
         .catch(err => {
           console.log(err);
