@@ -83,7 +83,7 @@ const ReservationCancel = (props) => {
         SeatTo[i] = toSeats[i];
       }
     }
-    seatCount = countFrom;
+
     console.log(cabin);
 
     switch (cabin) {
