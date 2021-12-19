@@ -4,7 +4,7 @@ import '../App.css';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
-
+import './ReservationCancel.css';
 
 const ReservationCancel = (props) => {
   const history = useHistory();
@@ -15,10 +15,15 @@ const ReservationCancel = (props) => {
   const fromSeats = props.fromSeats;
   const cabin = props.cabin;
   const reservationID = props.reservationId;
+  const chosenFromSeat = props.chosenFromSeat;
+  const chosenToSeat = props.chosenToSeat;
+  const departureFromCountry = props.departureFromCountry;
+  const departureToCountry = props.departureToCountry;
 
   const fromObj = props.fromflight;
   const toObj = props.toflight;
 
+  let seatCount = props.seatCount;
 
   let f;
   let t;
@@ -48,6 +53,7 @@ const ReservationCancel = (props) => {
   }
 
   useEffect(() => {
+
   }, []);
 
 
@@ -77,7 +83,7 @@ const ReservationCancel = (props) => {
         SeatTo[i] = toSeats[i];
       }
     }
-
+    seatCount = countFrom;
     console.log(cabin);
 
     switch (cabin) {
@@ -142,10 +148,23 @@ const ReservationCancel = (props) => {
       })
   };
   return (
-    <div>
-      <Button variant="outlined" onClick={toggleDialog}>Cancel Reservation</Button>
 
-     <div>
+
+    <div>
+      <div className='buttonUnder'>
+
+        <Button className="updateButton" style={{ marginBottom: "20px" }} onClick={(e) => history.push(
+          {
+            pathname: '/Reservation-Update',
+            state: { departureFrom: { departureFromCountry }, departureTo: { departureToCountry }, numberOfFromSeats: { chosenFromSeat },
+             departFlight: { fromObj }, seatNum: {seatCount} }
+          })
+        }>Update Reservation</Button>
+        <Button variant="outlined" color="error" onClick={toggleDialog}>Cancel Reservation</Button>
+
+
+      </div>
+      <div>
         <Dialog
           open={showConfirm}
           onClose={toggleDialog}
@@ -160,7 +179,7 @@ const ReservationCancel = (props) => {
             <Button onClick={onSubmit} variant="text" color="error">cancel Reservation</Button>
           </DialogActions>
         </Dialog>
-      </div> 
+      </div>
     </div>
   )
 }

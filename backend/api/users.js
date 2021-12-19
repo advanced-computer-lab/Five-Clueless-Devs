@@ -1,6 +1,8 @@
 const express = require('express');
 const { models } = require('mongoose');
 const router = express.Router();
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 var bodyParser = require('body-parser')
 
 require("dotenv").config
@@ -111,7 +113,81 @@ router.put('/update', (req, res) => {
 });
 
 
+// router.post("sign_up", async(req,res) => {
+//     const user = req.body;
 
+//     const takenEmail = await User.findOne({email: user.email})
+
+//     if(takenEmail){
+//         res.json({message: "Email already taken"})
+//     }  else{
+//         user.password= await bcrypt.hash(req.body.password, 10)
+
+//         User.create({ ...req.body, isAdmin: "false" })
+//         .then(console.log('User added successfully'))
+//         .catch(err => res.status(400).json({ error: 'Unable to add User' }));
+//     }
+// })
+
+// router.post("sign_in" , (req,res) => {
+//     const userLoggingIn = req.body;
+
+//     User.findOne({email: userLoggingIn.email})
+//     .then(dbUser => {
+//         if(!dbUser){
+//             return res.json({
+//                 message: "Invalid email"
+//             })
+//         }
+//         bcrypt.compare(userLoggingIn.password, dbUser.password)
+//         .then(isCorrect => {
+//             if(isCorrect){
+//                 const payload = {
+//                     id:dbUser._id,
+//                     email: dbUser.email,
+//                 }
+//                 jwt.sign(
+//                     payload, 
+//                     process.env.JWT_SECRET,
+//                     {expiresIn: 86400},
+//                     (err,token) => {
+//                         if(err) return res.json({message:err})
+//                         return res.json({
+//                             message: "Success",
+//                             token: "Bearer" + token
+//                         })
+//                     }
+//                 )
+//             }else{
+//                 return res.json({
+//                     message: "Invalid email or password"
+//                 })
+//             }
+//         })
+//     })
+// })
+
+// function verifyJWT(req,res,next){
+//     const token = req.headers["x-access-token"]?.split(' ')[1]
+//     if(token){
+//         jwt.verify(token,process.env.PASSPORTSECRET, (err,decoded) => {
+//             if(err) return res.json({
+//                 isLoggedIn: false,
+//                 message: "Failed To Authenticate"
+//             })
+//             req.user = {};
+//             req.user.id = decoded.id
+//             req.user.email = decoded.email
+//             next()
+//         })
+//      } else{
+//             res.json({message: "Incorrect Token Given" , isLoggedIn: false})
+//         }
+//     }
+
+//     router.get("/getEmail", verifyJWT, (req,res) => {
+//         res.json({isLoggedIn: true, username: req.user.email})  
+//     })
 
 
 

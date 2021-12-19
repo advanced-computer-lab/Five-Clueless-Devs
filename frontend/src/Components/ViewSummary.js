@@ -10,6 +10,7 @@ import ReservationCancel from './ReservationCancel';
 
 const ViewSummary = () => {
 
+  let seatCount = 0;
   let Uid = localStorage.getItem('userId');
 
   // david edited this part to add the send mail functionality
@@ -199,9 +200,10 @@ const ViewSummary = () => {
             // console.log(temp2)
 
             let SeatTo = [];
-
+     
             for (let i = 0; i < temp2.length; i++) {
               if (temp2[i] == Uid) {
+                seatCount++;
                 SeatTo.push(getSeatNumber(i));
               }
             }
@@ -421,6 +423,13 @@ const ViewSummary = () => {
                 reservationId={reservationId}
                 fromflight={fromflight}
                 toflight={toflight}
+                chosenFromSeat={seatsFrom}
+                chosenToSeat = {seatsTO}
+                departureFromCountry = {fromflight?.from}
+                departureToCountry = {fromflight?.to}
+                returnFromCountry={toflight?.from}
+                returnToCountry={toflight?.to}
+                seatCount = {seatCount}
                 handleSend={handleSend}
               />
 
