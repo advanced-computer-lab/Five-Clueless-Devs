@@ -162,7 +162,6 @@ const ReservationCancel = (props) => {
         }>Update Reservation</Button>
         <Button variant="outlined" color="error" onClick={toggleDialog}>Cancel Reservation</Button>
 
-
       </div>
       <div>
         <Dialog
