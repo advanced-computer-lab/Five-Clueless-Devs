@@ -20,21 +20,26 @@ import { set } from 'mongoose';
 import { useHistory } from "react-router";
 import "./Itinerary.css";
 import { useLocation } from "react-router-dom";
-import DepartureFlightCardEdit from './DepartureFlightCardEdit';
+import RetFlightCardEdit from './RetFlightCardEdit';
+import ResUpdateSummary from './ResUpdateSummary';
 
 
 
-const UpdateReservation = props =>  {
+const RetUpdateReservation = props => {
     const location = useLocation();
     const history = useHistory();
     // useState hooks for input and language
 
+    const departureFlight = location.state.departFlight;
+    const retFlight = location.state.returnFlight;
     const departureFrom = location.state.departureFrom;
     const departureTo = location.state.departureTo;
     const departFlight = location.state.departFlight;
     const seatCount = location.state.seatNum;
- 
-   //const numSeats = location.state.numberOfFromSeats; //add got seats here
+    const cabin = location.state.cabin;
+    const reservationID = location.state.reservationId
+
+    //const numSeats = location.state.numberOfFromSeats; //add got seats here
     const numSeats = 1;
     const moment = require('moment')
     const getDuration = (flight) => {
@@ -112,8 +117,8 @@ const UpdateReservation = props =>  {
 
     const [flight, setFlight] = useState({
         flightId: '',
-        from: departureFrom.departureFromCountry,
-        to: departureTo.departureToCountry,
+        from: retFlight.toObj.from,
+        to: retFlight.toObj.to,
         departureDate: '',
         arrivalDate: '',
         departureTime: '',
@@ -138,7 +143,7 @@ const UpdateReservation = props =>  {
 
     let saved = null;
     useEffect(() => {
-       
+
         axios
             .get(BACKEND_URL + "flights/search?")
             .then(res => {
@@ -151,11 +156,16 @@ const UpdateReservation = props =>  {
             .catch(err => {
                 console.log(err);
             })
-            
-            console.log(departFlight.fromObj.price);
-         console.log(departureFrom);
-         console.log(seatCount?.seatCount);
-      }, []);
+
+        // if(window.location.href.includes("Dep")){
+        //     console.log("YES YES YES!!!")
+        // }
+        console.log(departFlight.fromObj.flightId);
+        console.log(departureFrom);
+        console.log(seatCount?.seatCount);
+        console.log(retFlight);
+        console.log(reservationID.reservationID);
+    }, []);
 
 
     // const setSavedData = () => {
@@ -181,7 +191,7 @@ const UpdateReservation = props =>  {
     //     setAdultNumber(saved.adultsNumber);
     //     setChildNumber(saved.childNumber);
 
-        // selectDept={selectDept}
+    // selectDept={selectDept}
 
     //     setSelectedDeptFlight(saved.selectedDeptFlight);
     //     setSelectedRetFlight(saved.selectedRetFlight);
@@ -276,9 +286,9 @@ const UpdateReservation = props =>  {
         e.preventDefault();
         var goAhead = true;
 
-        if (returnDate && flight.departureDate && flight.departureDate > returnDate) {
+        if (flight.departureDate && flight.departureDate < departureFlight.fromObj.departureDate) { //DON FORGET ERORR/
             // alert("Departure date cannot be later than return date")
-            setErrorDate("Departure date cannot be later than return date")
+            setErrorDate("Return date cannot be earlier than departure date")
             goAhead = false;
         } else {
             setErrorDate("")
@@ -291,7 +301,8 @@ const UpdateReservation = props =>  {
             // returnFlight.from = flight.to;
             // returnFlight.departureDate = returnDate;
             // console.log(returnFlight);
-            var passNumber = seatCount;
+            //////////// var passNumber = seatCount;
+            var passNumber = seatCount?.seatCount;
             var numberAndClass = "";
             console.log(chosenClass);
             //flight.from = departureFrom;
@@ -300,6 +311,7 @@ const UpdateReservation = props =>  {
             const uspReturn = new URLSearchParams(returnFlight);
             let keysForDel = [];
             let keysForDel2 = [];
+            let keysForDel3 = [];
             if (chosenClass == "Economy") {
                 numberAndClass = "availableEconomy[gte]" + `=${passNumber}`;
                 console.log("entered here");
@@ -346,6 +358,15 @@ const UpdateReservation = props =>  {
                     else {
                         setView(1);
                         console.log(res.data);
+
+                        res.data.forEach((flight, key) => {
+                            console.log("I AM HERE")
+                            console.log( cabin?.cabin);
+                            if (flight.flightId == retFlight?.toObj?.flightId && chosenClass == cabin?.cabin) {
+                                res.data.splice(res.data.indexOf(flight),1);
+                            }
+                        });
+                       
                         setResult(res.data);
                         console.log(flightRes);
                     }
@@ -355,23 +376,23 @@ const UpdateReservation = props =>  {
                     console.log(err);
                 })
             //--------------------------------------------------------------------------------
-            axios
-                .get(BACKEND_URL + "flights/searchUser?" + uspReturn.toString() + "&" + numberAndClass)
-                .then(res => {
-                    if (!Array.isArray(res.data) || !res.data.length) {
-                        setView(6);
-                    }
-                    else {
-                        setView(1);
-                        console.log(res.data);
-                        setReturnResult(res.data);
-                        console.log(returnFlightRes);
-                    }
+            // axios
+            //     .get(BACKEND_URL + "flights/searchUser?" + uspReturn.toString() + "&" + numberAndClass)
+            //     .then(res => {
+            //         if (!Array.isArray(res.data) || !res.data.length) {
+            //             setView(6);
+            //         }
+            //         else {
+            //             setView(1);
+            //             console.log(res.data);
+            //             setReturnResult(res.data);
+            //             console.log(returnFlightRes);
+            //         }
 
-                })
-                .catch(err => {
-                    console.log(err);
-                })
+            //     })
+            //     .catch(err => {
+            //         console.log(err);
+            //     })
         }
 
     };
@@ -392,7 +413,7 @@ const UpdateReservation = props =>  {
                 </Box></div>
                 <div className='bg-dark text-light'>
                     <div className='container pt-5' style={{ height: '100vh' }}>
-                        <h1 className="display-4 text-center">Search for flights</h1>
+                        <h1 className="display-4 text-center">Update Return Flight</h1>
 
 
                         <form onSubmit={submitAction} className='mt-5'>
@@ -402,21 +423,7 @@ const UpdateReservation = props =>  {
                                     <div>
 
 
-                                        <span className={flight.departureDate === "" ? "criteria-hide" : ""}>
-                                            <TextField
-                                                //required
-                                                id="dateInput"
-                                                type="date"
-                                                className='form-control'
-                                                label='Departure Date'
-                                                name="departureDate"
-                                                value={flight.departureDate}
-                                                onChange={(e) => onChange(e)}
-                                                error={errorDate !== ""}
-                                                helperText={errorDate}
-                                            />
-                                        </span>
-                                        <span className={returnDate === "" ? "criteria-hide" : ""}>
+                                    <span className={returnDate === "" ? "criteria-hide" : ""}>
                                             <TextField
                                                 //required
                                                 id="dateInput"
@@ -429,6 +436,7 @@ const UpdateReservation = props =>  {
                                                 error={errorDate !== ""}
                                             />
                                         </span>
+                                        
                                         <div>
                                             <FormControl sx={{ m: 1, minWidth: 120 }} >
                                                 <InputLabel id="demo-simple-select-label">Class</InputLabel>
@@ -449,8 +457,8 @@ const UpdateReservation = props =>  {
                                                 </Select>
                                             </FormControl>
                                         </div>
-                                   
-                                     
+
+
                                     </div>
                                     <div className='input-group-append'>
                                         <Button variant="outlined" type="submit">Search</Button>
@@ -460,14 +468,13 @@ const UpdateReservation = props =>  {
 
 
                                     <div className="list">
-                                        {flightRes.map((flight, k) =>
-                                            <DepartureFlightCardEdit flight={flight} numOfChildren={childNumber} numOfAdults={adultsNumber}
-                                                chosenClass={chosenClass} data={selectDept} key={k} passDeptId={setDeptSelectedId} passDeptFrom={setDeptFlightFrom}
-                                                passDeptTo={setDeptFlightTo} passDeptDuration={setDeptFlightDuration} passDeptFlightDeptTime={setDeptFlightDeptTime}
-                                                passDeptFlightArrivalTime={setDeptFlightArrivalTime} passDeptFlightDeptDate={setDeptDeptDate}
-                                                passDeptFlightArrivalDate={setDeptArrivalDate} passDeptFlightPrice={setDeptPrice}
-                                                passSelectedDeptFlight={setSelectedDeptFlight} oldPrice = {departFlight.fromObj.price} />
-                                        )}
+                                        { flightRes.map((flight, k) =>
+                                    <RetFlightCardEdit flight={flight} data={selectDept} numOfChildren={childNumber} numOfAdults={adultsNumber} chosenClass={chosenClass} key={k}
+                                        passRetId={setRetSelectedId} passRetFrom={setRetFlightFrom}
+                                        passRetTo={setRetFlightTo} passRetDuration={setRetFlightDuration} passRetFlightDeptTime={setRetFlightDeptTime}
+                                        passRetFlightArrivalTime={setRetFlightArrivalTime} passRetFlightPrice={setRetPrice} passRetFlightDate={setRetDeptDate}
+                                        passRetFlightArrivalDate={setRetArrivalDate} passSelectedRetFlight={setSelectedRetFlight} oldPrice={retFlight.toObj.price} />
+                                ) }
                                     </div>
 
 
@@ -480,97 +487,13 @@ const UpdateReservation = props =>  {
             </>
         );
     }
-    else if(view == 2) {
-        return (
-            <>
-                <div className="stepper-space"><Box sx={{ width: '100%' }}>
-                    <Stepper activeStep={1} alternativeLabel>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
-                </Box></div>
-
-                <div >
-                    <div className="colC">
-                        <p className="selected-depart">Selected Departure Flight:</p>
 
 
-
-                        <Card sx={{ maxWidth: 500, }}  >
-                            <CardActionArea>
-
-
-                                <CardContent>
-                                    <div className="left-container">
-
-                                        <div className="left-image">
-                                            <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
-                                                alt="airplaneDepart"
-                                                width="27px"
-                                                height="27px"
-                                            />
-                                        </div>
-                                        <Typography gutterBottom variant="h5" component="div">
-                                            {deptFlightFrom} ({deptFlightDeptTime})
-                                        </Typography>
-                                        <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
-                                            alt="arrow"
-                                            width="40px"
-                                            height="27px" />
-                                        <Typography gutterBottom variant="h5" component="div">
-                                            {deptFlightTo} ({deptFlightArrivalTime})
-                                        </Typography>
-                                    </div>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Duration: {getDuration(selectedDeptFlight)}
-                                    </Typography>
-                                    <Typography>
-                                        <button className="editButton" type="button" onClick={editDept}>Edit</button>
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </div>
-                    <div><h2> Select return flight </h2></div>
-
-                    <div className="list">
-
-                        {
-                            returnFlightRes.length > 0 ?
-                                returnFlightRes.map((flight, k) =>
-                                    <ReturnFlightCard flight={flight} data={selectDept} numOfChildren={childNumber} numOfAdults={adultsNumber} chosenClass={chosenClass} key={k}
-                                        passRetId={setRetSelectedId} passRetFrom={setRetFlightFrom}
-                                        passRetTo={setRetFlightTo} passRetDuration={setRetFlightDuration} passRetFlightDeptTime={setRetFlightDeptTime}
-                                        passRetFlightArrivalTime={setRetFlightArrivalTime} passRetFlightPrice={setRetPrice} passRetFlightDate={setRetDeptDate}
-                                        passRetFlightArrivalDate={setRetArrivalDate} passSelectedRetFlight={setSelectedRetFlight} />
-                                ) 
-                                :
-                                <div className="no-search">
-                                    <img src="https://img.icons8.com/external-kiranshastry-gradient-kiranshastry/64/000000/external-search-airport-kiranshastry-gradient-kiranshastry.png" />
-                                    <h1>Sorry, No Return Flights Found</h1>
-                                </div>
-                        }
-
-                    </div>
-
-
-
-
-
-                </div>
-
-            </>
-        );
-    }
-   
-    else if (view == 3) {
+    else if (view == 2) {
         return (<>
 
             <div className="stepper-space"><Box sx={{ width: '100%' }}>
-                <Stepper activeStep={2} alternativeLabel>
+                <Stepper activeStep={1} alternativeLabel>
                     {steps.map((label) => (
                         <Step key={label}>
                             <StepLabel>{label}</StepLabel>
@@ -599,22 +522,20 @@ const UpdateReservation = props =>  {
                                         />
                                     </div>
                                     <Typography gutterBottom variant="h5" component="div">
-                                        {deptFlightFrom} ({deptFlightDeptTime})
+                                        {departFlight.fromObj.from} ({departFlight.fromObj.departureTime})
                                     </Typography>
                                     <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
                                         alt="arrow"
                                         width="40px"
                                         height="27px" />
                                     <Typography gutterBottom variant="h5" component="div">
-                                        {deptFlightTo} ({deptFlightArrivalTime})
+                                        {departFlight.fromObj.to} ({departFlight.fromObj.arrivalTime})
                                     </Typography>
                                 </div>
                                 <Typography variant="body2" color="text.secondary">
-                                    Duration: {getDuration(selectedDeptFlight)}
+                                    Duration: {getDuration(departFlight.fromObj)}
                                 </Typography>
-                                <Typography>
-                                    <button className="editButton" type="button" onClick={editDept}>Edit</button>
-                                </Typography>
+                                
                             </CardContent>
                         </CardActionArea>
                     </Card>
@@ -650,7 +571,7 @@ const UpdateReservation = props =>  {
                                     Duration: {getDuration(selectedRetFlight)}
                                 </Typography>
                                 <Typography>
-                                    <button className="editButton" type="button" onClick={editRet}>Edit</button>
+                                    <button className="editButton" type="button" onClick={editDept}>Edit</button>
                                 </Typography>
                             </CardContent>
                         </CardActionArea>
@@ -671,14 +592,14 @@ const UpdateReservation = props =>  {
                                             />
                                         </div>
                                         <Typography gutterBottom variant="h5" component="div">
-                                            {deptFlightFrom} ({deptFlightDeptTime})
+                                        {departFlight.fromObj.from} ({departFlight.fromObj.departureTime})
                                         </Typography>
                                         <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
                                             alt="arrow"
                                             width="40px"
                                             height="27px" />
                                         <Typography gutterBottom variant="h5" component="div">
-                                            {deptFlightTo} ({deptFlightArrivalTime})
+                                        {departFlight.fromObj.to} ({departFlight.fromObj.arrivalTime})
                                         </Typography>
                                     </div>
 
@@ -691,14 +612,14 @@ const UpdateReservation = props =>  {
                                             />
                                         </div>
                                         <Typography gutterBottom variant="h5" component="div">
-                                            {retFlightFrom} ({retFlightDeptTime})
+                                        {retFlightFrom} ({retFlightDeptTime})
                                         </Typography>
                                         <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
                                             alt="arrow"
                                             width="40px"
                                             height="27px" />
                                         <Typography gutterBottom variant="h5" component="div">
-                                            {retFlightTo} ({retFlightArrivalTime})
+                                        {retFlightTo} ({retFlightArrivalTime})
                                         </Typography>
                                     </div>
 
@@ -709,41 +630,44 @@ const UpdateReservation = props =>  {
                 </div>
             </div>
             <div>
-                <Summary
-                    deptFrom={deptFlightFrom}
-                    deptTo={deptFlightTo}
-                    deptFlightDeptTime={deptFlightDeptTime}
-                    deptFlightArrivalTime={deptFlightArrivalTime}
-                    deptFlightDeptDate={deptFlightDeptDate}
-                    deptFlightArrivalDate={deptFlightArrivalDate}
+                <ResUpdateSummary
+                    deptFrom={departFlight.fromObj.from}
+                    deptTo={departFlight.fromObj.to}
+                    deptFlightDeptTime={departFlight.fromObj.departureTime}
+                    deptFlightArrivalTime={departFlight.fromObj.arrivalTime}
+                    deptFlightDeptDate={departFlight.fromObj.departureDate}
+                    deptFlightArrivalDate={departFlight.fromObj.arrivalDate}
                     chosenClass={chosenClass}
-                    selectedDeptFlightId={selectedDeptFlightId}
-                    deptFlightPrice={deptFlightPrice}
-                    retFlightPrice={retFlightPrice}
+                    selectedDeptFlightId={departFlight.fromObj.flightId}
+                    deptFlightPrice={0}
+                    retFlightPrice={retFlightPrice - retFlight.toObj.price}
+                    deptFlightPriceReal={departFlight.fromObj.price}
+                    retFlightPriceReal ={retFlightPrice}
                     retFlightDeptTime={retFlightDeptTime}
                     retFlightDeptDate={retFlightDeptDate}
                     retFlightArrivalTime={retFlightArrivalTime}
                     retFlightArrivalDate={retFlightArrivalDate}
                     retFlightId={selectedRetFlightId}
-
+                    reservationId ={reservationID.reservationID}
                     numOfAdults={adultsNumber}
                     numOfChildren={childNumber}
                     selectDept={selectDept}
 
-                    deptFlight={selectedDeptFlight}
+                    deptFlight={departFlight.fromObj}
                     retFlight={selectedRetFlight}
+                    retFlightOld = {retFlight.toObj}
                     setBookingNum={setBookingNum}
                 />
             </div>
         </>);
     }
 
-    else if (view == 4) {
+    else if (view == 3) {
         return (
             <>
                 <div className="stepper-space">
                     <Box sx={{ width: '100%' }}>
-                        <Stepper activeStep={3} alternativeLabel>
+                        <Stepper activeStep={2} alternativeLabel>
                             {steps.map((label) => (
                                 <Step key={label}>
                                     <StepLabel>{label}</StepLabel>
@@ -769,13 +693,13 @@ const UpdateReservation = props =>  {
         )
     }//SEATS FUNC HERE
     //VIEWING SUMMARY -----------------------------------------------------------------------------------------------------------------------------------------------------------------
-    else if (view == 5) {
+    else if (view == 4) {
 
         return (
             <>
 
                 <div className="stepper-space"><Box sx={{ width: '100%' }}>
-                    <Stepper activeStep={4} alternativeLabel>
+                    <Stepper activeStep={3} alternativeLabel>
                         {steps.map((label) => (
                             <Step key={label}>
                                 <StepLabel>{label}</StepLabel>
@@ -972,22 +896,10 @@ const UpdateReservation = props =>  {
 
                                     <div>
 
-                                        
-                                        <span className={flight.departureDate === "" ? "criteria-hide" : ""}>
+
+                                    <span className={returnDate === "" ? "criteria-hide" : ""}>
                                             <TextField
                                                 //required
-                                                id="dateInput"
-                                                type="date"
-                                                className='form-control'
-                                                label='Departure Date'
-                                                name="departureDate"
-                                                value={flight.departureDate}
-                                                onChange={(e) => onChange(e)}
-                                            />
-                                        </span>
-                                        <span className={returnDate === "" ? "criteria-hide" : ""}>
-                                            <TextField
-                                                // required
                                                 id="dateInput"
                                                 type='date'
                                                 className='form-control'
@@ -995,6 +907,7 @@ const UpdateReservation = props =>  {
                                                 name="returnDate"
                                                 value={returnDate}
                                                 onChange={(e) => onChooseReturnDate(e)}
+                                                error={errorDate !== ""}
                                             />
                                         </span>
                                         <div>
@@ -1017,8 +930,8 @@ const UpdateReservation = props =>  {
                                                 </Select>
                                             </FormControl>
                                         </div>
-                                       
-                                       
+
+
                                     </div>
                                     <div className='input-group-append'>
                                         <Button variant="outlined" type="submit">Search</Button>
@@ -1043,4 +956,4 @@ const UpdateReservation = props =>  {
 }
 
 
-export default UpdateReservation;
+export default RetUpdateReservation;
