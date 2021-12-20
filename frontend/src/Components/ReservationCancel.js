@@ -155,11 +155,18 @@ const ReservationCancel = (props) => {
 
         <Button className="updateButton" style={{ marginBottom: "20px" }} onClick={(e) => history.push(
           {
-            pathname: '/Reservation-Update',
+            pathname: '/Reservation-Update-Dept',
             state: { departureFrom: { departureFromCountry }, departureTo: { departureToCountry }, numberOfFromSeats: { chosenFromSeat },
-             departFlight: { fromObj }, seatNum: {seatCount} }
+             departFlight: { fromObj }, returnFlight: {toObj}, seatNum: {seatCount}, cabin:{cabin},reservationId:{reservationID}  }
           })
-        }>Update Reservation</Button>
+        }>Update Dept Reservation</Button>
+         <Button className="updateButton" style={{ marginBottom: "20px" }} onClick={(e) => history.push(
+          {
+            pathname: '/Reservation-Update-Ret',
+            state: { departureFrom: { departureFromCountry }, departureTo: { departureToCountry }, numberOfFromSeats: { chosenFromSeat },
+             departFlight: { fromObj }, returnFlight: {toObj}, seatNum: {seatCount}, cabin:{cabin},reservationId:{reservationID}  }
+          })
+        }>Update Ret Reservation</Button>
         <Button variant="outlined" color="error" onClick={toggleDialog}>Cancel Reservation</Button>
 
 
