@@ -13,39 +13,24 @@ const ViewSummary = () => {
 
   //let seatCount = 0;
   const [seatCount, setSeatCount] = useState(0);
-  let Uid = localStorage.getItem('userId');
+  let Uid = JSON.parse(localStorage.getItem('user'))?._id;
 
-  // david edited this part to add the send mail functionality
   let currEmail = "";
-
+  let text2="";
   const [sent, setSent] = useState(false)
-  // const [refundedAmount, setRefundedAmount] = useState("")
-  // const [deptFlightId, setDeptFlightId] = useState("")
-  // const [retFlightId, setRetFlightId] = useState("")
-  // const [deptFrom, setDeptFrom] = useState("")
-  // const [deptTo, setDeptTo] = useState("")
-  // const [retFrom, setRetFrom] = useState("")
-  // const [retTo, setRetTo] = useState("")
-  const [email, setEmail] = useState("");
-  let deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo, refundedAmount, bookingNumber;
+  const [text, setText] = useState("")
+  const [email, setEmail] = useState("")
+
   const handleSend = async (e) => {
-    refundedAmount = reservation?.price
-    deptFlightId = fromflight?.flightId
-    retFlightId = toflight?.flightId
-    deptFrom = fromflight?.from
-    deptTo = fromflight?.to
-    retFrom = toflight?.from
-    retTo = toflight?.to
-    bookingNumber = bookingId
-
-
+    text2="Refunded : "+reservation?.price;
+    console.log(text2);
     setSent(true)
     try {
 
       console.log(email);
       //  BACKEND_URL + "users/search?userId=" + id)
       await axios.post(BACKEND_URL + "users/send_mail?userId=" + Uid, {
-        deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo, refundedAmount, bookingNumber, to: email
+        text2, to: email
       })
     } catch (error) {
 
@@ -124,7 +109,7 @@ const ViewSummary = () => {
     axios.get(BACKEND_URL + "reservations/GetReservation?_id=" + reservationId)
       .then(res => {
         setReservation(res.data[0]);
-        setBookingId(reservationId.toUpperCase())
+        setBookingId(reservationId.toUpperCase());
 
         var temp1 = [];
         var temp2 = [];
@@ -220,7 +205,9 @@ const ViewSummary = () => {
       .catch(err => {
         console.log(err);
       })
-
+    setText("Refunded :"+reservation?.price);
+     console.log(reservation?.price);
+     
   }
   const getSeatNumber = (i) => {
     let letter = String.fromCharCode('A'.charCodeAt(0) + i % 6);
