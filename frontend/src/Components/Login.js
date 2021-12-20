@@ -1,63 +1,51 @@
-import { useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import { BACKEND_URL } from '../API/URLS'
-import axios from 'axios';
-import TextField from '@mui/material/TextField';
-import { Button } from '@mui/material';
+import { Button, TextField } from "@mui/material";
+import { useState } from "react";
+import { useHistory } from "react-router";
 
 const Login = () => {
 
-    const [email, setEmail] = useState('')
-	const [password, setPassword] = useState('')
+    let history = useHistory();
+    const [user, setUser] = useState({
+        userId: '',
+        password: ''
+    })
 
-
-    async function loginUser(event) {
-		event.preventDefault()
-
-		const response = await fetch(BACKEND_URL+'users/login', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				email,
-				password,
-			}),
-		})
-
-		const data = await response.json()
-
-		if (data.user) {
-			localStorage.setItem('token', data.user)
-			alert('Login successful')
-			window.location.href = '/'
-		} else {
-			alert('Please check your username and password')
-		}
-	}
+    const onChange = (e) => {
+        setUser({ ...user, [e.target.name]: e.target.value });
+    };
+    const onLogin = () => {
+        localStorage.setItem('userId', user.userId);
+        history.push("/");
+    }
 
     return (
         <form>
-<div>
-			<h1>Login</h1>
-			<form onSubmit={loginUser}>
-				<input
-					value={email}
-					onChange={(e) => setEmail(e.target.value)}
-					type="email"
-					placeholder="Email"
-				/>
-				<br />
-				<input
-					value={password}
-					onChange={(e) => setPassword(e.target.value)}
-					type="password"
-					placeholder="Password"
-				/>
-				<br />
-				<input type="submit" value="Login" />
-			</form>
-		</div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+
+                <h2>Login</h2>
+
+                <TextField
+                    className='form-control'
+                    label='User Id'
+                    name="userId"
+                    value={user?.userId}
+                    type={"number"}
+                    onChange={(e) => onChange(e)}
+                    style={{ margin: "10px" }}
+                />
+                <TextField
+                    className='form-control'
+                    label='Password'
+                    type="password"
+                    name="password"
+                    value={user?.password}
+                    onChange={(e) => onChange(e)}
+                    style={{ margin: "10px" }}
+                />
+
+                <Button onClick={onLogin} variant={"outlined"} type={"submit"} style={{ margin: "10px" }}>Login</Button>
+
+            </div>
         </form>
     );
 }

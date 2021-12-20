@@ -21,16 +21,13 @@ import FlightSchedule from './Components/FlightSchedule';
 import SearchFlightUser from './Components/SearchFlightUser';
 import FlightSeats from './Components/FlightSeats/FlightSeats';
 
-import Login from './Components/Login';
-import Register from './Components/Register';
-
 
 import ViewDetailsUser from './Components/ViewDetailsUser';
 import ReservedFlight from './Components/ReservedFlight';
 import ViewSummary from './Components/ViewSummary';
 import Confirmation from './Components/Confirmation';
 import ReservationCancel from './Components/ReservationCancel';
-
+import Login from './Components/Login';
 function App() {
 
   return (
@@ -69,7 +66,6 @@ function App() {
           <Route path='/Resrevation-cancel' component={ReservationCancel} />
           <Route path='/reserve' component={Confirmation} />
           <Route path='/login' component={Login} />
-          <Route path='/register'component={Register} />
 
 
         </Switch>

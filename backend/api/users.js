@@ -3,18 +3,13 @@ const { models } = require('mongoose');
 const router = express.Router();
 var bodyParser = require('body-parser')
 
-const jwt=require("jsonwebtoken")
-const bcrypt = require("bcrypt")
-
-const User = require('../model/User');
-
 require("dotenv").config
 
 const nodemailer = require("nodemailer")
 const cors = require('cors');
 
 // Load User model
-
+const User = require('../model/User');
 
 // @route GET api/users/test
 // @description tests users route
@@ -115,56 +110,7 @@ router.put('/update', (req, res) => {
         );
 });
 
-router.post('/register',async (req,res) => {
-const user =req.body;
 
-const takenUsername = await User.findOne({username: user.username})
-const takenEmail = await User.findOne({email: user.email})
-
-if(takenEmail || takenUsername){
-    res.json({message: "Username or email has already been taken"})
-} else {
-    user.password = await bcrypt.hash(req.body.password, 10)
-
-    User.create({ ...user, isAdmin: "false" })
-        .then((newUser) =>
-        res.json({message:"User added" , data:newUser,status:'ok'})
-        )
-}
-})
-
-router.post("/login" , (req, res) => {
-    const userLoggingIn = req.body;
-    //console.log(req.body)
-    User.findOne({ username: userLoggingIn.username }).then((user) => {
-      if (!user) {
-        return res.json({ message: "Invalid Username or Password" });
-      }
-      console.log(user);
-      bcrypt
-        .compare(userLoggingIn.password, user.password)
-        .then((isCorrect) => {
-          if (isCorrect) {
-            const payload = {
-              id: user.userId,
-              username: user.username,
-            };
-            jwt.sign(
-              payload,
-              process.env.JWT_SECRET,
-              { expiresIn: "10h" },
-              (err, token) => {
-                if (err) {
-                  return res.json({ message:"error" });
-                }
-                return res.json({ message: "Success", token: "Bearer " + token });
-              }
-            );
-          } else {
-            res.json({ message: "Invalid Username or Password" });
-          }  });
-    });
-  });
 
 
 
