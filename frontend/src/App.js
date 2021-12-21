@@ -30,7 +30,6 @@ import ReservedFlight from './Components/ReservedFlight';
 import ViewSummary from './Components/ViewSummary';
 import Confirmation from './Components/Confirmation';
 import ReservationCancel from './Components/ReservationCancel';
-
 function App() {
 
   return (
@@ -67,6 +66,7 @@ function App() {
           {/* <Route path='/summary/:idfrom/:idto' component={ViewSummary} /> */}
           <Route path='/summary/:reservationId' component={ViewSummary} />
           <Route path='/Resrevation-cancel' component={ReservationCancel} />
+          {/* <Route path='/Reservation-Update' component={UpdateReservation} /> */}
           <Route path='/reserve' component={Confirmation} />
           <Route path='/login' component={Login} />
           <Route path='/register'component={Register} />

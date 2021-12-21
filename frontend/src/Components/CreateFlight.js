@@ -24,6 +24,11 @@ class CreateFlight extends Component {
             availableFirst: '',
             arrivalTerminal: '',
             departureTerminal: '',
+            baggageAllowance: '',
+            price:'',
+            seatsEconomy: [],
+            seatsBusiness: [],
+            seatsFirst: [],
             err: ''
         };
     }
@@ -34,6 +39,21 @@ class CreateFlight extends Component {
 
     onSubmit = e => {
         e.preventDefault();
+
+        let seatsEconomy1 = [];
+        let seatsBusiness1 = [];
+        let seatsFirst1 = [];
+
+        for(let i = 0; i < this.state.availableEconomy*1; i++){
+            seatsEconomy1.push(null);
+        }
+
+        for(let i = 0; i < this.state.availableBusiness*1; i++){
+            seatsBusiness1.push(null);
+        }
+        for(let i = 0; i < this.state.availableFirst*1; i++){
+            seatsFirst1.push(null);
+        }
 
         const data = {
             flightId: this.state.flightId,
@@ -47,8 +67,12 @@ class CreateFlight extends Component {
             availableBusiness: this.state.availableBusiness,
             availableFirst: this.state.availableFirst,
             departureTerminal: this.state.departureTerminal,
-            arrivalTerminal: this.state.arrivalTerminal
-
+            arrivalTerminal: this.state.arrivalTerminal,
+            baggageAllowance: this.state.baggageAllowance,
+            price: this.state.price,
+            seatsEconomy: seatsEconomy1,
+            seatsBusiness: seatsBusiness1,
+            seatsFirst: seatsFirst1
         };
 
         axios
@@ -66,13 +90,18 @@ class CreateFlight extends Component {
                     availableBusiness: '',
                     availableFirst: '',
                     arrivalTerminal: '',
-                    departureTerminal: ''
+                    departureTerminal: '',
+                    baggageAllowance: '',
+                    seatsEconomy: [],
+                    seatsBusiness: [],
+                    seatsFirst: [],
+                    price:''
                 })
                 this.props.history.push('/search');
             })
             .catch(err => {
                 console.log(err);
-                this.setState({['err']: 'error'})
+                this.setState({ ['err']: 'error' })
             })
     };
 
@@ -223,6 +252,24 @@ class CreateFlight extends Component {
                                             label='First Class Seats'
                                             name="availableFirst"
                                             value={this.state.availableFirst}
+                                            onChange={this.onChange}
+                                        />
+                                    </div>
+                                    <div>
+                                        <TextField
+                                            id="outlined"
+                                            className='form-control'
+                                            label='Baggage Allowance'
+                                            name="baggageAllowance"
+                                            value={this.state.baggageAllowance}
+                                            onChange={this.onChange}
+                                        />
+                                         <TextField
+                                            id="outlined"
+                                            className='form-control'
+                                            label='Price'
+                                            name="price"
+                                            value={this.state.price}
                                             onChange={this.onChange}
                                         />
                                     </div>

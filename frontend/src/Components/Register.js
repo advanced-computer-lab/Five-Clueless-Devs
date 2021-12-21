@@ -7,70 +7,72 @@ import { Button } from '@mui/material';
 
 
 
-const Register=()=> {
+const Register = () => {
 	const history = useHistory()
-    const [userId, setUserId] = useState('')
+	const [userId, setUserId] = useState('')
 	const [username, setUsername] = useState('')
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
-    const [firstName, setFirstName] = useState('')
+	const [firstName, setFirstName] = useState('')
 	const [lastName, setLastName] = useState('')
 	const [homeAddress, setHomeAddress] = useState('')
-    const [countryCode, setcountryCode] = useState('')
-    const [telephone, setTelephone] = useState('')
-    const [passportNumber, setPassportNumber] = useState('')
-    const [reservations, setReservations] = useState('')
+	const [countryCode, setcountryCode] = useState('')
+	const [telephone, setTelephone] = useState('')
+	const [passportNumber, setPassportNumber] = useState('')
+	const [reservations, setReservations] = useState([])
 
 	async function registerUser(event) {
 		event.preventDefault()
 
-        const response = await fetch(BACKEND_URL+'users/register', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-                userId,
-				username,
-				email,
-				password,
-                firstName,
-                lastName,
-                homeAddress,
-                countryCode,
-                telephone,
-                passportNumber,
-                reservations
-			}),
-		})
+		try {
+			const response = await fetch(BACKEND_URL + 'users/register', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					// userId: email,
+					username,
+					email,
+					password,
+					firstName,
+					lastName,
+					homeAddress,
+					countryCode,
+					telephone,
+					passportNumber,
+					reservations
+				}),
+			})
 
-		const data = await response.json()
-        console.log(data);
-		if (data.status === 'ok') {
-			history.push('/login')
+			const data = await response.json()
+			console.log(data);
+			if (data.status === 'ok') {
+				history.push('/login')
+			}
+		} catch (error) {
+			console.log(error);
 		}
 	}
 
 	return (
-<div>
+		<div>
 			<h1>Register</h1>
 			<form onSubmit={registerUser}>
-                <TextField
-
-                    value={userId}
-                    onChange={(e) => setUserId(e.target.value)}
-                    type="text"
-                    placeholder="UserID"
-                />
-                <br/>
+				{/* <TextField
+					value={userId}
+					onChange={(e) => setUserId(e.target.value)}
+					type="text"
+					placeholder="UserID"
+				/>
+				<br /> */}
 				<TextField
-
 					value={username}
 					onChange={(e) => setUsername(e.target.value)}
 					type="text"
 					placeholder="Username"
 				/>
-                
+
 				<TextField
 					value={email}
 					onChange={(e) => setEmail(e.target.value)}
@@ -85,27 +87,27 @@ const Register=()=> {
 					placeholder="Password"
 				/>
 				<br />
-                <TextField
-                                               
-                   value={firstName}
-                   onChange={(e) => setFirstName(e.target.value)}
-                   type="text"
-                   placeholder="First Name"
-                />
-                <TextField
-                                               
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    type="text"
-                    placeholder="Last Name"
-                    /> 
-            	<TextField
+				<TextField
+
+					value={firstName}
+					onChange={(e) => setFirstName(e.target.value)}
+					type="text"
+					placeholder="First Name"
+				/>
+				<TextField
+
+					value={lastName}
+					onChange={(e) => setLastName(e.target.value)}
+					type="text"
+					placeholder="Last Name"
+				/>
+				<TextField
 					value={telephone}
 					onChange={(e) => setTelephone(e.target.value)}
 					placeholder="Telephone"
 				/>
-				<br />     
-                <TextField
+				<br />
+				<TextField
 					value={homeAddress}
 					onChange={(e) => setHomeAddress(e.target.value)}
 					placeholder="Home Address"
@@ -115,18 +117,19 @@ const Register=()=> {
 					onChange={(e) => setcountryCode(e.target.value)}
 					placeholder="Country Code"
 				/>
-				<br />      
-                <TextField
+				<br />
+				<TextField
 					value={passportNumber}
 					onChange={(e) => setPassportNumber(e.target.value)}
 					placeholder="Passport Number"
 				/>
-				<br />                            
-                <TextField
+				<br />
+				{/* <TextField
 					value={reservations}
 					onChange={(e) => setReservations(e.target.value)}
 					placeholder="Reservations"
-				/>         
+				/>
+				<br /> */}
 				<input type="submit" value="Register" />
 			</form>
 		</div>

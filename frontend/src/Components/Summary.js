@@ -47,7 +47,7 @@ const Summary = (props) => {
         createData('Flight Price', props.retFlightPrice),
     ];
     
-    let userId = localStorage.getItem('userId');
+    let userId = JSON.parse(localStorage.getItem('user'))?._id;
 
     const clickConfirm = () =>{
         if(userId){
@@ -62,7 +62,7 @@ const Summary = (props) => {
     const onConfirm = (e) => {
         let numOfAdults = props.numOfAdults
         let numOfChildren = props.numOfChildren;
-        let numOfSeats = numOfAdults + numOfChildren;
+        let numOfSeats = numOfAdults*1 + numOfChildren*1;
         let priceOfDept = props.deptFlightPrice;
         let priceOfRet = props.retFlightPrice;
         console.log(props)
@@ -84,12 +84,12 @@ const Summary = (props) => {
                 retFlight = { ...retFlight, availableEconomy: retFlight.availableEconomy - numOfSeats };
                 break;
             case "First":
-                deptFlight = { ...deptFlight, availableFirst: deptFlight.availableEconomy - numOfSeats };
-                retFlight = { ...retFlight, availableFirst: retFlight.availableEconomy - numOfSeats };
+                deptFlight = { ...deptFlight, availableFirst: deptFlight.availableFirst - numOfSeats };
+                retFlight = { ...retFlight, availableFirst: retFlight.availableFirst - numOfSeats };
                 break;
             case "Business":
-                deptFlight = { ...deptFlight, availableBusiness: deptFlight.availableEconomy - numOfSeats };
-                retFlight = { ...retFlight, availableBusiness: retFlight.availableEconomy - numOfSeats };
+                deptFlight = { ...deptFlight, availableBusiness: deptFlight.availableBusiness - numOfSeats };
+                retFlight = { ...retFlight, availableBusiness: retFlight.availableBusiness - numOfSeats };
                 break;
             default:
                 console.log("Something went wrong");

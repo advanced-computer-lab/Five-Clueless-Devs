@@ -22,7 +22,7 @@ const Login=()=> {
 		})
 
 		const data = await response.json()
-        console.log(data.user.userId)
+        console.log(data.user)
 		if (data.user) {
 			localStorage.setItem('token', data.user)
 			alert('Login successful')

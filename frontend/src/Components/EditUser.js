@@ -34,7 +34,7 @@ const EditUser = () => {
     const getUser = () => {
         console.log("Print id: " + { id });
         axios
-            .get(BACKEND_URL + "users/search?userId=" + id)
+            .get(BACKEND_URL + "users/search?_id=" + id)
             .then(res => {
                 console.log(res.data[0]);
                 setUser(res.data[0]);
@@ -51,9 +51,9 @@ const EditUser = () => {
     const onSubmit = (e) => {
         e.preventDefault();
         axios
-            .put(BACKEND_URL + 'users/update?userId=' + id, user)
+            .put(BACKEND_URL + 'users/update?_id=' + id, user)
             .then(res => {
-                history.push('/user-details/' + user?.userId);
+                history.push('/user-details/' + user?._id);
                 console.log(res.data);
 
             })
@@ -79,7 +79,7 @@ const EditUser = () => {
 
 
                         <form noValidate onSubmit={onSubmit}>
-                            <div className='criteria-form-group'>
+                            {/* <div className='criteria-form-group'>
                                 <div>
                                     <TextField
                                         disabled
@@ -87,11 +87,11 @@ const EditUser = () => {
                                         label="User ID"
                                         className='form-control'
                                         name="userId"
-                                        value={user?.userId}
+                                        value={user?._id}
 
                                     />
                                 </div>
-                            </div>
+                            </div> */}
 
 
                             <div className='form-group'>
@@ -194,7 +194,7 @@ const EditUser = () => {
 
 
                             <div className='input-group-append'>
-                                <Button style={{ marginRight: "10px" }} onClick={() => history.push('/user-details/' + localStorage.getItem("userId"))} variant="outlined">Back</Button>
+                                <Button style={{ marginRight: "10px" }} onClick={() => history.push('/user-details/' + JSON.parse(localStorage.getItem('user'))?._id)} variant="outlined">Back</Button>
                                 <Button onClick={toggleDialog} variant="outlined" >Edit User</Button>
 
                             </div>
@@ -211,7 +211,7 @@ const EditUser = () => {
                                     </DialogTitle>
                                     <DialogActions>
                                         <Button onClick={toggleDialog} variant="text">Cancel </Button>
-                                        <Button onClick={ onSubmit} variant="text" type="submit" >Confirm Edit</Button>
+                                        <Button onClick={ onSubmit} variant="text" type="submit" color="success" >Confirm Edit</Button>
                                     </DialogActions>
                                 </Dialog>
 

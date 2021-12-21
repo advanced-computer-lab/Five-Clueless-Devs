@@ -4,6 +4,7 @@ import '../App.css';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import "./FlightCard.css";
 
 
 const ViewUserDetails = () => {
@@ -48,7 +49,7 @@ const ViewUserDetails = () => {
   useEffect(() => {
     console.log("Print id: " + { id });
     axios
-      .get(BACKEND_URL + "users/search?userId=" + id)
+      .get(BACKEND_URL + "users/search?_id=" + id)
       .then(res => {
         //console.log(res.data);
         //console.log(res.data[0].email);
@@ -118,7 +119,7 @@ const ViewUserDetails = () => {
                 <TableRow>
                   {/* <th scope="row">1</th> */}
                   <TableCell>User ID</TableCell>
-                  <TableCell>{user?.userId}</TableCell>
+                  <TableCell>{user?._id}</TableCell>
                 </TableRow>
                 <TableRow>
                   {/* <th scope="row">2</th> */}

@@ -5,9 +5,10 @@ import "./DepartureFlightCard.css";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { Table, TableBody, TableCell, TableRow , IconButton} from '@mui/material';
+import { Table, TableBody, TableCell, TableRow, IconButton } from '@mui/material';
+import { textAlign } from '@mui/system';
 
-const FlightCard = (props) => {
+const DepartureFlightCardEdit = (props) => {
 
     const style = {
         position: 'absolute',
@@ -251,8 +252,15 @@ const FlightCard = (props) => {
                     </Modal>
                     <div className="middle-price">
                         <p> <span><b>EGP</b>{checkTotal()}</span></p>
+
                     </div>
                     <p className="passenger-font" onClick={handleClick}>(for {props.numOfAdults + props.numOfChildren} passengers)</p>
+                    {props.oldPrice - checkTotal() < 0 ? <p style={{ marginLeft:"9px", textAlign: "center", fontSize:"14px"}}>
+                        Pay Additional: <p style={{ color: "red", textAlign: "center", fontSize:"20px" }}> <b style={{color:"black", fontSize:"12px"}}>EGP </b>
+                        {Math.abs(props.oldPrice - checkTotal())} </p></p> :
+                        <p style={{ marginLeft:"9px", textAlign: "center", fontSize:"14px"}}>
+                        Save: <p style={{ color: "green", textAlign: "center", fontSize:"20px" }}> <b style={{color:"black", fontSize:"12px"}}>EGP </b>
+                        {Math.abs(props.oldPrice - checkTotal())} </p></p>}
                 </div>
 
             </div>
@@ -261,4 +269,4 @@ const FlightCard = (props) => {
     )
 };
 
-export default FlightCard;
+export default DepartureFlightCardEdit;

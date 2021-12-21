@@ -19,13 +19,23 @@ import FlightSeats from './FlightSeats/FlightSeats';
 import { set } from 'mongoose';
 import { useHistory } from "react-router";
 import "./Itinerary.css";
+import { useLocation } from "react-router-dom";
+import DepartureFlightCardEdit from './DepartureFlightCardEdit';
 
 
 
-const SearchFlightUser = ({ location }) => {
-     const history = useHistory();
+const UpdateReservation = props =>  {
+    const location = useLocation();
+    const history = useHistory();
     // useState hooks for input and language
 
+    const departureFrom = location.state.departureFrom;
+    const departureTo = location.state.departureTo;
+    const departFlight = location.state.departFlight;
+    const seatCount = location.state.seatNum;
+ 
+   //const numSeats = location.state.numberOfFromSeats; //add got seats here
+    const numSeats = 1;
     const moment = require('moment')
     const getDuration = (flight) => {
         console.log('----duraton----')
@@ -39,8 +49,7 @@ const SearchFlightUser = ({ location }) => {
     }
 
     const steps = [
-        'Search & Select Departure Flight',
-        'Select Return Flight',
+        'Search & Update Departure Flight',
         'View Summary',
         'Select Seats',
         'View Your Itinerary',
@@ -103,8 +112,8 @@ const SearchFlightUser = ({ location }) => {
 
     const [flight, setFlight] = useState({
         flightId: '',
-        from: '',
-        to: '',
+        from: departureFrom.departureFromCountry,
+        to: departureTo.departureToCountry,
         departureDate: '',
         arrivalDate: '',
         departureTime: '',
@@ -129,6 +138,7 @@ const SearchFlightUser = ({ location }) => {
 
     let saved = null;
     useEffect(() => {
+       
         axios
             .get(BACKEND_URL + "flights/search?")
             .then(res => {
@@ -141,66 +151,43 @@ const SearchFlightUser = ({ location }) => {
             .catch(err => {
                 console.log(err);
             })
-    }, []);
+            
+            console.log(departFlight.fromObj.price);
+         console.log(departureFrom);
+         console.log(seatCount?.seatCount);
+      }, []);
 
 
-    const setSavedData = () => {
-        setDeptFlightFrom(saved.deptFlightFrom);
-        setDeptFlightTo(saved.deptFlightTo);
-        setDeptFlightDeptTime(saved.deptFlightDeptTime);
-        setDeptFlightArrivalTime(saved.deptFlightArrivalTime);
-        setDeptDeptDate(saved.deptFlightDeptDate);
-        setDeptArrivalDate(saved.deptFlightArrivalDate);
+    // const setSavedData = () => {
+    //     setDeptFlightFrom(saved.deptFlightFrom);
+    //     setDeptFlightTo(saved.deptFlightTo);
+    //     setDeptFlightDeptTime(saved.deptFlightDeptTime);
+    //     setDeptFlightArrivalTime(saved.deptFlightArrivalTime);
+    //     setDeptDeptDate(saved.deptFlightDeptDate);
+    //     setDeptArrivalDate(saved.deptFlightArrivalDate);
 
-        setClass(saved.chosenClass);
+    //     setClass(saved.chosenClass);
 
-        setDeptSelectedId(saved.selectedDeptFlightId);
-        setDeptPrice(saved.deptFlightPrice);
-        setRetPrice(saved.retFlightPrice);
-        setRetFlightDeptTime(saved.retFlightDeptTime);
-        setRetDeptDate(saved.retFlightDeptDate);
-        setRetFlightArrivalTime(saved.retFlightArrivalTime);
-        setRetArrivalDate(saved.retFlightArrivalDate);
+    //     setDeptSelectedId(saved.selectedDeptFlightId);
+    //     setDeptPrice(saved.deptFlightPrice);
+    //     setRetPrice(saved.retFlightPrice);
+    //     setRetFlightDeptTime(saved.retFlightDeptTime);
+    //     setRetDeptDate(saved.retFlightDeptDate);
+    //     setRetFlightArrivalTime(saved.retFlightArrivalTime);
+    //     setRetArrivalDate(saved.retFlightArrivalDate);
 
-        setRetSelectedId(saved.selectedRetFlightId);
+    //     setRetSelectedId(saved.selectedRetFlightId);
 
-        setAdultNumber(saved.adultsNumber);
-        setChildNumber(saved.childNumber);
+    //     setAdultNumber(saved.adultsNumber);
+    //     setChildNumber(saved.childNumber);
 
         // selectDept={selectDept}
 
-        setSelectedDeptFlight(saved.selectedDeptFlight);
-        setSelectedRetFlight(saved.selectedRetFlight);
-    }
+    //     setSelectedDeptFlight(saved.selectedDeptFlight);
+    //     setSelectedRetFlight(saved.selectedRetFlight);
+    // }
 
-    // useEffect((e) => {
-    //     const usp = new URLSearchParams(flight);
-    //     let keysForDel = [];
-    //     usp.forEach((value, key) => {
-    //         if (value === '') {
-    //             keysForDel.push(key);
-    //         }
-    //     });
 
-    //     keysForDel.forEach(key => {
-    //         usp.delete(key);
-    //     });
-    //     console.log(usp.toString());
-    //     // prevents default, so page won't reload on form submit
-
-    //     //e.preventDefault();
-    //     axios
-    //         .get(BACKEND_URL + "flights/search?" + usp.toString())
-    //         .then(res => {
-    //             console.log(res.data);
-    //             setResult(res.data);
-    //             console.log(flightRes);
-
-    //         })
-    //         .catch(err => {
-    //             console.log(err);
-    //         })
-    // }, [flight])
 
     useEffect((e) => {
         setResult([]);
@@ -264,21 +251,7 @@ const SearchFlightUser = ({ location }) => {
         setView(2);
     }
 
-    // const clearAll = (e) => {
-    //     var elementsSelect = document.getElementById('select');
-    //     var elementsDate = document.getElementById('dateInput');
-    //     console.log(elementsSelect.length);
 
-    //     for (var i = 0; i < elementsSelect.length; i++) {
-    //         elementsSelect.selectedIndex = null;
-    //         console.log("Im in select");
-    //     }
-    //     for (var j = 0; j < elementsDate.length; j++) {
-    //         elementsDate.value = "";
-    //         console.log("Im in");
-    //     }
-    //     console.log("CLEARED");
-    // }
     const showAll = (e) => {
         e.preventDefault();
         axios
@@ -302,14 +275,7 @@ const SearchFlightUser = ({ location }) => {
     const submitAction = (e) => {
         e.preventDefault();
         var goAhead = true;
-        if (flight.to == flight.from) {
-            //alert("From and To need to be different")
-            setErrorSame("From and To need to be different");
-            goAhead = false;
-        } else {
-            setErrorSame("");
-        }
-        
+
         if (returnDate && flight.departureDate && flight.departureDate > returnDate) {
             // alert("Departure date cannot be later than return date")
             setErrorDate("Departure date cannot be later than return date")
@@ -321,13 +287,15 @@ const SearchFlightUser = ({ location }) => {
         if (goAhead) {
             console.log("This is the flight:")
 
-            returnFlight.to = flight.from;
-            returnFlight.from = flight.to;
-            returnFlight.departureDate = returnDate;
-            console.log(returnFlight);
-            var passNumber = adultsNumber + childNumber;
+            // returnFlight.to = flight.from;
+            // returnFlight.from = flight.to;
+            // returnFlight.departureDate = returnDate;
+            // console.log(returnFlight);
+            var passNumber = seatCount;
             var numberAndClass = "";
             console.log(chosenClass);
+            //flight.from = departureFrom;
+            console.log(flight);
             const usp = new URLSearchParams(flight);
             const uspReturn = new URLSearchParams(returnFlight);
             let keysForDel = [];
@@ -433,46 +401,7 @@ const SearchFlightUser = ({ location }) => {
 
                                     <div>
 
-                                        <div className='search-center'>
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={allFlights.map(flight => flight.from)
-                                                    .filter((value, index, self) => self.indexOf(value) === index)}
-                                                sx={{ width: 300 }}
 
-                                                // onChange={(e) => onChange(e)}
-
-                                                renderInput={(params) => <TextField {...params} error={errorSame !== ""} required label="From" />}
-                                                // name="to"
-                                                // value={flight.to}
-                                                onChange={handleChangeFrom}
-
-                                            />
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={allFlights.map(flight => flight.to)
-                                                    .filter((value, index, self) => self.indexOf(value) === index)}
-                                                sx={{ width: 300 }}
-
-                                                // onChange={(e) => onChange(e)}
-
-                                                renderInput={(params) =>
-                                                    <TextField
-                                                        {...params}
-                                                        required
-                                                        label="To"
-                                                        error={errorSame !== ""}
-                                                        helperText={errorSame}
-                                                    />}
-                                                // name="to"
-                                                // value={flight.to}
-                                                onChange={handleChangeTo}
-
-
-                                            />
-                                        </div>
                                         <span className={flight.departureDate === "" ? "criteria-hide" : ""}>
                                             <TextField
                                                 //required
@@ -520,56 +449,8 @@ const SearchFlightUser = ({ location }) => {
                                                 </Select>
                                             </FormControl>
                                         </div>
-                                        <FormControl sx={{ m: 1, minWidth: 120 }} >
-                                            <InputLabel id="demo-simple-select-label">Adults</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="select"
-
-                                                value={adultsNumber}
-                                                label="Adults"
-                                                onChange={(e) => onChooseAdult(e)}
-
-                                            >
-
-
-                                                <MenuItem value={1} >1</MenuItem>
-                                                <MenuItem value={2} >2</MenuItem>
-                                                <MenuItem value={3} >3</MenuItem>
-                                                <MenuItem value={4} >4</MenuItem>
-                                                <MenuItem value={5} >5</MenuItem>
-                                                <MenuItem value={6} >6</MenuItem>
-                                                <MenuItem value={7} >7</MenuItem>
-                                                <MenuItem value={8} >8</MenuItem>
-                                                <MenuItem value={9} >9</MenuItem>
-
-                                            </Select>
-                                        </FormControl>
-                                        <FormControl sx={{ m: 1, minWidth: 120 }} >
-                                            <InputLabel id="demo-simple-select-label">Children</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="select"
-
-                                                value={childNumber}
-                                                label="Children"
-                                                onChange={(e) => onChooseChild(e)}
-
-                                            >
-
-                                                <MenuItem value={0} >0</MenuItem>
-                                                <MenuItem value={1} >1</MenuItem>
-                                                <MenuItem value={2} >2</MenuItem>
-                                                <MenuItem value={3} >3</MenuItem>
-                                                <MenuItem value={4} >4</MenuItem>
-                                                <MenuItem value={5} >5</MenuItem>
-                                                <MenuItem value={6} >6</MenuItem>
-                                                <MenuItem value={7} >7</MenuItem>
-                                                <MenuItem value={8} >8</MenuItem>
-                                                <MenuItem value={9} >9</MenuItem>
-
-                                            </Select>
-                                        </FormControl>
+                                   
+                                     
                                     </div>
                                     <div className='input-group-append'>
                                         <Button variant="outlined" type="submit">Search</Button>
@@ -580,12 +461,12 @@ const SearchFlightUser = ({ location }) => {
 
                                     <div className="list">
                                         {flightRes.map((flight, k) =>
-                                            <DepartureFlightCard flight={flight} numOfChildren={childNumber} numOfAdults={adultsNumber}
+                                            <DepartureFlightCardEdit flight={flight} numOfChildren={childNumber} numOfAdults={adultsNumber}
                                                 chosenClass={chosenClass} data={selectDept} key={k} passDeptId={setDeptSelectedId} passDeptFrom={setDeptFlightFrom}
                                                 passDeptTo={setDeptFlightTo} passDeptDuration={setDeptFlightDuration} passDeptFlightDeptTime={setDeptFlightDeptTime}
                                                 passDeptFlightArrivalTime={setDeptFlightArrivalTime} passDeptFlightDeptDate={setDeptDeptDate}
                                                 passDeptFlightArrivalDate={setDeptArrivalDate} passDeptFlightPrice={setDeptPrice}
-                                                passSelectedDeptFlight={setSelectedDeptFlight} />
+                                                passSelectedDeptFlight={setSelectedDeptFlight} oldPrice = {departFlight.fromObj.price} />
                                         )}
                                     </div>
 
@@ -599,8 +480,7 @@ const SearchFlightUser = ({ location }) => {
             </>
         );
     }
-    //SELECTING RETURN FLIGHT------------------------------------------------------------------------------------------------------------------------------------------------------
-    else if (view == 2) {
+    else if(view == 2) {
         return (
             <>
                 <div className="stepper-space"><Box sx={{ width: '100%' }}>
@@ -685,6 +565,7 @@ const SearchFlightUser = ({ location }) => {
             </>
         );
     }
+   
     else if (view == 3) {
         return (<>
 
@@ -1051,7 +932,7 @@ const SearchFlightUser = ({ location }) => {
                     bookingNum={bookingNum}
 
                 />
-                <div><button className="confirm-res" style={{marginBottom:"20px"}} onClick={(e) => history.push('/Reserved-flights')}>View Reservations</button></div>
+                    <div><button className="confirm-res" style={{ marginBottom: "20px" }} onClick={(e) => history.push('/Reserved-flights')}>View Reservations</button></div>
 
                 </div>
 
@@ -1091,39 +972,7 @@ const SearchFlightUser = ({ location }) => {
 
                                     <div>
 
-                                        <div className='search-center'>
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={allFlights.map(flight => flight.from)
-                                                    .filter((value, index, self) => self.indexOf(value) === index)}
-                                                sx={{ width: 300 }}
-
-                                                // onChange={(e) => onChange(e)}
-
-                                                renderInput={(params) => <TextField {...params} required label="From" />}
-                                                // name="to"
-                                                // value={flight.to}
-                                                onChange={handleChangeFrom}
-
-                                            />
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={allFlights.map(flight => flight.to)
-                                                    .filter((value, index, self) => self.indexOf(value) === index)}
-                                                sx={{ width: 300 }}
-
-                                                // onChange={(e) => onChange(e)}
-
-                                                renderInput={(params) => <TextField {...params} required label="To" />}
-                                                // name="to"
-                                                // value={flight.to}
-                                                onChange={handleChangeTo}
-
-
-                                            />
-                                        </div>
+                                        
                                         <span className={flight.departureDate === "" ? "criteria-hide" : ""}>
                                             <TextField
                                                 //required
@@ -1168,56 +1017,8 @@ const SearchFlightUser = ({ location }) => {
                                                 </Select>
                                             </FormControl>
                                         </div>
-                                        <FormControl sx={{ m: 1, minWidth: 120 }} >
-                                            <InputLabel id="demo-simple-select-label">Adults</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="select"
-
-                                                value={adultsNumber}
-                                                label="Adults"
-                                                onChange={(e) => onChooseAdult(e)}
-
-                                            >
-
-
-                                                <MenuItem value={1} >1</MenuItem>
-                                                <MenuItem value={2} >2</MenuItem>
-                                                <MenuItem value={3} >3</MenuItem>
-                                                <MenuItem value={4} >4</MenuItem>
-                                                <MenuItem value={5} >5</MenuItem>
-                                                <MenuItem value={6} >6</MenuItem>
-                                                <MenuItem value={7} >7</MenuItem>
-                                                <MenuItem value={8} >8</MenuItem>
-                                                <MenuItem value={9} >9</MenuItem>
-
-                                            </Select>
-                                        </FormControl>
-                                        <FormControl sx={{ m: 1, minWidth: 120 }} >
-                                            <InputLabel id="demo-simple-select-label">Children</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="select"
-
-                                                value={childNumber}
-                                                label="Children"
-                                                onChange={(e) => onChooseChild(e)}
-
-                                            >
-
-                                                <MenuItem value={0} >0</MenuItem>
-                                                <MenuItem value={1} >1</MenuItem>
-                                                <MenuItem value={2} >2</MenuItem>
-                                                <MenuItem value={3} >3</MenuItem>
-                                                <MenuItem value={4} >4</MenuItem>
-                                                <MenuItem value={5} >5</MenuItem>
-                                                <MenuItem value={6} >6</MenuItem>
-                                                <MenuItem value={7} >7</MenuItem>
-                                                <MenuItem value={8} >8</MenuItem>
-                                                <MenuItem value={9} >9</MenuItem>
-
-                                            </Select>
-                                        </FormControl>
+                                       
+                                       
                                     </div>
                                     <div className='input-group-append'>
                                         <Button variant="outlined" type="submit">Search</Button>
@@ -1242,4 +1043,4 @@ const SearchFlightUser = ({ location }) => {
 }
 
 
-export default SearchFlightUser;
+export default UpdateReservation;
