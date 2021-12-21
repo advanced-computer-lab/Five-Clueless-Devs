@@ -221,6 +221,8 @@ let priceToFinalDisplay = 0;
                 console.log("Something went wrong");
         }
 
+        console.table(deptFlightOld);
+
 
 
         if (window.location.href.includes("Ret")) {
@@ -238,7 +240,8 @@ let priceToFinalDisplay = 0;
 
                                 to: retFlight?.flightId,
                                 cabin: cabin,
-                                price: priceOfDept + priceOfRet
+                                price: priceOfDept + priceOfRet,
+                                cabinArrival: cabin
                             }
                             axios
                                 .put(BACKEND_URL + "reservations/update?_id=" + reservationId, data)
@@ -278,7 +281,8 @@ let priceToFinalDisplay = 0;
 
                                 from: deptFlight?.flightId,
                                 cabin: cabin,
-                                price: priceOfDept + priceOfRet
+                                price: priceOfDept + priceOfRet,
+                                cabinArrival: cabin
                             }
                             axios
                                 .put(BACKEND_URL + "reservations/update?_id=" + reservationId, data)

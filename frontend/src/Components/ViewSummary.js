@@ -137,7 +137,7 @@ const ViewSummary = () => {
             tempFromFirst = [...resFrom.data[0].seatsFirst];
             tempFromBusiness = [...resFrom.data[0].seatsBusiness];
 
-            switch (res.data[0].cabin) {
+            switch (res.data[0].cabinDeparture) {
               case "Economy":
                 temp1 = tempFromEconomy;
                 break;
@@ -173,7 +173,7 @@ const ViewSummary = () => {
             temptoFirst = [...resTo.data[0].seatsFirst];
             temptoBusiness = [...resTo.data[0].seatsBusiness];
 
-            switch (res.data[0].cabin) {
+            switch (res.data[0].cabinArrival) {
               case "Economy":
                 temp2 = temptoEconomy;
                 break;
@@ -213,6 +213,33 @@ const ViewSummary = () => {
     let letter = String.fromCharCode('A'.charCodeAt(0) + i % 6);
     let num = Math.floor(i / 6 + 1);
     return `${num}${letter}`
+  }
+
+  const seatsDeparture = () => {
+    history.push(
+      {
+        pathname: `/editSeats/${reservation?._id}`,
+        state: {
+          flight: fromflight,
+          maxSeats: reservation?.numberOfSeats,
+          cabin: reservation?.cabinDeparture,
+          type: "Departure"  
+        }
+      })
+  }
+
+  const seatsArrival = () => {
+    history.push(
+      {
+        pathname: `/editSeats/${reservation?._id}`,
+        state: {
+          flight: toflight,
+          maxSeats: reservation?.numberOfSeats,
+          cabin: reservation?.cabinArrival,
+          type: "Arrival"  ,
+          reservationId: reservation?._id
+        }
+      })
   }
 
 
@@ -319,9 +346,9 @@ const ViewSummary = () => {
                     <TableRow>
                       {/* <th scope="row">12</th> */}
                       <TableCell>  <span className="info-header-font">Cabin Class</span></TableCell>
-                      <TableCell align="right">{reservation?.cabin}</TableCell>
+                      <TableCell align="right">{reservation?.cabinDeparture}</TableCell>
                     </TableRow>
-                    <TableRow>
+                    <TableRow style={{ cursor: 'pointer' }} onClick={seatsDeparture} title="Click to edit seats">
                       {/* <th scope="row">12</th> */}
                       <TableCell>  <span className="info-header-font">Seats</span></TableCell>
                       <TableCell align="right">{seatsFrom}</TableCell>
@@ -389,9 +416,9 @@ const ViewSummary = () => {
                     <TableRow>
                       {/* <th scope="row">12</th> */}
                       <TableCell><span className="info-header-font">Cabin Class</span></TableCell>
-                      <TableCell align="right">{reservation?.cabin}</TableCell>
+                      <TableCell align="right">{reservation?.cabinArrival}</TableCell>
                     </TableRow>
-                    <TableRow>
+                    <TableRow style={{ cursor: 'pointer' }} onClick={seatsArrival}  title="Click to edit seats">
                       {/* <th scope="row">12</th> */}
                       <TableCell><span className="info-header-font">Seats</span></TableCell>
                       <TableCell align="right">{seatsTO}</TableCell>
