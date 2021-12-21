@@ -113,7 +113,8 @@ const Summary = (props) => {
                             from: deptFlight?.flightId,
                             to: retFlight?.flightId,
                             cabin: cabin,
-                            price: priceOfDept + priceOfRet
+                            price: priceOfDept + priceOfRet,
+                            numberOfSeats: numOfSeats
                         }
                         axios
                             .post(BACKEND_URL + "reservations/createReservation", data)

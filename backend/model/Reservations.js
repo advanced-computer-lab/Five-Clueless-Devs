@@ -20,7 +20,10 @@ const ReservationSchema = new mongoose.Schema({
     required:true
   },
   price:{
-    type:Number
+    type: Number
+  },
+  numberOfSeats:{
+    type: Number
   }
 });
 
