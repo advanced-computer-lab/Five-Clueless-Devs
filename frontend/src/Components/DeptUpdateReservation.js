@@ -39,6 +39,7 @@ const DeptUpdateReservation = props => {
     const seatCount = location.state.seatNum;
     const cabin = location.state.cabin;
     const reservationID = location.state.reservationId
+    const cabinDeparture= location.state.cabinDeparture;
 
     console.log("seatCount " + seatCount.seatCount);
 
@@ -109,7 +110,7 @@ const DeptUpdateReservation = props => {
     const [retSeats, setRetSeats] = useState([]);
     //info used in this component
     const [view, setView] = useState(1);
-    const [chosenClass, setClass] = useState(cabin.cabin);
+    const [chosenClass, setClass] = useState(cabinDeparture.cabinDeparture);
     const [returnDate, setReturnDate] = useState('');
     const [adultsNumber, setAdultNumber] = useState(1);
     const [childNumber, setChildNumber] = useState(0);
@@ -363,7 +364,7 @@ const DeptUpdateReservation = props => {
                         res.data.forEach((flight, key) => {
                             console.log("I AM HERE")
                             console.log(cabin?.cabin);
-                            if (flight.flightId == departureFlight?.fromObj?.flightId && chosenClass == cabin?.cabin) {
+                            if (flight.flightId == departureFlight?.fromObj?.flightId && chosenClass == cabinDeparture?.cabinDeparture) {
                                 res.data.splice(res.data.indexOf(flight), 1);
                             }
                         });
@@ -479,7 +480,7 @@ const DeptUpdateReservation = props => {
                                                 passDeptTo={setDeptFlightTo} passDeptDuration={setDeptFlightDuration} passDeptFlightDeptTime={setDeptFlightDeptTime}
                                                 passDeptFlightArrivalTime={setDeptFlightArrivalTime} passDeptFlightDeptDate={setDeptDeptDate}
                                                 passDeptFlightArrivalDate={setDeptArrivalDate} passDeptFlightPrice={setDeptPrice}
-                                                passSelectedDeptFlight={setSelectedDeptFlight} passPriceToDisplay={setPriceToDisplay} oldPrice={departFlight.fromObj.price} oldCabin={cabin.cabin}/>
+                                                passSelectedDeptFlight={setSelectedDeptFlight} passPriceToDisplay={setPriceToDisplay} oldPrice={departFlight.fromObj.price} oldCabin={cabinDeparture.cabinDeparture}/>
                                         )}
                                     </div>
 
@@ -657,7 +658,7 @@ const DeptUpdateReservation = props => {
                     retFlightArrivalDate={retFlight.toObj.arrivalDate}
                     retFlightId={retFlight.toObj.flightId}
                     newCabin = {chosenClass}
-                    oldCabin = {cabin.cabin}
+                    oldCabin = {cabinDeparture.cabinDeparture}
                     numOfAdults={adultsNumber}
                     numOfChildren={childNumber}
                     seatCount = {seatCount.seatCount}

@@ -450,6 +450,8 @@ const ViewSummary = () => {
                 to={toflight?.flightId}
                 userid={Uid}
                 cabin={reservation?.cabin}
+                cabinDeparture={reservation?.cabinDeparture}
+                cabinReturn = {reservation?.cabinArrival}
                 reservationId={reservationId}
                 fromflight={fromflight}
                 toflight={toflight}
