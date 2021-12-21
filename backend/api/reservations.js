@@ -31,7 +31,7 @@ router.get('/GetReservation', (req, res) => {
 
 router.put('/update', (req, res) => {
     Reservations.findOneAndUpdate(req.query, req.body)
-        .then(reservation => res.json({ msg: "Reservation updated succesfully" }))
+        .then(reservation => res.json(reservation))
         .catch(err =>
             res.status(400).json({ error: 'Unable to update the reservation' })
         );

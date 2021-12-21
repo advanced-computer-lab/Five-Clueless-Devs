@@ -218,7 +218,7 @@ const ResUpdateSummary = (props) => {
                                 from: deptFlight?.flightId,
                                 cabin: cabin,
                                 price: priceOfDept + priceOfRet,
-                                cabinArrival: cabin
+                                cabinDeparture: cabin
                             }
                             axios
                                 .put(BACKEND_URL + "reservations/update?_id=" + reservationId, data)
