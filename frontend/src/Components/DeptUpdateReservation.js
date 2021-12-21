@@ -109,7 +109,7 @@ const DeptUpdateReservation = props => {
     const [retSeats, setRetSeats] = useState([]);
     //info used in this component
     const [view, setView] = useState(1);
-    const [chosenClass, setClass] = useState('Economy');
+    const [chosenClass, setClass] = useState(cabin.cabin);
     const [returnDate, setReturnDate] = useState('');
     const [adultsNumber, setAdultNumber] = useState(1);
     const [childNumber, setChildNumber] = useState(0);
@@ -118,7 +118,7 @@ const DeptUpdateReservation = props => {
     const [flightRes, setResult] = useState([]);
 
     const [bookingNum, setBookingNum] = useState();
-
+    const [priceToDisplay, setPriceToDisplay] = useState(0);
     const [flight, setFlight] = useState({
         flightId: '',
         from: departureFrom.departureFromCountry,
@@ -165,6 +165,7 @@ const DeptUpdateReservation = props => {
         console.log(departureFrom);
         console.log(seatCount?.seatCount);
         console.log(retFlight);
+        console.log(cabin.cabin);
     }, []);
 
 
@@ -447,7 +448,7 @@ const DeptUpdateReservation = props => {
                                                 <Select
                                                     labelId="demo-simple-select-label"
                                                     id="select"
-
+                                                    defaultValue={cabin.cabin}
                                                     value={chosenClass}
                                                     label="Class"
                                                     onChange={(e) => onChooseClass(e)}
@@ -473,12 +474,12 @@ const DeptUpdateReservation = props => {
 
                                     <div className="list">
                                         {flightRes.map((flight, k) =>
-                                            <DepartureFlightCardEdit flight={flight} numOfChildren={childNumber} numOfAdults={adultsNumber}
+                                            <DepartureFlightCardEdit flight={flight} numOfChildren={childNumber} numOfAdults={adultsNumber} seatCount = {seatCount?.seatCount}
                                                 chosenClass={chosenClass} data={selectDept} key={k} passDeptId={setDeptSelectedId} passDeptFrom={setDeptFlightFrom}
                                                 passDeptTo={setDeptFlightTo} passDeptDuration={setDeptFlightDuration} passDeptFlightDeptTime={setDeptFlightDeptTime}
                                                 passDeptFlightArrivalTime={setDeptFlightArrivalTime} passDeptFlightDeptDate={setDeptDeptDate}
                                                 passDeptFlightArrivalDate={setDeptArrivalDate} passDeptFlightPrice={setDeptPrice}
-                                                passSelectedDeptFlight={setSelectedDeptFlight} oldPrice={departFlight.fromObj.price} />
+                                                passSelectedDeptFlight={setSelectedDeptFlight} passPriceToDisplay={setPriceToDisplay} oldPrice={departFlight.fromObj.price} oldCabin={cabin.cabin}/>
                                         )}
                                     </div>
 
@@ -655,7 +656,8 @@ const DeptUpdateReservation = props => {
                     retFlightArrivalTime={retFlight.toObj.arrivalTime}
                     retFlightArrivalDate={retFlight.toObj.arrivalDate}
                     retFlightId={retFlight.toObj.flightId}
-
+                    newCabin = {chosenClass}
+                    oldCabin = {cabin.cabin}
                     numOfAdults={adultsNumber}
                     numOfChildren={childNumber}
                     seatCount = {seatCount.seatCount}
@@ -665,6 +667,7 @@ const DeptUpdateReservation = props => {
                     deptFlightOld={departFlight.fromObj}
                     retFlight={retFlight.toObj}
                     setBookingNum={setBookingNum}
+                    priceToDisplay={priceToDisplay}
                 />
             </div>
         </>);

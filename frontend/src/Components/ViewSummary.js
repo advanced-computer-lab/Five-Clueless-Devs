@@ -356,6 +356,7 @@ const ViewSummary = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
+            
             </div>
 
             <div className='view-summary-card'>
@@ -424,11 +425,12 @@ const ViewSummary = () => {
                     </TableRow>
                   </TableBody>
                 </Table>
+             
               </TableContainer>
+             
             </div>
           </div>
-          <div>Booking Number: <span>{bookingId}</span></div>
-          <div>Total Price: EGP <span>{reservation?.price}</span></div>
+         
         </div>
 
         <div className="row">
@@ -459,6 +461,8 @@ const ViewSummary = () => {
                 returnToCountry={toflight?.to}
                 seatCount={seatCount}
                 handleSend={handleSend}
+                bookingId = {bookingId}
+                reservationPrice= {reservation?.price}
               />
 
             </div>
