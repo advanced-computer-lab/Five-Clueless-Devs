@@ -88,15 +88,15 @@ const EditSeatsOutside = () => {
 
             if (cabin === 'Economy') {
                 // setFlight({ ...tmpFlight, seatsEconomy: tmpSeats, availableEconomy: tmpFlight.availableEconomy - selectedSeats.length });
-                tmpFlight = { ...tmpFlight, seatsEconomy: tmpSeats, availableEconomy: tmpFlight.availableEconomy - selectedSeats.length }
+                tmpFlight = {seatsEconomy: tmpSeats}
             }
             else if (cabin === 'Business') {
                 // setFlight({ ...tmpFlight, seatsBusiness: tmpSeats, availableBusiness: tmpFlight.availableBusiness - selectedSeats.length });
-                tmpFlight = { ...tmpFlight, seatsBusiness: tmpSeats, availableBusiness: tmpFlight.availableBusiness - selectedSeats.length }
+                tmpFlight = {seatsBusiness: tmpSeats}
             }
             else if (cabin === 'First') {
                 // setFlight({ ...tmpFlight, seatsFirst: tmpSeats, availableFirst: tmpFlight.availableFirst - selectedSeats.length });
-                tmpFlight = { ...tmpFlight, seatsFirst: tmpSeats, availableFirst: tmpFlight.availableFirst - selectedSeats.length }
+                tmpFlight = {  seatsFirst: tmpSeats }
             }
 
             let id = flight?.flightId;

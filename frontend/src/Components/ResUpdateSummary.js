@@ -137,42 +137,42 @@ let priceToFinalDisplay = 0;
                 if (window.location.href.includes("Dept")) {
                     let deptSeatsOld = deptFlightOld.seatsEconomy;
                     deptSeatsOld = deptSeatsOld.map((s) => (s == userId) ? null : s)
-                    deptFlight = { ...deptFlight, availableEconomy: deptFlight.availableEconomy - numOfSeats };
-                    deptFlightOld = { ...deptFlightOld, availableEconomy: deptFlightOld.availableEconomy + numOfSeats, seatsEconomy: deptSeatsOld };
+                    // deptFlight = {  flightId: deptFlight.flightId, availableEconomy: deptFlight.availableEconomy - numOfSeats };
+                    deptFlightOld = {flightId: deptFlightOld.flightId, availableEconomy: deptFlightOld.availableEconomy + numOfSeats, seatsEconomy: deptSeatsOld };
                 }
                 else if (window.location.href.includes("Ret")) {
                     let retSeatsOld = retFlightOld.seatsEconomy;
                     retSeatsOld = retSeatsOld.map((s) => (s == userId) ? null : s)
-                    retFlight = { ...retFlight, availableEconomy: retFlight.availableEconomy - numOfSeats };
-                    retFlightOld = { ...retFlightOld, availableEconomy: retFlightOld.availableEconomy + numOfSeats, seatsEconomy: retSeatsOld };
+                    // retFlight = { flightId: retFlight.flightId, availableEconomy: retFlight.availableEconomy - numOfSeats };
+                    retFlightOld = {  flightId : retFlightOld.flightId, availableEconomy: retFlightOld.availableEconomy + numOfSeats, seatsEconomy: retSeatsOld };
                 }
                 break;
             case "First":
                 if (window.location.href.includes("Dept")) {
                     let deptSeatsOld = deptFlightOld.seatsFirst;
                     deptSeatsOld = deptSeatsOld.map((s) => (s == userId) ? null : s)
-                    deptFlight = { ...deptFlight, availableFirst: deptFlight.availableFirst - numOfSeats };
-                    deptFlightOld = { ...deptFlightOld, availableFirst: deptFlightOld.availableFirst + numOfSeats, seatsFirst: deptSeatsOld };
+                    // deptFlight = {  flightId: deptFlight.flightId, availableFirst: deptFlight.availableFirst - numOfSeats };
+                    deptFlightOld = { flightId: deptFlightOld.flightId, availableFirst: deptFlightOld.availableFirst + numOfSeats, seatsFirst: deptSeatsOld };
                 }
                 else if (window.location.href.includes("Ret")) {
                     let retSeatsOld = retFlightOld.seatsFirst;
                     retSeatsOld = retSeatsOld.map((s) => (s == userId) ? null : s)
-                    retFlight = { ...retFlight, availableFirst: retFlight.availableFirst - numOfSeats };
-                    retFlightOld = { ...retFlightOld, availableFirst: retFlightOld.availableFirst + numOfSeats, seatsFirst: retSeatsOld };
+                    // retFlight = { flightId: retFlight.flightId, availableFirst: retFlight.availableFirst - numOfSeats };
+                    retFlightOld = { flightId : retFlightOld.flightId, availableFirst: retFlightOld.availableFirst + numOfSeats, seatsFirst: retSeatsOld };
                 }
                 break;
             case "Business":
                 if (window.location.href.includes("Dept")) {
                     let deptSeatsOld = deptFlightOld.seatsBusiness;
                     deptSeatsOld = deptSeatsOld.map((s) => (s == userId) ? null : s)
-                    deptFlight = { ...deptFlight, availableBusiness: deptFlight.availableBusiness - numOfSeats };
-                    deptFlightOld = { ...deptFlightOld, availableBusiness: deptFlightOld.availableBusiness + numOfSeats, seatsBusiness: deptSeatsOld };
+                    // deptFlight = {  flightId: deptFlight.flightId, availableBusiness: deptFlight.availableBusiness - numOfSeats };
+                    deptFlightOld = { flightId: deptFlightOld.flightId, availableBusiness: deptFlightOld.availableBusiness + numOfSeats, seatsBusiness: deptSeatsOld };
                 }
                 else if (window.location.href.includes("Ret")) {
                     let retSeatsOld = retFlightOld.seatsBusiness;
                     retSeatsOld = retSeatsOld.map((s) => (s == userId) ? null : s)
-                    retFlight = { ...retFlight, availableBusiness: retFlight.availableBusiness - numOfSeats };
-                    retFlightOld = { ...retFlightOld, availableBusiness: retFlightOld.availableBusiness + numOfSeats, seatsBusiness: retSeatsOld };
+                    // retFlight = { flightId: retFlight.flightId, availableBusiness: retFlight.availableBusiness - numOfSeats };
+                    retFlightOld = { flightId : retFlightOld.flightId, availableBusiness: retFlightOld.availableBusiness + numOfSeats, seatsBusiness: retSeatsOld };
                 }
                 break;
             default:
@@ -184,36 +184,36 @@ let priceToFinalDisplay = 0;
 
                 if (window.location.href.includes("Dept")) {
 
-                    deptFlight = { ...deptFlight, availableEconomy: deptFlight.availableEconomy - numOfSeats };
+                    deptFlight = { flightId: deptFlight.flightId, availableEconomy: deptFlight.availableEconomy - numOfSeats };
 
                 }
                 else if (window.location.href.includes("Ret")) {
 
-                    retFlight = { ...retFlight, availableEconomy: retFlight.availableEconomy - numOfSeats };
+                    retFlight = { flightId: retFlight.flightId, availableEconomy: retFlight.availableEconomy - numOfSeats };
 
                 }
                 break;
             case "First":
                 if (window.location.href.includes("Dept")) {
 
-                    deptFlight = { ...deptFlight, availableFirst: deptFlight.availableFirst - numOfSeats };
+                    deptFlight = {  flightId: deptFlight.flightId, availableFirst: deptFlight.availableFirst - numOfSeats };
 
                 }
                 else if (window.location.href.includes("Ret")) {
 
-                    retFlight = { ...retFlight, availableFirst: retFlight.availableFirst - numOfSeats };
+                    retFlight = { flightId: retFlight.flightId, availableFirst: retFlight.availableFirst - numOfSeats };
 
                 }
                 break;
             case "Business":
                 if (window.location.href.includes("Dept")) {
 
-                    deptFlight = { ...deptFlight, availableBusiness: deptFlight.availableBusiness - numOfSeats };
+                    deptFlight = {  flightId: deptFlight.flightId, availableBusiness: deptFlight.availableBusiness - numOfSeats };
 
                 }
                 else if (window.location.href.includes("Ret")) {
 
-                    retFlight = { ...retFlight, availableBusiness: retFlight.availableBusiness - numOfSeats };
+                    retFlight = { flightId: retFlight.flightId, availableBusiness: retFlight.availableBusiness - numOfSeats };
 
                 }
                 break;
