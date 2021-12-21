@@ -657,6 +657,7 @@ const DeptUpdateReservation = props => {
 
                     numOfAdults={adultsNumber}
                     numOfChildren={childNumber}
+                    seatCount = {seatCount.seatCount}
                     selectDept={selectDept}
                     reservationId={reservationID.reservationID}
                     deptFlight={selectedDeptFlight}

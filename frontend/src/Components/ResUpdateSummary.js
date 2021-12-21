@@ -86,6 +86,9 @@ const ResUpdateSummary = (props) => {
         let numOfAdults = props.numOfAdults
         let numOfChildren = props.numOfChildren;
         let numOfSeats = numOfAdults * 1 + numOfChildren * 1;
+
+       numOfSeats = props.seatCount;
+
         let priceOfDept = props.deptFlightPriceReal;
         let priceOfRet = props.retFlightPriceReal;
         console.log(props)
@@ -104,7 +107,7 @@ const ResUpdateSummary = (props) => {
 
         switch (cabin) {
             case "Economy":
-                console.log(numOfSeats)
+                console.log(numOfSeats + " updatett here")
                 console.log(deptFlight)
 
                 if (window.location.href.includes("Dept")) {
