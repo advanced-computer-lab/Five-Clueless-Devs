@@ -9,7 +9,7 @@ const Navbar = () => {
   const [userId, setUser] = useState();
 
   useEffect(() => {
-    setInterval(()=>  setUser(localStorage.getItem('userId')),
+    setInterval(()=>  setUser(localStorage.getItem('user')),
     2000);
   }, [])
 
@@ -22,7 +22,7 @@ const Navbar = () => {
         <Button className="admin" color="inherit" onClick={(e) => history.push('/')}>Search for Flights</Button>
 
         {userId ? <Button className="admin" color="inherit" onClick={(e) => {
-          localStorage.removeItem('userId');
+          localStorage.removeItem('user');
           window.location.reload();
         }}>Logout</Button> : <Button className="admin" color="inherit" onClick={(e) => history.push("/login")}>Login</Button>}
         

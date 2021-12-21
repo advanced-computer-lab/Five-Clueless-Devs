@@ -120,11 +120,12 @@ if(takenEmail || takenUsername){
 router.post("/login" , (req, res) => {
     const userLoggingIn = req.body;
     //console.log(req.body)
-    User.findOne({ username: userLoggingIn.username }).then((user) => {
+    User.findOne({ email: userLoggingIn.email }).then((user) => {
       if (!user) {
-        return res.json({ message: "Invalid Username or Password" });
+        //console.log("invalid")
+        return res.json({ message: "Invalid Email or Password" });
       }
-      console.log(user);
+      //console.log(user);
       bcrypt
         .compare(userLoggingIn.password, user.password)
         .then((isCorrect) => {
@@ -141,11 +142,11 @@ router.post("/login" , (req, res) => {
                 if (err) {
                   return res.json({ message:"error" });
                 }
-                return res.json({ message: "Success", token: "Bearer " + token });
+                return res.json({ message: "Success", token: "Bearer " + token, user:user });
               }
             );
           } else {
-            res.json({ message: "Invalid Username or Password" });
+            res.json({ message: "Invalid email or Password" });
           }  });
     });
   });
