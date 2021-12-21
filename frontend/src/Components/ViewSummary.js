@@ -137,7 +137,7 @@ const ViewSummary = () => {
             tempFromFirst = [...resFrom.data[0].seatsFirst];
             tempFromBusiness = [...resFrom.data[0].seatsBusiness];
 
-            switch (res.data[0].cabin) {
+            switch (res.data[0].cabinDeparture) {
               case "Economy":
                 temp1 = tempFromEconomy;
                 break;
@@ -173,7 +173,7 @@ const ViewSummary = () => {
             temptoFirst = [...resTo.data[0].seatsFirst];
             temptoBusiness = [...resTo.data[0].seatsBusiness];
 
-            switch (res.data[0].cabin) {
+            switch (res.data[0].cabinArrival) {
               case "Economy":
                 temp2 = temptoEconomy;
                 break;
@@ -222,7 +222,7 @@ const ViewSummary = () => {
         state: {
           flight: fromflight,
           maxSeats: reservation?.numberOfSeats,
-          cabin: reservation?.cabin,
+          cabin: reservation?.cabinDeparture,
           type: "Departure"  
         }
       })
@@ -235,7 +235,7 @@ const ViewSummary = () => {
         state: {
           flight: toflight,
           maxSeats: reservation?.numberOfSeats,
-          cabin: reservation?.cabin,
+          cabin: reservation?.cabinArrival,
           type: "Arrival"  ,
           reservationId: reservation?._id
         }
@@ -346,7 +346,7 @@ const ViewSummary = () => {
                     <TableRow>
                       {/* <th scope="row">12</th> */}
                       <TableCell>  <span className="info-header-font">Cabin Class</span></TableCell>
-                      <TableCell align="right">{reservation?.cabin}</TableCell>
+                      <TableCell align="right">{reservation?.cabinDeparture}</TableCell>
                     </TableRow>
                     <TableRow style={{ cursor: 'pointer' }} onClick={seatsDeparture} title="Click to edit seats">
                       {/* <th scope="row">12</th> */}
@@ -415,7 +415,7 @@ const ViewSummary = () => {
                     <TableRow>
                       {/* <th scope="row">12</th> */}
                       <TableCell><span className="info-header-font">Cabin Class</span></TableCell>
-                      <TableCell align="right">{reservation?.cabin}</TableCell>
+                      <TableCell align="right">{reservation?.cabinArrival}</TableCell>
                     </TableRow>
                     <TableRow style={{ cursor: 'pointer' }} onClick={seatsArrival}  title="Click to edit seats">
                       {/* <th scope="row">12</th> */}
