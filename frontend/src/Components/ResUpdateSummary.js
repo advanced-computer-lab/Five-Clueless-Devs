@@ -105,6 +105,8 @@ const ResUpdateSummary = (props) => {
 
         //-------------------------------
 
+        console.table(deptFlightOld);
+
         switch (cabin) {
             case "Economy":
                 console.log(numOfSeats + " updatett here")
@@ -154,6 +156,8 @@ const ResUpdateSummary = (props) => {
             default:
                 console.log("Something went wrong");
         }
+
+        console.table(deptFlightOld);
 
 
 
@@ -313,7 +317,7 @@ const ResUpdateSummary = (props) => {
 
                 {(props.deptFlightPrice + props.retFlightPrice) >= 0 ? <div>Additional Fee: <p style={{ color: "red" }}> <span><b style={{ color: "black" }}>EGP</b>{props.deptFlightPrice + props.retFlightPrice}</span></p> </div> :
                     <div>Amount to be refunded: <p style={{ color: "green" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(props.deptFlightPrice + props.retFlightPrice)}</span></p> </div>}
-                <p className="passenger-font">(for {props.numOfAdults + props.numOfChildren} passengers)</p>
+                <p className="passenger-font">(for {props.seatCount} passengers)</p>
 
                 <button className="confirm-res" onClick={clickConfirm}>Confirm Reservation</button>
 

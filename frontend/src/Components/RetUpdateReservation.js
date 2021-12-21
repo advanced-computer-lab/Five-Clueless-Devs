@@ -22,6 +22,7 @@ import "./Itinerary.css";
 import { useLocation } from "react-router-dom";
 import RetFlightCardEdit from './RetFlightCardEdit';
 import ResUpdateSummary from './ResUpdateSummary';
+import UpdateSeats from './UpdateSeats/UpdateSeats';
 
 
 
@@ -653,6 +654,8 @@ const RetUpdateReservation = props => {
                     numOfChildren={childNumber}
                     selectDept={selectDept}
 
+                    seatCount ={seatCount?.seatCount}
+
                     deptFlight={departFlight.fromObj}
                     retFlight={selectedRetFlight}
                     retFlightOld = {retFlight.toObj}
@@ -677,17 +680,14 @@ const RetUpdateReservation = props => {
                     </Box>
                 </div>
                 <div>
-                    <FlightSeats
-                        from={selectedDeptFlight}
-                        setFrom={setSelectedDeptFlight}
-                        to={selectedRetFlight}
-                        setTo={setSelectedRetFlight}
-                        maxSeats={adultsNumber + childNumber}
+                <UpdateSeats
+                        flight={selectedRetFlight}
+                        maxSeats={seatCount.seatCount}
                         setView={(num) => setView(num)}
                         cabin={chosenClass}
-                        setDeptSeats={setDeptSeats}
-                        setRetSeats={setRetSeats}
-                    />
+                        setFlightSeats={setRetSeats}
+                        type = {"Arrival"} 
+                />
                 </div>
             </>
         )
