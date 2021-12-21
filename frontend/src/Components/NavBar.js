@@ -9,7 +9,7 @@ const Navbar = () => {
   const [userId, setUser] = useState();
 
   useEffect(() => {
-    setInterval(() => setUser(localStorage.getItem('userId')),
+    setInterval(() => setUser(JSON.parse(localStorage.getItem('user'))?._id),
       2000);
   }, [])
 
@@ -17,12 +17,13 @@ const Navbar = () => {
   return (
     <AppBar position="static" style={{ alignItems: 'flex-start' }}>
       <Toolbar>
-        {userId ? <Button className="admin" color="inherit" onClick={(e) => history.push('/user-details/' + localStorage.getItem("userId"))}>View Profile</Button> : null}
+        {userId ? <Button className="admin" color="inherit" onClick={(e) => history.push('/user-details/' + JSON.parse(localStorage.getItem('user'))?._id)}>View Profile</Button> : null}
         {userId ? <Button className="admin" color="inherit" onClick={(e) => history.push('/Reserved-flights')}>View Reservations</Button> : null}
         <Button className="admin" color="inherit" onClick={(e) => history.push('/')}>Search for Flights</Button>
 
         {userId ? <Button className="admin" color="inherit" onClick={(e) => {
-          localStorage.removeItem('userId');
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
           history.push('/');
         }}>Logout</Button> : <Button className="admin" color="inherit" onClick={(e) => history.push("/login")}>Login</Button>}
 

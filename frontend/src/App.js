@@ -21,6 +21,9 @@ import FlightSchedule from './Components/FlightSchedule';
 import SearchFlightUser from './Components/SearchFlightUser';
 import FlightSeats from './Components/FlightSeats/FlightSeats';
 
+// import Login from './Components/Login';
+import Register from './Components/Register';
+
 
 import ViewDetailsUser from './Components/ViewDetailsUser';
 import ReservedFlight from './Components/ReservedFlight';
@@ -70,6 +73,7 @@ function App() {
           <Route path='/Reservation-Update-Ret' component={RetUpdateReservation} />
           <Route path='/reserve' component={Confirmation} />
           <Route path='/login' component={Login} />
+          <Route path='/register'component={Register} />
 
 
         </Switch>

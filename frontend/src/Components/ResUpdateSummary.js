@@ -15,7 +15,7 @@ import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 
 const ResUpdateSummary = (props) => {
     const flight = props.flight;
-
+let priceToFinalDisplay = 0;
 
     useEffect(() => {
         console.log(props.retFlightOld);
@@ -24,6 +24,8 @@ const ResUpdateSummary = (props) => {
         console.log(props.numOfAdults);
         console.log(props.numOfChildren);
         console.log(props.reservationId);
+        console.log(props.newCabin);
+        console.log(props.oldCabin);
     })
 
     const history = useHistory();
@@ -43,7 +45,7 @@ const ResUpdateSummary = (props) => {
         createData('Flight Number', props.selectedDeptFlightId),
         createData('Departure Date and Time', props.deptFlightDeptTime + "   ,   " + props.deptFlightDeptDate.substring(0, 10)),
         createData('Arrival Date and Time', props.deptFlightArrivalTime + "  ,   " + props.deptFlightArrivalDate.substring(0, 10)),
-        createData('Chosen Class', props.chosenClass),
+
 
 
 
@@ -53,24 +55,44 @@ const ResUpdateSummary = (props) => {
         createData('Flight Number', props.retFlightId),
         createData('Departure Date and Time', props.retFlightDeptTime + "   ,   " + props.retFlightDeptDate.substring(0, 10)),
         createData('Arrival Date and Time', props.retFlightArrivalTime + "  ,   " + props.retFlightArrivalDate.substring(0, 10)),
-        createData('Chosen Class', props.chosenClass),
+
+
 
 
     ];
-    if (props.deptFlightPrice >= 0) {
-        rows.push(createData('Additional Fee', props.deptFlightPrice))
+
+
+    
+    if (window.location.href.includes("Dept")) {
+        if (props.priceToDisplay <= 0) {
+
+
+            rows.push(createData('Additional Fee', Math.abs(props.priceToDisplay)))
+        }
+        else {
+            rows.push(createData('Amount to be refunded', (props.priceToDisplay)))
+        }
+        priceToFinalDisplay = props.priceToDisplay;
+        rowsR.push(createData('Additional Fee', 0))
+        rows.push(createData('Chosen Class', props.newCabin))
+        rowsR.push(createData('Chosen Class', props.oldCabin))
     }
-    else {
-        rows.push(createData('Amount to be refunded', Math.abs(props.deptFlightPrice)))
-    }
-    if (props.retFlightPrice >= 0) {
-        rowsR.push(createData('Additional Fee', props.retFlightPrice))
-    }
-    else {
-        rowsR.push(createData('Amount to be refunded', Math.abs(props.retFlightPrice)))
+    else if (window.location.href.includes("Ret")) {
+        if (props.priceToDisplayRet <= 0) {
+            
+            rowsR.push(createData('Additional Fee', Math.abs(props.priceToDisplayRet)))
+        }
+        else {
+            
+            rowsR.push(createData('Amount to be refunded', (props.priceToDisplayRet)))
+        }
+        priceToFinalDisplay = props.priceToDisplayRet;
+        rows.push(createData('Additional Fee', 0))
+        rows.push(createData('Chosen Class', props.oldCabin))
+        rowsR.push(createData('Chosen Class', props.newCabin))
     }
 
-    let userId = localStorage.getItem('userId');
+    let userId = JSON.parse(localStorage.getItem('user'))?._id;
 
     const clickConfirm = () => {
         if (userId) {
@@ -86,6 +108,9 @@ const ResUpdateSummary = (props) => {
         let numOfAdults = props.numOfAdults
         let numOfChildren = props.numOfChildren;
         let numOfSeats = numOfAdults * 1 + numOfChildren * 1;
+
+        numOfSeats = props.seatCount;
+
         let priceOfDept = props.deptFlightPriceReal;
         let priceOfRet = props.retFlightPriceReal;
         console.log(props)
@@ -95,6 +120,8 @@ const ResUpdateSummary = (props) => {
         let deptFlightOld = props.deptFlightOld;
         let retFlight = props.retFlight;
         let retFlightOld = props.retFlightOld;
+        let newCabin = props.newCabin;
+        let oldCabin = props.oldCabin;
 
 
 
@@ -102,37 +129,92 @@ const ResUpdateSummary = (props) => {
 
         //-------------------------------
 
-        switch (cabin) {
+        switch (oldCabin) {
             case "Economy":
-                console.log(numOfSeats)
+                console.log(numOfSeats + " updatett here")
                 console.log(deptFlight)
+
                 if (window.location.href.includes("Dept")) {
+                    let deptSeatsOld = deptFlightOld.seatsEconomy;
+                    deptSeatsOld = deptSeatsOld.map((s) => (s == userId) ? null : s)
                     deptFlight = { ...deptFlight, availableEconomy: deptFlight.availableEconomy - numOfSeats };
-                    deptFlightOld = { ...deptFlightOld, availableEconomy: deptFlightOld.availableEconomy + numOfSeats };
+                    deptFlightOld = { ...deptFlightOld, availableEconomy: deptFlightOld.availableEconomy + numOfSeats, seatsEconomy: deptSeatsOld };
                 }
                 else if (window.location.href.includes("Ret")) {
+                    let retSeatsOld = retFlightOld.seatsEconomy;
+                    retSeatsOld = retSeatsOld.map((s) => (s == userId) ? null : s)
                     retFlight = { ...retFlight, availableEconomy: retFlight.availableEconomy - numOfSeats };
-                    retFlightOld = { ...retFlightOld, availableEconomy: retFlightOld.availableEconomy + numOfSeats };
+                    retFlightOld = { ...retFlightOld, availableEconomy: retFlightOld.availableEconomy + numOfSeats, seatsEconomy: retSeatsOld };
                 }
                 break;
             case "First":
                 if (window.location.href.includes("Dept")) {
+                    let deptSeatsOld = deptFlightOld.seatsFirst;
+                    deptSeatsOld = deptSeatsOld.map((s) => (s == userId) ? null : s)
                     deptFlight = { ...deptFlight, availableFirst: deptFlight.availableFirst - numOfSeats };
-                    deptFlightOld = { ...deptFlightOld, availableFirst: deptFlightOld.availableFirst + numOfSeats };
+                    deptFlightOld = { ...deptFlightOld, availableFirst: deptFlightOld.availableFirst + numOfSeats, seatsFirst: deptSeatsOld };
                 }
                 else if (window.location.href.includes("Ret")) {
+                    let retSeatsOld = retFlightOld.seatsFirst;
+                    retSeatsOld = retSeatsOld.map((s) => (s == userId) ? null : s)
                     retFlight = { ...retFlight, availableFirst: retFlight.availableFirst - numOfSeats };
-                    retFlightOld = { ...retFlightOld, availableFirst: retFlightOld.availableFirst + numOfSeats };
+                    retFlightOld = { ...retFlightOld, availableFirst: retFlightOld.availableFirst + numOfSeats, seatsFirst: retSeatsOld };
                 }
                 break;
             case "Business":
                 if (window.location.href.includes("Dept")) {
+                    let deptSeatsOld = deptFlightOld.seatsBusiness;
+                    deptSeatsOld = deptSeatsOld.map((s) => (s == userId) ? null : s)
                     deptFlight = { ...deptFlight, availableBusiness: deptFlight.availableBusiness - numOfSeats };
-                    deptFlightOld = { ...deptFlightOld, availableBusiness: deptFlightOld.availableBusiness + numOfSeats };
+                    deptFlightOld = { ...deptFlightOld, availableBusiness: deptFlightOld.availableBusiness + numOfSeats, seatsBusiness: deptSeatsOld };
                 }
                 else if (window.location.href.includes("Ret")) {
+                    let retSeatsOld = retFlightOld.seatsBusiness;
+                    retSeatsOld = retSeatsOld.map((s) => (s == userId) ? null : s)
                     retFlight = { ...retFlight, availableBusiness: retFlight.availableBusiness - numOfSeats };
-                    retFlightOld = { ...retFlightOld, availableBusiness: retFlightOld.availableBusiness + numOfSeats };
+                    retFlightOld = { ...retFlightOld, availableBusiness: retFlightOld.availableBusiness + numOfSeats, seatsBusiness: retSeatsOld };
+                }
+                break;
+            default:
+                console.log("Something went wrong");
+        }
+        switch (newCabin) {
+            case "Economy":
+
+
+                if (window.location.href.includes("Dept")) {
+
+                    deptFlight = { ...deptFlight, availableEconomy: deptFlight.availableEconomy - numOfSeats };
+
+                }
+                else if (window.location.href.includes("Ret")) {
+
+                    retFlight = { ...retFlight, availableEconomy: retFlight.availableEconomy - numOfSeats };
+
+                }
+                break;
+            case "First":
+                if (window.location.href.includes("Dept")) {
+
+                    deptFlight = { ...deptFlight, availableFirst: deptFlight.availableFirst - numOfSeats };
+
+                }
+                else if (window.location.href.includes("Ret")) {
+
+                    retFlight = { ...retFlight, availableFirst: retFlight.availableFirst - numOfSeats };
+
+                }
+                break;
+            case "Business":
+                if (window.location.href.includes("Dept")) {
+
+                    deptFlight = { ...deptFlight, availableBusiness: deptFlight.availableBusiness - numOfSeats };
+
+                }
+                else if (window.location.href.includes("Ret")) {
+
+                    retFlight = { ...retFlight, availableBusiness: retFlight.availableBusiness - numOfSeats };
+
                 }
                 break;
             default:
@@ -181,7 +263,7 @@ const ResUpdateSummary = (props) => {
                     console.log(err);
                 })
         }
-        else  if (window.location.href.includes("Dept")) {
+        else if (window.location.href.includes("Dept")) {
             axios
                 .put(BACKEND_URL + 'flights/update?flightId=' + deptFlight?.flightId, deptFlight)
                 .then(res => {
@@ -295,9 +377,9 @@ const ResUpdateSummary = (props) => {
                     </Table>
                 </TableContainer>
 
-                {(props.deptFlightPrice + props.retFlightPrice) >= 0 ? <div>Additional Fee: <p style={{ color: "red" }}> <span><b style={{ color: "black" }}>EGP</b>{props.deptFlightPrice + props.retFlightPrice}</span></p> </div> :
-                    <div>Amount to be refunded: <p style={{ color: "green" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(props.deptFlightPrice + props.retFlightPrice)}</span></p> </div>}
-                <p className="passenger-font">(for {props.numOfAdults + props.numOfChildren} passengers)</p>
+                {(priceToFinalDisplay) <= 0 ? <div>Additional Fee: <p style={{ color: "red" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(priceToFinalDisplay)}</span></p> </div> :
+                    <div>Amount to be refunded: <p style={{ color: "green" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(priceToFinalDisplay)}</span></p> </div>}
+                <p className="passenger-font">(for {props.seatCount} passengers)</p>
 
                 <button className="confirm-res" onClick={clickConfirm}>Confirm Reservation</button>
 

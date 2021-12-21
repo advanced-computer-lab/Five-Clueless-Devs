@@ -9,6 +9,16 @@ import { Table, TableBody, TableCell, TableRow, IconButton } from '@mui/material
 
 const FlightCard = (props) => {
 
+    let oldPrice = 0;
+    if(props.oldCabin == 'Economy'){
+        oldPrice = props.oldPrice;
+    }
+    else if(props.oldCabin == 'Business'){
+        oldPrice = 1.2 * props.oldPrice;
+    }
+    if(props.oldCabin == 'First'){
+        oldPrice = 1.4* props.oldPrice;
+    }
 
     const style = {
         position: 'absolute',
@@ -59,6 +69,8 @@ const FlightCard = (props) => {
         props.passRetFlightDate(flight.departureDate)
         props.passRetFlightArrivalDate(flight.arrivalDate)
         props.passSelectedRetFlight(flight);
+        props.passPriceToDisplayRet(oldPrice-checkTotal())
+        console.log(oldPrice - checkTotal())
         console.log(flight.flightId);
         console.log(flight.from);
     }
@@ -75,13 +87,13 @@ const FlightCard = (props) => {
     }
     const checkTotal = () => {
         if (props.chosenClass == "Economy") {
-            return +(flight.price * props.numOfAdults + flight.price * props.numOfChildren * 0.7).toFixed(2)
+            return +(flight.price * (props.seatCount)).toFixed(2)
         }
         else if (props.chosenClass == "Business") {
-            return +(1.2 * (flight.price * props.numOfAdults + flight.price * props.numOfChildren * 0.7)).toFixed(2)
+            return +(1.2 * (flight.price * (props.seatCount))).toFixed(2)
         }
         else if (props.chosenClass == "First") {
-            return +(1.4 * (flight.price * props.numOfAdults + flight.price * props.numOfChildren * 0.7)).toFixed(2)
+            return +(1.4 * (flight.price * (props.seatCount))).toFixed(2)
         }
     }
 
@@ -241,11 +253,11 @@ const FlightCard = (props) => {
                             </Table>
                         </Box>
                     </Modal>
-                    {props.oldPrice - checkTotal() < 0 ? <div style={{ textAlign: "right", marginBottom: "-20px", marginTop: "10px", marginRight: "-8px" }}>Pay Additional:</div> :
+                    {oldPrice - checkTotal() < 0 ? <div style={{ textAlign: "right", marginBottom: "-20px", marginTop: "10px", marginRight: "-8px" }}>Pay Additional:</div> :
                         <div style={{ textAlign: "center", marginBottom: "-20px", marginTop: "10px", }}>Save:</div>}
                     <div className="middle-price">
-                    {props.oldPrice - checkTotal() < 0 ? <p style={{ color: "red", marginTop: "20px" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(props.oldPrice - checkTotal())}</span></p>
-                            : <p style={{ color: "green", marginTop: "20px" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(props.oldPrice - checkTotal())}</span></p>}
+                    {oldPrice - checkTotal() < 0 ? <p style={{ color: "red", marginTop: "20px" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(oldPrice - checkTotal())}</span></p>
+                            : <p style={{ color: "green", marginTop: "20px" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(oldPrice - checkTotal())}</span></p>}
 
                     </div>
                     <p className="passenger-font" onClick={handleClick}>(for {props.numOfAdults + props.numOfChildren} passengers)</p>
