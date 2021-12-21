@@ -129,13 +129,7 @@ let priceToFinalDisplay = 0;
 
         //-------------------------------
 
-<<<<<<< HEAD
-        console.table(deptFlightOld);
-
-        switch (cabin) {
-=======
         switch (oldCabin) {
->>>>>>> 2a7dfc769f0082cc9190f7f393038eb5478b6911
             case "Economy":
                 console.log(numOfSeats + " updatett here")
                 console.log(deptFlight)
@@ -387,13 +381,8 @@ let priceToFinalDisplay = 0;
                     </Table>
                 </TableContainer>
 
-<<<<<<< HEAD
-                {(props.deptFlightPrice + props.retFlightPrice) >= 0 ? <div>Additional Fee: <p style={{ color: "red" }}> <span><b style={{ color: "black" }}>EGP</b>{props.deptFlightPrice + props.retFlightPrice}</span></p> </div> :
-                    <div>Amount to be refunded: <p style={{ color: "green" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(props.deptFlightPrice + props.retFlightPrice)}</span></p> </div>}
-=======
                 {(priceToFinalDisplay) <= 0 ? <div>Additional Fee: <p style={{ color: "red" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(priceToFinalDisplay)}</span></p> </div> :
                     <div>Amount to be refunded: <p style={{ color: "green" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(priceToFinalDisplay)}</span></p> </div>}
->>>>>>> 2a7dfc769f0082cc9190f7f393038eb5478b6911
                 <p className="passenger-font">(for {props.seatCount} passengers)</p>
 
                 <button className="confirm-res" onClick={clickConfirm}>Confirm Reservation</button>
