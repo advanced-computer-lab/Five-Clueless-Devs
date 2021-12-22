@@ -6,6 +6,8 @@ const app = express();
 
 const cors = require('cors');
 
+//const stripe = require('stripe')('sk_test_51K9D6UA32Adg2XeIHSgKlwhQv8iuS235SFa3utAxVVdyj6NSHN1O9Feh2mZXnaMd3Z3YTFrIjwTCI9AWwdYEclG200bdSXDFyd////'); // Add your Secret Key Here
+//const uuid = require("uuid/v4");
 
 
 
@@ -32,6 +34,10 @@ app.use('/api/flights', flightRouter);
 
 const reservationRouter = require('./api/reservations');
 app.use('/api/reservations', reservationRouter);
+
+
+
+
 
 const port = process.env.PORT || 8082;
 
