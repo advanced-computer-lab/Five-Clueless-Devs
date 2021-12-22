@@ -75,9 +75,10 @@ let priceToFinalDisplay = 0;
         priceToFinalDisplay = props.priceToDisplay;
         rowsR.push(createData('Additional Fee', 0))
         rows.push(createData('Chosen Class', props.newCabin))
-        rowsR.push(createData('Chosen Class', props.oldCabin))
+        rowsR.push(createData('Chosen Class', props.oldCabinReturn))
     }
     else if (window.location.href.includes("Ret")) {
+     
         if (props.priceToDisplayRet <= 0) {
             
             rowsR.push(createData('Additional Fee', Math.abs(props.priceToDisplayRet)))
@@ -88,7 +89,7 @@ let priceToFinalDisplay = 0;
         }
         priceToFinalDisplay = props.priceToDisplayRet;
         rows.push(createData('Additional Fee', 0))
-        rows.push(createData('Chosen Class', props.oldCabin))
+        rows.push(createData('Chosen Class', props.oldCabinDept))
         rowsR.push(createData('Chosen Class', props.newCabin))
     }
 
