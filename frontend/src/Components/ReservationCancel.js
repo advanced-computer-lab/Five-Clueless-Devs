@@ -159,14 +159,16 @@ const ReservationCancel = (props) => {
           {
             pathname: '/Reservation-Update-Dept',
             state: { departureFrom: { departureFromCountry }, departureTo: { departureToCountry }, numberOfFromSeats: { chosenFromSeat },
-             departFlight: { fromObj }, returnFlight: {toObj}, seatNum: {seatCount}, cabin:{cabin},reservationId:{reservationID}, cabinDeparture:{cabinDeparture}  }
+             departFlight: { fromObj }, returnFlight: {toObj}, seatNum: {seatCount}, cabin:{cabin},reservationId:{reservationID}, cabinDeparture:{cabinDeparture}, 
+             chosenToSeat:{chosenToSeat} , cabinReturn:{cabinReturn} }
           })
         }>Update Depart Reservation</Button>
          <Button className="updateButton" style={{ marginBottom: "10px", marginTop:"-10px" }} onClick={(e) => history.push(
           {
             pathname: '/Reservation-Update-Ret',
             state: { departureFrom: { departureFromCountry }, departureTo: { departureToCountry }, numberOfFromSeats: { chosenFromSeat },
-             departFlight: { fromObj }, returnFlight: {toObj}, seatNum: {seatCount}, cabin:{cabin},reservationId:{reservationID}, cabinReturn:{cabinReturn}  }
+             departFlight: { fromObj }, returnFlight: {toObj}, seatNum: {seatCount}, cabin:{cabin},reservationId:{reservationID}, cabinReturn:{cabinReturn}, 
+             chosenFromSeat:{chosenFromSeat}, cabinDeparture:{cabinDeparture} }
           })
         }>Update Return Reservation</Button>
         

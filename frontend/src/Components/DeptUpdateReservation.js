@@ -23,6 +23,7 @@ import { useLocation } from "react-router-dom";
 import DepartureFlightCardEdit from './DepartureFlightCardEdit';
 import ResUpdateSummary from './ResUpdateSummary';
 import UpdateSeats from './UpdateSeats/UpdateSeats';
+import ItineraryUpdate from './ItineraryUpdate';
 
 
 
@@ -40,6 +41,8 @@ const DeptUpdateReservation = props => {
     const cabin = location.state.cabin;
     const reservationID = location.state.reservationId
     const cabinDeparture= location.state.cabinDeparture;
+    const chosenToSeat = location.state.chosenToSeat;
+    const cabinReturn = location.state.cabinReturn;
 
     console.log("seatCount " + seatCount.seatCount);
 
@@ -167,6 +170,7 @@ const DeptUpdateReservation = props => {
         console.log(seatCount?.seatCount);
         console.log(retFlight);
         console.log(cabin.cabin);
+        console.log(chosenToSeat.chosenToSeat)
     }, []);
 
 
@@ -659,6 +663,7 @@ const DeptUpdateReservation = props => {
                     retFlightId={retFlight.toObj.flightId}
                     newCabin = {chosenClass}
                     oldCabin = {cabinDeparture.cabinDeparture}
+                    oldCabinReturn = {cabinReturn.cabinReturn}
                     numOfAdults={adultsNumber}
                     numOfChildren={childNumber}
                     seatCount = {seatCount.seatCount}
@@ -723,12 +728,84 @@ const DeptUpdateReservation = props => {
 
 
                         <Card sx={{ maxWidth: 500 }}>
-                            <CardActionArea>
+                        <CardActionArea>
 
 
-                                <CardContent>
-                                    <div className="left-container">
+                            <CardContent>
+                                <div className="left-container">
 
+                                    <div className="left-image">
+                                        <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
+                                            alt="airplaneDepart"
+                                            width="27px"
+                                            height="27px"
+                                        />
+                                    </div>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {deptFlightFrom} ({deptFlightDeptTime})
+                                    </Typography>
+                                    <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
+                                        alt="arrow"
+                                        width="40px"
+                                        height="27px" />
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {deptFlightTo} ({deptFlightArrivalTime})
+                                    </Typography>
+                                </div>
+                                <Typography variant="body2" color="text.secondary">
+                                    Duration: {getDuration(selectedDeptFlight)}
+                                </Typography>
+                                <Typography>
+                                    <button className="editButton" type="button" onClick={editDept}>Edit</button>
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                </div>
+                <div className="column">
+                    <p className="selected-return">Selected Return Flight:</p>
+                    <Card sx={{ maxWidth: 500 }}>
+                        <CardActionArea>
+
+
+                            <CardContent>
+                                <div className="middle-container">
+
+                                    <div className="left-image">
+                                        <img className="flip-image" src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
+                                            alt="airplaneDepart"
+                                            width="27px"
+                                            height="27px"
+                                        />
+                                    </div>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {retFlight.toObj.from} ({retFlight.toObj.departureTime})
+                                    </Typography>
+                                    <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
+                                        alt="arrow"
+                                        width="40px"
+                                        height="27px" />
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {retFlight.toObj.to} ({retFlight.toObj.arrivalTime})
+                                    </Typography>
+                                </div>
+                                <Typography variant="body2" color="text.secondary">
+                                    Duration: {getDuration(retFlight.toObj)}
+                                </Typography>
+                                <Typography>
+
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                </div>
+                <div className="column">
+                    <p className="selected-return">Summary:</p>
+                    <Card sx={{ maxWidth: 500 }}>
+                        <CardActionArea>
+                            <CardContent>
+                                <div className="right-container">
+                                    <div className="middle-container">
                                         <div className="left-image">
                                             <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
                                                 alt="airplaneDepart"
@@ -747,23 +824,8 @@ const DeptUpdateReservation = props => {
                                             {deptFlightTo} ({deptFlightArrivalTime})
                                         </Typography>
                                     </div>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Duration: {getDuration(selectedDeptFlight)}
-                                    </Typography>
 
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </div>
-                    <div className="column">
-                        <p className="selected-return">Selected Return Flight:</p>
-                        <Card sx={{ maxWidth: 500 }}>
-                            <CardActionArea>
-
-
-                                <CardContent>
                                     <div className="middle-container">
-
                                         <div className="left-image">
                                             <img className="flip-image" src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
                                                 alt="airplaneDepart"
@@ -772,77 +834,24 @@ const DeptUpdateReservation = props => {
                                             />
                                         </div>
                                         <Typography gutterBottom variant="h5" component="div">
-                                            {retFlightFrom} ({retFlightDeptTime})
+                                            {retFlight.toObj.from} ({retFlight.toObj.departureTime})
                                         </Typography>
                                         <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
                                             alt="arrow"
                                             width="40px"
                                             height="27px" />
                                         <Typography gutterBottom variant="h5" component="div">
-                                            {retFlightTo} ({retFlightArrivalTime})
+                                            {retFlight.toObj.to} ({retFlight.toObj.arrivalTime})
                                         </Typography>
                                     </div>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Duration: {getDuration(selectedRetFlight)}
-                                    </Typography>
 
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </div>
-                    <div className="column">
-                        <p className="selected-return">Summary:</p>
-                        <Card sx={{ maxWidth: 500 }}>
-                            <CardActionArea>
-                                <CardContent>
-                                    <div className="right-container">
-                                        <div className="middle-container">
-                                            <div className="left-image">
-                                                <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
-                                                    alt="airplaneDepart"
-                                                    width="27px"
-                                                    height="27px"
-                                                />
-                                            </div>
-                                            <Typography gutterBottom variant="h5" component="div">
-                                                {deptFlightFrom} ({deptFlightDeptTime})
-                                            </Typography>
-                                            <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
-                                                alt="arrow"
-                                                width="40px"
-                                                height="27px" />
-                                            <Typography gutterBottom variant="h5" component="div">
-                                                {deptFlightTo} ({deptFlightArrivalTime})
-                                            </Typography>
-                                        </div>
-
-                                        <div className="middle-container">
-                                            <div className="left-image">
-                                                <img className="flip-image" src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
-                                                    alt="airplaneDepart"
-                                                    width="27px"
-                                                    height="27px"
-                                                />
-                                            </div>
-                                            <Typography gutterBottom variant="h5" component="div">
-                                                {retFlightFrom} ({retFlightDeptTime})
-                                            </Typography>
-                                            <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
-                                                alt="arrow"
-                                                width="40px"
-                                                height="27px" />
-                                            <Typography gutterBottom variant="h5" component="div">
-                                                {retFlightTo} ({retFlightArrivalTime})
-                                            </Typography>
-                                        </div>
-
-                                    </div>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
+                                </div>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
                     </div>
                 </div>
-                <div><Itinerary
+                <div><ItineraryUpdate
                     deptFrom={deptFlightFrom}
                     deptTo={deptFlightTo}
                     deptFlightDeptTime={deptFlightDeptTime}
@@ -853,16 +862,17 @@ const DeptUpdateReservation = props => {
                     selectedDeptFlightId={selectedDeptFlightId}
                     deptFlightPrice={deptFlightPrice}
                     retFlightPrice={retFlightPrice}
-                    retFlightDeptTime={retFlightDeptTime}
-                    retFlightDeptDate={retFlightDeptDate}
-                    retFlightArrivalTime={retFlightArrivalTime}
-                    retFlightArrivalDate={retFlightArrivalDate}
-                    retFlightId={selectedRetFlightId}
+                    retFlightDeptTime={retFlight.toObj.departureTime}
+                    retFlightDeptDate={retFlight.toObj.departureDate}
+                    retFlightArrivalTime={retFlight.toObj.arrivalTime}
+                    retFlightArrivalDate={retFlight.toObj.arrivalDate}
+                    retFlightId={retFlight.toObj.flightId}
                     numOfAdults={adultsNumber}
                     numOfChildren={childNumber}
                     deptSeats={deptSeats}
-                    retSeats={retSeats}
+                    retSeats={chosenToSeat?.chosenToSeat}
                     bookingNum={bookingNum}
+                    oldCabinReturn = {cabinReturn.cabinReturn}
 
                 />
                     <div><button className="confirm-res" style={{ marginBottom: "20px" }} onClick={(e) => history.push('/Reserved-flights')}>View Reservations</button></div>
@@ -896,7 +906,7 @@ const DeptUpdateReservation = props => {
                 </Box></div>
                 <div className='bg-dark text-light'>
                     <div className='container pt-5' style={{ height: '100vh' }}>
-                        <h1 className="display-4 text-center">Search for flights</h1>
+                        <h1 className="display-4 text-center">Update Departure Flight</h1>
 
 
                         <form onSubmit={submitAction} className='mt-5'>
