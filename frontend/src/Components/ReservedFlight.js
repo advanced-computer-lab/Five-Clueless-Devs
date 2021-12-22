@@ -17,7 +17,7 @@ const ReservedFlight = () => {
     }, []);
     //let { id } = useParams();
 
-    let Uid = localStorage.getItem('userId');
+    let Uid = JSON.parse(localStorage.getItem('user'))?._id;
     console.log(Uid);
 
     const getReservetion = () => {

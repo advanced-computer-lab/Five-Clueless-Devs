@@ -1,19 +1,29 @@
 import { Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory, useLocation, useParams } from "react-router";
 import { BACKEND_URL } from "../../API/URLS";
 import Seats from "../SeatMap/Seats";
-import './DepartureSeats.css';
+import '../FlightSeats/DepartureSeats.css';
 import moment from 'moment';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 
 
-const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDeptSeats, setRetSeats }) => {
+const EditSeatsOutside = () => {
 
     const history = useHistory();
 
-    const [type, setType] = useState("Departure");
+
+    const location = useLocation();
+
+    const {reservationId} = useParams();
+
+    const flight = location.state.flight;
+    const maxSeats = location.state.maxSeats;
+    const cabin = location.state.cabin;
+    const type = location.state.type;
+    //const reservationId = location.state.reservationId;
+
     const [errMsg, setErrMsg] = useState("");
 
     //must get it from the previous step
@@ -22,29 +32,13 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
     //-----------------------------------
 
 
-    const [flight, setFlight] = useState({});
+    //const [flight, setFlight] = useState({});
     const [selectedSeats, setSelectedSeats] = useState([]); // [{number:A3, id:2}...]
 
     const [seats, setSeats] = useState([]);
     // const [seats, setSeats] = useState([123, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 111,
     //     123, null, null, 123, null, null, "hell", 123, null, null, 123, null, null, null, null, null]);
 
-
-    useEffect(() => {
-        console.log("Print id: " + flight?.flightId);
-        setFlight(from);
-    }, []);
-
-    useEffect(() => {
-        console.log("Print id: " + flight?.flightId);
-        if (type === 'Departure') {
-            setFlight(from);
-        }
-        if (type === 'Arrival') {
-            setFlight(to);
-        }
-
-    }, [type]);
 
 
     useEffect(() => {
@@ -58,7 +52,9 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
             setSeats(flight?.seatsFirst);
         }
         console.log(seats);
+        console.log(maxSeats);
     }, [flight?.flightId])
+
 
     const removeSeat = (id) => {
         let tmpSeats = [...seats];
@@ -75,12 +71,8 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
             let tmpSeats = [...seats];
             let tmpFlight = {};
 
-            if (type === 'Departure') {
-                tmpFlight = { ...from };
-            }
-            if (type === 'Arrival') {
-                tmpFlight = { ...to };
-            }
+
+            tmpFlight = { ...flight };
 
             selectedSeats.forEach((seat) => {
                 if (!tmpSeats[seat.id] || tmpSeats[seat.id] === 'null' || tmpSeats[seat.id] == userId) {
@@ -95,16 +87,16 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
             let remSeats = freeSeats.length;
 
             if (cabin === 'Economy') {
-                setFlight({ ...tmpFlight, seatsEconomy: tmpSeats, availableEconomy: tmpFlight.availableEconomy - selectedSeats.length });
-                tmpFlight = { ...tmpFlight, seatsEconomy: tmpSeats, availableEconomy: tmpFlight.availableEconomy - selectedSeats.length }
+                // setFlight({ ...tmpFlight, seatsEconomy: tmpSeats, availableEconomy: tmpFlight.availableEconomy - selectedSeats.length });
+                tmpFlight = {seatsEconomy: tmpSeats}
             }
             else if (cabin === 'Business') {
-                setFlight({ ...tmpFlight, seatsBusiness: tmpSeats, availableBusiness: tmpFlight.availableBusiness - selectedSeats.length });
-                tmpFlight = { ...tmpFlight, seatsBusiness: tmpSeats, availableBusiness: tmpFlight.availableBusiness - selectedSeats.length }
+                // setFlight({ ...tmpFlight, seatsBusiness: tmpSeats, availableBusiness: tmpFlight.availableBusiness - selectedSeats.length });
+                tmpFlight = {seatsBusiness: tmpSeats}
             }
             else if (cabin === 'First') {
-                setFlight({ ...tmpFlight, seatsFirst: tmpSeats, availableFirst: tmpFlight.availableFirst - selectedSeats.length });
-                tmpFlight = { ...tmpFlight, seatsFirst: tmpSeats, availableFirst: tmpFlight.availableFirst - selectedSeats.length }
+                // setFlight({ ...tmpFlight, seatsFirst: tmpSeats, availableFirst: tmpFlight.availableFirst - selectedSeats.length });
+                tmpFlight = {  seatsFirst: tmpSeats }
             }
 
             let id = flight?.flightId;
@@ -112,27 +104,14 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
                 .put(BACKEND_URL + 'flights/update?flightId=' + id, tmpFlight)
                 .then(res => {
                     console.log(res.data);
-                    if (type === 'Arrival') {
-                        setView(5);
-                        setTo(tmpFlight);
-                        setRetSeats(selectedSeats)
-                    } else {
-                        setFrom(tmpFlight);
-                        setDeptSeats(selectedSeats);
-                        setSeats([]);
-                        setSelectedSeats([]);
-                        setType('Arrival');
-                    }
+                    // setView(4);
+                   // setTo(tmpFlight);
+                    // setFlightSeats(selectedSeats);
+                    history.push(`/summary/${reservationId}/`)
                 })
                 .catch(err => {
                     console.log(err);
                 })
-
-            // if (type == 'Departure') {
-
-            // } else if (type === "Arrival") {
-
-            // }
         }
     };
 
@@ -146,28 +125,16 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
         return `${durHours} hours and ${durationInMins} minutes`;
     }
 
-    const getBaggage = () => {
-        if (type == "Departure") {
-            return from?.baggageAllowance;
-        } else {
-            return to?.baggageAllowance;
-        }
-    }
 
 
-    const goBack = () => {
-        setSeats([]);
-        setSelectedSeats([]);
-        setType('Departure');
-    }
 
     return (
         <div>
 
             <div className="dep-cont">
-                {type === 'Arrival' ? <IconButton onClick={goBack} style={{ marginBottom: 'auto' }}>
+                {<IconButton onClick={() => history.push(`/summary/${reservationId}/`)} style={{ marginBottom: 'auto' }}>
                     <ArrowBack />
-                </IconButton> : null
+                </IconButton>
                 }
                 <div className="dep-flex-cont">
                     <div className="dep-summary">
@@ -219,7 +186,7 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
                                     </TableRow>
                                     <TableRow>
                                         <TableCell className="dep-table-header">Baggage Allowance</TableCell>
-                                        <TableCell className="dep-table-content">{getBaggage()}</TableCell>
+                                        <TableCell className="dep-table-content">{flight?.baggageAllowance}</TableCell>
                                     </TableRow>
                                     <TableRow>
                                         <TableCell className="dep-table-header">Max Number Of Seats</TableCell>
@@ -250,7 +217,7 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
 
 
             <Button variant="outlined" type="submit" onClick={onSubmit}>
-                Confirm {type} Seats
+                Confirm Seats
             </Button>
             <Typography style={{ color: '#ff3333' }}>
                 {errMsg}
@@ -260,4 +227,4 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
     );
 }
 
-export default FlightSeats;
+export default EditSeatsOutside;

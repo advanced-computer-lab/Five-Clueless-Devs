@@ -1,4 +1,5 @@
 import React from 'react';
+import {useEffect} from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import '../App.css';
 import "./DepartureFlightCard.css";
@@ -6,8 +7,25 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { Table, TableBody, TableCell, TableRow, IconButton } from '@mui/material';
+import { textAlign } from '@mui/system';
 
-const FlightCard = (props) => {
+const DepartureFlightCardEdit = (props) => {
+    let oldPrice = 0;
+    if(props.oldCabin == 'Economy'){
+        oldPrice = props.oldPrice;
+    }
+    else if(props.oldCabin == 'Business'){
+        oldPrice = 1.2 * props.oldPrice;
+    }
+    if(props.oldCabin == 'First'){
+        oldPrice = 1.4* props.oldPrice;
+    }
+    console.log(oldPrice);
+    
+    useEffect(() => {
+        
+       
+    });
 
     const style = {
         position: 'absolute',
@@ -60,6 +78,7 @@ const FlightCard = (props) => {
         props.passDeptFlightDeptDate(flight.departureDate)
         props.passDeptFlightArrivalDate(flight.arrivalDate)
         props.passDeptFlightPrice(checkTotal())
+        props.passPriceToDisplay(oldPrice - checkTotal());
 
         console.log(flight);
         props.passSelectedDeptFlight(flight);
@@ -84,13 +103,13 @@ const FlightCard = (props) => {
     }
     const checkTotal = () => {
         if (props.chosenClass == "Economy") {
-            return +(flight.price * (props.numOfAdults + props.numOfChildren)).toFixed(2)
+            return +(flight.price * (props.seatCount)).toFixed(2)
         }
         else if (props.chosenClass == "Business") {
-            return +(1.2 * (flight.price * (props.numOfAdults + props.numOfChildren))).toFixed(2)
+            return +(1.2 * (flight.price * (props.seatCount))).toFixed(2)
         }
         else if (props.chosenClass == "First") {
-            return +(1.4 * (flight.price * (props.numOfAdults + props.numOfChildren))).toFixed(2)
+            return +(1.4 * (flight.price * (props.seatCount))).toFixed(2)
         }
     }
 
@@ -249,10 +268,21 @@ const FlightCard = (props) => {
                             </Table>
                         </Box>
                     </Modal>
-                    <div className="middle-price">
-                        <p> <span><b>EGP</b>{checkTotal()}</span></p>
+                    {oldPrice - checkTotal() < 0 ? <div style={{ textAlign: "right", marginBottom: "-20px", marginTop: "10px", marginRight: "-8px" }}>Pay Additional:</div> :
+                        <div style={{ textAlign: "center", marginBottom: "-20px", marginTop: "10px", }}>Save:</div>}
+                    <div className="middle-price" style={{ marginRight: "-10px" }}>
+
+                        {oldPrice - checkTotal() < 0 ? <p style={{ color: "red", marginTop: "20px" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(oldPrice - checkTotal())}</span></p>
+                            : <p style={{ color: "green", marginTop: "20px" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(oldPrice - checkTotal())}</span></p>}
+
                     </div>
                     <p className="passenger-font" onClick={handleClick}>(for {props.numOfAdults + props.numOfChildren} passengers)</p>
+                    {/* {props.oldPrice - checkTotal() < 0 ? <p style={{ marginLeft:"9px", textAlign: "center", fontSize:"14px"}}>
+                        Pay Additional: <p style={{ color: "red", textAlign: "center", fontSize:"20px" }}> <b style={{color:"black", fontSize:"12px"}}>EGP </b>
+                        {Math.abs(props.oldPrice - checkTotal())} </p></p> :
+                        <p style={{ marginLeft:"9px", textAlign: "center", fontSize:"14px"}}>
+                        Save: <p style={{ color: "green", textAlign: "center", fontSize:"20px" }}> <b style={{color:"black", fontSize:"12px"}}>EGP </b>
+                        {Math.abs(props.oldPrice - checkTotal())} </p></p>} */}
                 </div>
 
             </div>
@@ -261,4 +291,4 @@ const FlightCard = (props) => {
     )
 };
 
-export default FlightCard;
+export default DepartureFlightCardEdit;

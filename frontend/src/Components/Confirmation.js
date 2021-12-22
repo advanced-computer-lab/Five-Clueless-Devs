@@ -12,7 +12,7 @@ const Confirmation = () => {
    const too = props.to;
    const cabinClass = props.cabin;*/
   
-  let Uid = localStorage.getItem('userId');
+  let Uid = JSON.parse(localStorage.getItem('user'))?._id;
   let from = 79;
   let too = 8;
   let cabinClass = "Economy";

@@ -9,6 +9,17 @@ import { Table, TableBody, TableCell, TableRow, IconButton } from '@mui/material
 
 const FlightCard = (props) => {
 
+    let oldPrice = 0;
+    if(props.oldCabin == 'Economy'){
+        oldPrice = props.oldPrice;
+    }
+    else if(props.oldCabin == 'Business'){
+        oldPrice = 1.2 * props.oldPrice;
+    }
+    if(props.oldCabin == 'First'){
+        oldPrice = 1.4* props.oldPrice;
+    }
+
     const style = {
         position: 'absolute',
         top: '50%',
@@ -22,6 +33,7 @@ const FlightCard = (props) => {
     };
     const moment = require('moment')
     const flight = props.flight;
+
     const whichClassName = () => {
         if (props.chosenClass == "Economy") {
             return "Economy"
@@ -44,27 +56,27 @@ const FlightCard = (props) => {
             return flight.availableFirst
         }
     }
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-
     const history = useHistory();
     const handleClick = () => {
         props.data();
-        props.passDeptId(flight.flightId);
-        props.passDeptFrom(flight.from);
-        props.passDeptTo(flight.to);
-        props.passDeptDuration(flight.duration);
-        props.passDeptFlightDeptTime(flight.departureTime)
-        props.passDeptFlightArrivalTime(flight.arrivalTime)
-        props.passDeptFlightDeptDate(flight.departureDate)
-        props.passDeptFlightArrivalDate(flight.arrivalDate)
-        props.passDeptFlightPrice(checkTotal())
-
-        console.log(flight);
-        props.passSelectedDeptFlight(flight);
+        props.passRetId(flight.flightId);
+        props.passRetFrom(flight.from);
+        props.passRetTo(flight.to);
+        props.passRetDuration(flight.duration);
+        props.passRetFlightDeptTime(flight.departureTime)
+        props.passRetFlightArrivalTime(flight.arrivalTime)
+        props.passRetFlightPrice(checkTotal())
+        props.passRetFlightDate(flight.departureDate)
+        props.passRetFlightArrivalDate(flight.arrivalDate)
+        props.passSelectedRetFlight(flight);
+        props.passPriceToDisplayRet(oldPrice-checkTotal())
+        console.log(oldPrice - checkTotal())
         console.log(flight.flightId);
+        console.log(flight.from);
     }
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
     const getDuration = (flight) => {
         let depDate = moment(flight?.departureDate?.substring(0, 10) + "T" + flight?.departureTime + ":00");
         let arrDate = moment(flight?.arrivalDate?.substring(0, 10) + "T" + flight?.arrivalTime + ":00");
@@ -73,24 +85,15 @@ const FlightCard = (props) => {
         durationInMins = durationInMins - 60 * durHours;
         return `${durHours} hours and ${durationInMins} minutes`;
     }
-    const popUp = () => {
-        history.push(`/details/${flight.flightId}`)
-    }
-    const onClick = (e) => {
-        document.getElementById(e.target.id).disabled = true;
-        console.log(e.target.id);
-        console.log(e.target.value);
-        console.log(props);
-    }
     const checkTotal = () => {
         if (props.chosenClass == "Economy") {
-            return +(flight.price * (props.numOfAdults + props.numOfChildren)).toFixed(2)
+            return +(flight.price * (props.seatCount)).toFixed(2)
         }
         else if (props.chosenClass == "Business") {
-            return +(1.2 * (flight.price * (props.numOfAdults + props.numOfChildren))).toFixed(2)
+            return +(1.2 * (flight.price * (props.seatCount))).toFixed(2)
         }
         else if (props.chosenClass == "First") {
-            return +(1.4 * (flight.price * (props.numOfAdults + props.numOfChildren))).toFixed(2)
+            return +(1.4 * (flight.price * (props.seatCount))).toFixed(2)
         }
     }
 
@@ -109,12 +112,16 @@ const FlightCard = (props) => {
 
             <div className="flight-card-search" >
                 <div className="flight-card-left">
-                    <div className="head-card head-card2">
-                        <p className="flight-card-head-type">Departure</p>
-                        <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
-                            alt="airplaneDepart"
-                            width="27px"
-                            height="27px" /></div>
+                    <div className="head-card-return">
+                        <p className="flight-card-head-type">Return</p>
+                        <div className="flip-image">
+                            <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
+                                alt="airplaneDepart"
+                                width="27px"
+                                height="27px"
+                            />
+                        </div>
+                    </div>
                     <p className="flight-card-airport">{flight?.from}</p>
                     <p className="flight-card-head">date</p>
                     <p className="flight-card-date">{`${flight.departureDate.substring(0, 10)}  ${flight.departureTime}`}</p>
@@ -124,6 +131,9 @@ const FlightCard = (props) => {
                 </div>
 
                 <div className="">
+                    <p className="flight-card-head"></p>
+                    <p className="flight-card-head"></p>
+
                     <p className="flight-card-head"></p>
                     <p className="flight-card-head"></p>
                     <img
@@ -141,6 +151,7 @@ const FlightCard = (props) => {
                             height="40px" />
 
                         <p className="flight-card-duration">Duration {getDuration(flight)} </p>
+
                     </div>
 
                 </div>
@@ -157,7 +168,7 @@ const FlightCard = (props) => {
 
                 </div>
                 <div className="flight-card-right-buttons">
-                    <button className="buttonClass" type="button" id="selection" value={flight.flightId} onClick={handleClick}>Select</button>
+                    <button className="buttonClass" type="button" onClick={handleClick}>Select</button>
                     <p className="view-detail" onClick={handleOpen}>View Details</p>
                     <Modal
                         open={open}
@@ -166,7 +177,7 @@ const FlightCard = (props) => {
                         aria-describedby="modal-modal-description"
                     >
                         <Box sx={style}>
-                            <div style={{ display: "flex", alignItems: 'center' }}>
+                            <div style={{display:"flex",alignItems:'center'}}>
                                 <IconButton onClick={handleClose} aria-label="fingerprint"  >
                                     x
                                 </IconButton>
@@ -175,14 +186,7 @@ const FlightCard = (props) => {
                                 </Typography>
                             </div>
                             <Table sx={{ maxWidth: 500 }} className="table table-hover table-dark">
-                                {/* <thead>
-          <TableRow>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
-          </TableRow>
-        </thead> */}
+
                                 <TableBody>
                                     <TableRow>
                                         {/* <th scope="row">1</th> */}
@@ -249,12 +253,15 @@ const FlightCard = (props) => {
                             </Table>
                         </Box>
                     </Modal>
+                    {oldPrice - checkTotal() < 0 ? <div style={{ textAlign: "right", marginBottom: "-20px", marginTop: "10px", marginRight: "-8px" }}>Pay Additional:</div> :
+                        <div style={{ textAlign: "center", marginBottom: "-20px", marginTop: "10px", }}>Save:</div>}
                     <div className="middle-price">
-                        <p> <span><b>EGP</b>{checkTotal()}</span></p>
+                    {oldPrice - checkTotal() < 0 ? <p style={{ color: "red", marginTop: "20px" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(oldPrice - checkTotal())}</span></p>
+                            : <p style={{ color: "green", marginTop: "20px" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(oldPrice - checkTotal())}</span></p>}
+
                     </div>
                     <p className="passenger-font" onClick={handleClick}>(for {props.numOfAdults + props.numOfChildren} passengers)</p>
                 </div>
-
             </div>
 
         </div>

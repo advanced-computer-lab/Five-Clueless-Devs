@@ -14,7 +14,7 @@ router.get('/test', (req, res) => res.json({ "res": "123" }));
 router.post('/createFlight', (req, res) => {
     console.log('YOU ADDED A FLIGHT');
     Flight.create({ ...req.body })
-        .then(users => res.json({ msg: 'Flight added successfully' }))
+        .then(users => res.json(users))
         .catch(err => res.status(400).json({ error: 'Unable to add flight' }));
 });
 
@@ -35,7 +35,7 @@ router.get('/searchUser', (req, res) => {
 //PUT: Update flight details
 router.put('/update', (req, res) => {
     Flight.findOneAndUpdate(req.query, req.body)
-        .then(book => res.json({msg: "updated succesfully"}))
+        .then(book => res.json(book))
         .catch(err =>
             res.status(400).json({ error: 'Unable to update the Database' })
         );

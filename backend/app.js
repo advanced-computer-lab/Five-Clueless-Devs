@@ -42,3 +42,5 @@ app.use('/api/reservations', reservationRouter);
 const port = process.env.PORT || 8082;
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
+
+// module.exports = app;
