@@ -19,12 +19,12 @@ const makePayment= token =>{
     return fetch('http://localhost:5000/payment',{
       method: "POST",
       headers,
-      body:JSON.stringify(body)
+      body:JSON.stringify(body)})
       .then(response=>{
           console.log("RESPONSE", response);
           const {status} = response;
           console.log("STATUS",status);
-      })
+      
       
     })
     .catch(err => console.log(err));
