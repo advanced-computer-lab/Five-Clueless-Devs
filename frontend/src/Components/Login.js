@@ -1,53 +1,63 @@
-import { Button, TextField } from "@mui/material";
-import { useState } from "react";
-import { useHistory } from "react-router";
+import {Link} from "react-router-dom";
+import { useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import { BACKEND_URL } from '../API/URLS'
 
-const Login = () => {
+const Login=()=> {
+	const [email, setEmail] = useState('')
+	const [password, setPassword] = useState('')
 
-    let history = useHistory();
-    const [user, setUser] = useState({
-        userId: '',
-        password: ''
-    })
+	async function loginUser(event) {
+		event.preventDefault()
 
-    const onChange = (e) => {
-        setUser({ ...user, [e.target.name]: e.target.value });
-    };
-    const onLogin = () => {
-        localStorage.setItem('userId', user.userId);
-        history.push("/");
-    }
+		const response = await fetch(BACKEND_URL+'users/login', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				email,
+				password,
+			}),
+		})
 
-    return (
-        <form>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+		const data = await response.json()
+        console.log(data.user)
+		if (data.user) {
+			localStorage.setItem('token', data.user)
+			alert('Login successful')
+            localStorage.setItem("user",data.user)
+            localStorage.setItem("userId",data.user.userId)
+			window.location.href = '/'
+		} else {
+			alert('Invalid Email or Password')
+		}
+	}
 
-                <h2>Login</h2>
-
-                <TextField
-                    className='form-control'
-                    label='User Id'
-                    name="userId"
-                    value={user?.userId}
-                    type={"number"}
-                    onChange={(e) => onChange(e)}
-                    style={{ margin: "10px" }}
-                />
-                <TextField
-                    className='form-control'
-                    label='Password'
-                    type="password"
-                    name="password"
-                    value={user?.password}
-                    onChange={(e) => onChange(e)}
-                    style={{ margin: "10px" }}
-                />
-
-                <Button onClick={onLogin} variant={"outlined"} type={"submit"} style={{ margin: "10px" }}>Login</Button>
-
-            </div>
-        </form>
-    );
+	return (
+		<div>
+			<h1>Login</h1>
+			<form onSubmit={loginUser}>
+				<input
+					value={email}
+					onChange={(e) => setEmail(e.target.value)}
+					type="email"
+					placeholder="Email"
+				/>
+				<br />
+				<input
+					value={password}
+					onChange={(e) => setPassword(e.target.value)}
+					type="password"
+					placeholder="Password"
+				/>
+				<br />
+				<input type="submit" value="Login" />
+                <br />
+                <Link to="/Register"> Don't have an account? Sign Up! </Link>
+			</form>
+		</div>
+	)
 }
 
-export default Login;
+export default Login

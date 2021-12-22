@@ -52,46 +52,30 @@ router.get('/search', (req, res) => {
 
 router.post('/send_mail', cors(), async (req, res) => {
 
-    let { deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo, refundedAmount, bookingNumber, to } = req.body
+    let { text, to } = req.body
     const transport = nodemailer.createTransport({
-        host: process.env.MAIL_HOST,
-        port: process.env.MAIL_PORT,
-        auth: {
-            user: process.env.MAIL_USER,
-            pass: process.env.MAIL_PASS
-        }
+		host: process.env.MAIL_HOST,
+		port: process.env.MAIL_PORT,
+		auth: {
+			user: process.env.MAIL_USER,
+			pass: process.env.MAIL_PASS
+		}
+        
+	})
 
-    })
-
-    await transport.sendMail({
-        from: process.env.MAIL_FROM,
-        to: to,
-        subject: "Reservation Cancellation ",
-        html: `<div className="email" style="
+	await transport.sendMail({
+		from: process.env.MAIL_FROM,
+		to: to,
+		subject: "test email",
+		html: `<div className="email" style="
         border: 1px solid black;
         padding: 20px;
         font-family: sans-serif;
         line-height: 2;
         font-size: 20px; 
         ">
-        <h2>This mail is to confirm that you canceled your flight reservation. </h2>
-        <h3>Departure Flight</h3>
-        <div>
-        <p>Flight ID: ${deptFlightId}</p>
-        <p>From: ${deptFrom}</p>
-        <p>To: ${deptTo}</p>
-        <p></p>
-        </div>
-        <h3>Return Flight</h3>
-        <div>
-        <p>Flight ID: ${retFlightId}</p>
-        <p>From: ${retFrom}</p>
-        <p>To: ${retTo}</p>
-        <p></p>
-        </div>
-        <h3>Amount refunded is  EGP<span style="color:blue; font-size:25px">${refundedAmount}</span> for booking number: <span style="font-size:25px">
-        ${bookingNumber}</span> </h3>
-
+        <h2>This mail it to confirm that you canceled your flight reservation. </h2>
+        <p>${text}</p>
     
         <p>All the best, Five clueless devs!</p>
          </div>
@@ -111,6 +95,39 @@ router.put('/update', (req, res) => {
 });
 
 
+router.post("/login" , (req, res) => {
+    const userLoggingIn = req.body;
+    //console.log(req.body)
+    User.findOne({ email: userLoggingIn.email }).then((user) => {
+      if (!user) {
+        //console.log("invalid")
+        return res.json({ message: "Invalid Email or Password" });
+      }
+      //console.log(user);
+      bcrypt
+        .compare(userLoggingIn.password, user.password)
+        .then((isCorrect) => {
+          if (isCorrect) {
+            const payload = {
+              id: user.userId,
+              username: user.username,
+            };
+            jwt.sign(
+              payload,
+              process.env.JWT_SECRET,
+              { expiresIn: "10h" },
+              (err, token) => {
+                if (err) {
+                  return res.json({ message:"error" });
+                }
+                return res.json({ message: "Success", token: "Bearer " + token, user:user });
+              }
+            );
+          } else {
+            res.json({ message: "Invalid email or Password" });
+          }  });
+    });
+  });
 
 
 

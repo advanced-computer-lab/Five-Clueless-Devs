@@ -1,4 +1,4 @@
-import { Button, IconButton, Table, TableBody, TableCell, TableRow, Typography } from "@mui/material";
+import { Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
@@ -17,7 +17,7 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
     const [errMsg, setErrMsg] = useState("");
 
     //must get it from the previous step
-    let userId = localStorage.getItem('userId');
+    let userId = JSON.parse(localStorage.getItem('user'))?._id;
 
     //-----------------------------------
 
@@ -76,7 +76,7 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
             let tmpFlight = {};
 
             if (type === 'Departure') {
-                tmpFlight = {...from};
+                tmpFlight = { ...from };
             }
             if (type === 'Arrival') {
                 tmpFlight = { ...to };
@@ -95,16 +95,16 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
             let remSeats = freeSeats.length;
 
             if (cabin === 'Economy') {
-                setFlight({ ...tmpFlight, seatsEconomy: tmpSeats });
-                tmpFlight = {...tmpFlight,  seatsEconomy: tmpSeats }
+                setFlight({ ...tmpFlight, seatsEconomy: tmpSeats, availableEconomy: tmpFlight.availableEconomy - selectedSeats.length });
+                tmpFlight = { ...tmpFlight, seatsEconomy: tmpSeats, availableEconomy: tmpFlight.availableEconomy - selectedSeats.length }
             }
             else if (cabin === 'Business') {
-                setFlight({ ...tmpFlight,  seatsBusiness: tmpSeats });
-                tmpFlight = {...tmpFlight, seatsBusiness: tmpSeats }
+                setFlight({ ...tmpFlight, seatsBusiness: tmpSeats, availableBusiness: tmpFlight.availableBusiness - selectedSeats.length });
+                tmpFlight = { ...tmpFlight, seatsBusiness: tmpSeats, availableBusiness: tmpFlight.availableBusiness - selectedSeats.length }
             }
             else if (cabin === 'First') {
-                setFlight({ ...tmpFlight, seatsFirst: tmpSeats });
-                tmpFlight = { ...tmpFlight, seatsFirst: tmpSeats }
+                setFlight({ ...tmpFlight, seatsFirst: tmpSeats, availableFirst: tmpFlight.availableFirst - selectedSeats.length });
+                tmpFlight = { ...tmpFlight, seatsFirst: tmpSeats, availableFirst: tmpFlight.availableFirst - selectedSeats.length }
             }
 
             let id = flight?.flightId;
@@ -131,7 +131,7 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
             // if (type == 'Departure') {
 
             // } else if (type === "Arrival") {
-               
+
             // }
         }
     };
@@ -146,10 +146,10 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
         return `${durHours} hours and ${durationInMins} minutes`;
     }
 
-    const getBaggage = () =>{
-        if(type == "Departure"){
+    const getBaggage = () => {
+        if (type == "Departure") {
             return from?.baggageAllowance;
-        }else{
+        } else {
             return to?.baggageAllowance;
         }
     }
@@ -169,81 +169,83 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
                     <ArrowBack />
                 </IconButton> : null
                 }
+                <div className="dep-flex-cont">
+                    <div className="dep-summary">
+                        <TableContainer component={Paper}>
+                            <Table size="small">
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell colSpan="2">
+                                            <Typography variant="h4" component="h4">
+                                                {type} Flight Summary
+                                            </Typography>
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell className="dep-table-header">Flight Number</TableCell>
+                                        <TableCell className="dep-table-content">{flight?.flightId}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell className="dep-table-header">Origin Country</TableCell>
+                                        <TableCell className="dep-table-content">{flight?.from}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell className="dep-table-header">Destination</TableCell>
+                                        <TableCell className="dep-table-content">{flight?.to}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell className="dep-table-header">Departure Date</TableCell>
+                                        <TableCell className="dep-table-content">{flight?.departureDate?.substring(0, 10)}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell className="dep-table-header">Departure Time</TableCell>
+                                        <TableCell className="dep-table-content">{flight?.departureTime}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell className="dep-table-header">Arrival Date</TableCell>
+                                        <TableCell className="dep-table-content">{flight?.arrivalDate?.substring(0, 10)}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell className="dep-table-header">Arrival Time</TableCell>
+                                        <TableCell className="dep-table-content">{flight?.arrivalTime}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell className="dep-table-header">Duration</TableCell>
+                                        <TableCell className="dep-table-content">{getDuration()}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell className="dep-table-header">Cabin Class</TableCell>
+                                        <TableCell className="dep-table-content">{cabin}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell className="dep-table-header">Baggage Allowance</TableCell>
+                                        <TableCell className="dep-table-content">{getBaggage()}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell className="dep-table-header">Max Number Of Seats</TableCell>
+                                        <TableCell className="dep-table-content">{maxSeats}</TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </div>
 
-                <div className="dep-summary">
-                    <Table size="small">
-                        <TableBody>
-                            <TableRow>
-                                <TableCell colSpan="2">
-                                    <Typography variant="h4" component="h4">
-                                        {type} Flight Summary
-                                    </Typography>
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Flight Number</TableCell>
-                                <TableCell>{flight?.flightId}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Origin Country</TableCell>
-                                <TableCell>{flight?.from}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Destination</TableCell>
-                                <TableCell>{flight?.to}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Departure Date</TableCell>
-                                <TableCell>{flight?.departureDate?.substring(0, 10)}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Departure Time</TableCell>
-                                <TableCell>{flight?.departureTime}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Arrival Date</TableCell>
-                                <TableCell>{flight?.arrivalDate?.substring(0, 10)}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Arrival Time</TableCell>
-                                <TableCell>{flight?.arrivalTime}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Duration</TableCell>
-                                <TableCell>{getDuration()}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Cabin Class</TableCell>
-                                <TableCell>{cabin}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Baggage Allowance</TableCell>
-                                <TableCell>{getBaggage()}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Max Number Of Seats</TableCell>
-                                <TableCell>{maxSeats}</TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
+                    <div className="dep-seats">
+                        <Seats
+                            selectedSeats={selectedSeats}
+                            setSelectedSeats={setSelectedSeats}
+                            seats={seats}
+                            maxSeats={maxSeats}
+                            userId={userId}
+                            removeSeat={removeSeat}
+                        />
+                        <Typography style={{ fontStyle: 'italic', maxWidth: '240px' }}> {`Selected Seats: `}
+                            {
+                                selectedSeats.map((s) => s.number).join(", ")
+                            }
+                        </Typography>
+                    </div>
                 </div>
-
-                <div className="dep-seats">
-                    <Seats
-                        selectedSeats={selectedSeats}
-                        setSelectedSeats={setSelectedSeats}
-                        seats={seats}
-                        maxSeats={maxSeats}
-                        userId={userId}
-                        removeSeat={removeSeat}
-                    />
-                    <Typography style={{ fontStyle: 'italic', maxWidth: '240px' }}> {`Selected Seats: `}
-                        {
-                            selectedSeats.map((s) => s.number).join(", ")
-                        }
-                    </Typography>
-                </div>
-
             </div>
 
 

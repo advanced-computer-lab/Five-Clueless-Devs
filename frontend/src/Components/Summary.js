@@ -47,7 +47,7 @@ const Summary = (props) => {
         createData('Flight Price', props.retFlightPrice),
     ];
     
-    let userId = localStorage.getItem('userId');
+    let userId = JSON.parse(localStorage.getItem('user'))?._id;
 
     const clickConfirm = () =>{
         if(userId){
