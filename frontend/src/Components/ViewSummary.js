@@ -14,23 +14,34 @@ const ViewSummary = () => {
   //let seatCount = 0;
   const [seatCount, setSeatCount] = useState(0);
   let Uid = JSON.parse(localStorage.getItem('user'))?._id;
+  let emailSearch = JSON.parse(localStorage.getItem('user'))?.email;
 
   let currEmail = "";
   let text2 = "";
   const [sent, setSent] = useState(false)
   const [text, setText] = useState("")
   const [email, setEmail] = useState("")
-
+  const [firstName, setFirstName] = useState("")
+  let deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo, refundedAmount, bookingNumber;
   const handleSend = async (e) => {
-    text2 = "Refunded : " + reservation?.price;
-    console.log(text2);
+    refundedAmount = reservation?.price
+    deptFlightId = fromflight?.flightId
+    retFlightId = toflight?.flightId
+    deptFrom = fromflight?.from
+    deptTo = fromflight?.to
+    retFrom = toflight?.from
+    retTo = toflight?.to
+    bookingNumber = bookingId
+
+    
     setSent(true)
+    
     try {
 
       console.log(email);
       //  BACKEND_URL + "users/search?userId=" + id)
-      await axios.post(BACKEND_URL + "users/send_mail?userId=" + Uid, {
-        text2, to: email
+      await axios.post(BACKEND_URL + "users/send_mail?email=" + emailSearch, {
+        deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo, refundedAmount, bookingNumber, to: email
       })
     } catch (error) {
 
@@ -74,11 +85,12 @@ const ViewSummary = () => {
     getSummary();
 
     axios
-      .get(BACKEND_URL + "users/search?userId=" + Uid)
+      .get(BACKEND_URL + "users/search?email=" + emailSearch)
       .then(res => {
         console.log(res.data);
         setEmail(res.data[0].email);
-        console.log(currEmail);
+        console.log(email);
+        setFirstName(res.data[0].firstName)
 
 
       })
@@ -207,6 +219,7 @@ const ViewSummary = () => {
       })
     setText("Refunded :" + reservation?.price);
     console.log(reservation?.price);
+    console.log(emailSearch);
 
   }
   const getSeatNumber = (i) => {
@@ -280,10 +293,8 @@ const ViewSummary = () => {
         <div className="row">
           <br />
           <div className="col-md-8 m-auto">
-            <h1 className="display-4 text-center">Flights' Record</h1>
-            <p className="lead text-center">
-              View Flights' Info
-            </p>
+            <h1 className="display-4 text-center">{firstName}'s Reservation Details</h1>
+            
             <hr /> <br />
           </div>
         </div>

@@ -55,7 +55,8 @@ const EditUser = () => {
             .then(res => {
                 history.push('/user-details/' + user?._id);
                 console.log(res.data);
-
+                console.log(user);
+                localStorage.setItem('user',JSON.stringify(user))
             })
             .catch(err => {
                 console.log(err);
