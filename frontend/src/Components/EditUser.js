@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField';
 
 import './SearchFlightCriteria.css';   // create one for users
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import UIButton from './UIButton/UIButton';
 
 const EditUser = () => {
     const history = useHistory();
@@ -194,8 +195,20 @@ const EditUser = () => {
 
 
                             <div className='input-group-append'>
-                                <Button style={{ marginRight: "10px" }} onClick={() => history.push('/user-details/' + JSON.parse(localStorage.getItem('user'))?._id)} variant="outlined">Back</Button>
-                                <Button onClick={toggleDialog} variant="outlined" >Edit User</Button>
+                                {/* <Button style={{ marginRight: "10px" }} variant="outlined">Back</Button> */}
+
+                                <UIButton
+                                    onClick={() => history.push('/user-details/' + JSON.parse(localStorage.getItem('user'))?._id)}
+                                    text={"Back"}
+                                    margin="10px"
+                                />
+
+                                <UIButton
+                                    onClick={toggleDialog}
+                                    text={"Edit User"}
+                                    margin="10px"
+                                />
+                                {/* <Button onClick={toggleDialog} variant="outlined" >Edit User</Button> */}
 
                             </div>
                             <div>
@@ -211,7 +224,7 @@ const EditUser = () => {
                                     </DialogTitle>
                                     <DialogActions>
                                         <Button onClick={toggleDialog} variant="text">Cancel </Button>
-                                        <Button onClick={ onSubmit} variant="text" type="submit" color="success" >Confirm Edit</Button>
+                                        <Button onClick={onSubmit} variant="text" type="submit" color="success" >Confirm Edit</Button>
                                     </DialogActions>
                                 </Dialog>
 

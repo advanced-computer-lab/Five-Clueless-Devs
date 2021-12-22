@@ -5,10 +5,7 @@
     color:#fff !important;
     border-color:#599bb3;
     font-weight:bold !important;
-    border-top-left-radius:8px;
-    border-top-right-radius:8px;
-    border-bottom-left-radius:8px;
-    border-bottom-right-radius:8px;
+    border-radius:8px !important;
     box-shadow: 0px 10px 14px -7px #276873;
     text-shadow: 0px 1px 0px #3d768a;
     background:linear-gradient(#599bb3, #408c99);
@@ -20,10 +17,10 @@
   }
   .buttonUnder {
     display: flex;
-    justify-content: center;
-    flex-direction: column;
+    justify-content: space-between;
+    flex-direction: row;
     padding-top: 20px;
-    width: 200px;
+    width: 700px;
     margin: 0 auto;
     margin-bottom: 20px;
   }

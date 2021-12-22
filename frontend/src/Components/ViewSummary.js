@@ -16,13 +16,13 @@ const ViewSummary = () => {
   let Uid = JSON.parse(localStorage.getItem('user'))?._id;
 
   let currEmail = "";
-  let text2="";
+  let text2 = "";
   const [sent, setSent] = useState(false)
   const [text, setText] = useState("")
   const [email, setEmail] = useState("")
 
   const handleSend = async (e) => {
-    text2="Refunded : "+reservation?.price;
+    text2 = "Refunded : " + reservation?.price;
     console.log(text2);
     setSent(true)
     try {
@@ -137,7 +137,7 @@ const ViewSummary = () => {
             tempFromFirst = [...resFrom.data[0].seatsFirst];
             tempFromBusiness = [...resFrom.data[0].seatsBusiness];
 
-            switch (res.data[0].cabin) {
+            switch (res.data[0].cabinDeparture) {
               case "Economy":
                 temp1 = tempFromEconomy;
                 break;
@@ -173,7 +173,7 @@ const ViewSummary = () => {
             temptoFirst = [...resTo.data[0].seatsFirst];
             temptoBusiness = [...resTo.data[0].seatsBusiness];
 
-            switch (res.data[0].cabin) {
+            switch (res.data[0].cabinArrival) {
               case "Economy":
                 temp2 = temptoEconomy;
                 break;
@@ -205,14 +205,41 @@ const ViewSummary = () => {
       .catch(err => {
         console.log(err);
       })
-    setText("Refunded :"+reservation?.price);
-     console.log(reservation?.price);
-     
+    setText("Refunded :" + reservation?.price);
+    console.log(reservation?.price);
+
   }
   const getSeatNumber = (i) => {
     let letter = String.fromCharCode('A'.charCodeAt(0) + i % 6);
     let num = Math.floor(i / 6 + 1);
     return `${num}${letter}`
+  }
+
+  const seatsDeparture = () => {
+    history.push(
+      {
+        pathname: `/editSeats/${reservation?._id}`,
+        state: {
+          flight: fromflight,
+          maxSeats: reservation?.numberOfSeats,
+          cabin: reservation?.cabinDeparture,
+          type: "Departure"  
+        }
+      })
+  }
+
+  const seatsArrival = () => {
+    history.push(
+      {
+        pathname: `/editSeats/${reservation?._id}`,
+        state: {
+          flight: toflight,
+          maxSeats: reservation?.numberOfSeats,
+          cabin: reservation?.cabinArrival,
+          type: "Arrival"  ,
+          reservationId: reservation?._id
+        }
+      })
   }
 
 
@@ -284,7 +311,7 @@ const ViewSummary = () => {
                       <TableCell>  <span className="info-header-font"> Departure Flight ID </span> </TableCell>
                       <TableCell align="right">{fromflight?.flightId}</TableCell>
                     </TableRow>
-                   
+
                     <TableRow>
                       <TableCell>   <span className="info-header-font">Departure Date</span></TableCell>
                       <TableCell align="right">{fromflight?.departureDate?.substring(0, 10)}</TableCell>
@@ -295,7 +322,7 @@ const ViewSummary = () => {
                       <TableCell>  <span className="info-header-font">Arrival Date</span></TableCell>
                       <TableCell align="right">{fromflight?.arrivalDate?.substring(0, 10)}</TableCell>
                     </TableRow>
-                    
+
                     <TableRow>
                       {/* <th scope="row">6</th> */}
                       <TableCell>  <span className="info-header-font">Departure Time </span></TableCell>
@@ -319,9 +346,9 @@ const ViewSummary = () => {
                     <TableRow>
                       {/* <th scope="row">12</th> */}
                       <TableCell>  <span className="info-header-font">Cabin Class</span></TableCell>
-                      <TableCell align="right">{reservation?.cabin}</TableCell>
+                      <TableCell align="right">{reservation?.cabinDeparture}</TableCell>
                     </TableRow>
-                    <TableRow>
+                    <TableRow style={{ cursor: 'pointer' }} onClick={seatsDeparture} title="Click to edit seats">
                       {/* <th scope="row">12</th> */}
                       <TableCell>  <span className="info-header-font">Seats</span></TableCell>
                       <TableCell align="right">{seatsFrom}</TableCell>
@@ -329,6 +356,7 @@ const ViewSummary = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
+            
             </div>
 
             <div className='view-summary-card'>
@@ -353,7 +381,7 @@ const ViewSummary = () => {
                       <TableCell> <span className="info-header-font">Return Flight ID</span></TableCell>
                       <TableCell align="right">{toflight.flightId}</TableCell>
                     </TableRow>
-                
+
                     <TableRow>
                       {/* <th scope="row">4</th> */}
                       <TableCell><span className="info-header-font">Departure Date</span></TableCell>
@@ -388,20 +416,21 @@ const ViewSummary = () => {
                     <TableRow>
                       {/* <th scope="row">12</th> */}
                       <TableCell><span className="info-header-font">Cabin Class</span></TableCell>
-                      <TableCell align="right">{reservation?.cabin}</TableCell>
+                      <TableCell align="right">{reservation?.cabinArrival}</TableCell>
                     </TableRow>
-                    <TableRow>
+                    <TableRow style={{ cursor: 'pointer' }} onClick={seatsArrival}  title="Click to edit seats">
                       {/* <th scope="row">12</th> */}
                       <TableCell><span className="info-header-font">Seats</span></TableCell>
                       <TableCell align="right">{seatsTO}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
+             
               </TableContainer>
+             
             </div>
           </div>
-          <div>Booking Number: <span>{bookingId}</span></div>
-          <div>Total Price: EGP <span>{reservation?.price}</span></div>
+         
         </div>
 
         <div className="row">
@@ -421,6 +450,8 @@ const ViewSummary = () => {
                 to={toflight?.flightId}
                 userid={Uid}
                 cabin={reservation?.cabin}
+                cabinDeparture={reservation?.cabinDeparture}
+                cabinReturn = {reservation?.cabinArrival}
                 reservationId={reservationId}
                 fromflight={fromflight}
                 toflight={toflight}
@@ -432,6 +463,8 @@ const ViewSummary = () => {
                 returnToCountry={toflight?.to}
                 seatCount={seatCount}
                 handleSend={handleSend}
+                bookingId = {bookingId}
+                reservationPrice= {reservation?.price}
               />
 
             </div>

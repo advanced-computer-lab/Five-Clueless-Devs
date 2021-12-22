@@ -33,6 +33,7 @@ import ReservationCancel from './Components/ReservationCancel';
 import Login from './Components/Login';
 import DeptUpdateReservation from './Components/DeptUpdateReservation';
 import RetUpdateReservation from './Components/RetUpdateReservation';
+import EditSeatsOutside from './Components/UpdateSeats/EditSeatsOutside';
 function App() {
 
   return (
@@ -74,6 +75,8 @@ function App() {
           <Route path='/reserve' component={Confirmation} />
           <Route path='/login' component={Login} />
          
+
+          <Route path='/editSeats/:reservationId' component={EditSeatsOutside} />
 
 
         </Switch>
