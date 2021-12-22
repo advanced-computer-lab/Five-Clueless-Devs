@@ -75,6 +75,7 @@ const Summary = (props) => {
         
         //-------------------------------
 
+
         switch (cabin) {
             case "Economy":
                 console.log(numOfSeats)
