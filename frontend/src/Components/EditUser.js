@@ -6,7 +6,7 @@ import { BACKEND_URL } from '../API/URLS';
 import TextField from '@mui/material/TextField';
 
 import './SearchFlightCriteria.css';   // create one for users
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Table, TableBody, TableCell, TableRow } from '@mui/material';
 import UIButton from './UIButton/UIButton';
 
 const EditUser = () => {
@@ -219,13 +219,27 @@ const EditUser = () => {
                                     aria-labelledby="alert-dialog-title"
                                     aria-describedby="alert-dialog-description"
                                 >
-                                    <DialogTitle id="alert-dialog-title">
-                                        {"Are you sure you want to edit this user?"}
-                                    </DialogTitle>
-                                    <DialogActions>
-                                        <Button onClick={toggleDialog} variant="text">Cancel </Button>
-                                        <Button onClick={onSubmit} variant="text" type="submit" color="success" >Confirm Edit</Button>
-                                    </DialogActions>
+                                    <div style={{margin: '0 0 10px 0'}} >
+                                        <DialogTitle id="alert-dialog-title">
+                                            {"Are you sure you want to edit this user?"}
+                                        </DialogTitle>
+                                        <DialogActions>
+                                            {/* <Button onClick={toggleDialog} variant="text">Cancel </Button> */}
+                                            <UIButton
+                                                text={"Cancel"}
+                                                margin="0px 5px"
+                                                color={'red'}
+                                                onClick={toggleDialog}
+                                            />
+                                            {/* <Button onClick={onSubmit} variant="text" type="submit" color="success" >Confirm Edit</Button> */}
+                                            <UIButton
+                                                text={"Confirm Edit"}
+                                                margin="0px 5px"
+                                                onClick={onSubmit}
+                                                color={'green'}
+                                            />
+                                        </DialogActions>
+                                    </div>
                                 </Dialog>
 
                             </div>

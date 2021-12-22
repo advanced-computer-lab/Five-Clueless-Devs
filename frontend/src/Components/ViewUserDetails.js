@@ -3,9 +3,10 @@ import { Link, useParams, useHistory } from 'react-router-dom';
 import '../App.css';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 import "./FlightCard.css";
 import UIButton from './UIButton/UIButton';
+import './ViewUserDetails.css'
 
 
 const ViewUserDetails = () => {
@@ -107,69 +108,57 @@ const ViewUserDetails = () => {
         </div>
         <div>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <Table sx={{ maxWidth: 500 }} className="table table-hover table-dark">
-              {/* <thead>
-          <TableRow>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
-          </TableRow>
-        </thead> */}
-              <TableBody>
-                <TableRow>
-                  {/* <th scope="row">1</th> */}
-                  <TableCell>User ID</TableCell>
-                  <TableCell>{user?._id}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">2</th> */}
-                  <TableCell>Username</TableCell>
-                  <TableCell>{user?.username}</TableCell>
-                </TableRow>
-                {/* <TableRow>
-                  
-                  <TableCell>password</TableCell>
-                  <TableCell>{user?.password}</TableCell>
-                </TableRow> */}
-                <TableRow>
-                  {/* <th scope="row">4</th> */}
-                  <TableCell>Email</TableCell>
-                  <TableCell>{user?.email}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">1</th> */}
-                  <TableCell>First Name</TableCell>
-                  <TableCell>{user?.firstName}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">1</th> */}
-                  <TableCell>Last Name</TableCell>
-                  <TableCell>{user?.lastName}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">1</th> */}
-                  <TableCell>Home Address</TableCell>
-                  <TableCell>{user?.homeAddress}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">1</th> */}
-                  <TableCell>Telephone Number</TableCell>
-                  <TableCell>{user?.telephone}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">1</th> */}
-                  <TableCell>Passport Number</TableCell>
-                  <TableCell>{user?.passportNumber}</TableCell>
-                </TableRow>
+            <div className='view-user-card'>
+              <TableContainer component={Paper}>
+                <Table sx={{ maxWidth: 500 }} className="table table-hover table-dark">
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>User ID</TableCell>
+                      <TableCell align="right">{user?._id}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Username</TableCell>
+                      <TableCell align="right">{user?.username}</TableCell>
+                    </TableRow>
 
-                {/* <th scope="row">4</th> */}
+                    <TableRow>
+                      <TableCell><span className="info-header-font">Email </span></TableCell>
+                      <TableCell align="right">{user?.email}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell><span className="info-header-font">First Name </span></TableCell>
+                      <TableCell align="right">{user?.firstName}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell><span className="info-header-font">Last Name </span></TableCell>
+                      <TableCell align="right">{user?.lastName}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      {/* <th scope="row">1</th> */}
+                      <TableCell><span className="info-header-font">Home Address </span></TableCell>
+                      <TableCell align="right">{user?.homeAddress}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      {/* <th scope="row">1</th> */}
+                      <TableCell><span className="info-header-font">Telephone Number </span></TableCell>
+                      <TableCell align="right">{user?.telephone}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      {/* <th scope="row">1</th> */}
+                      <TableCell><span className="info-header-font">Passport Number </span></TableCell>
+                      <TableCell align="right">{user?.passportNumber}</TableCell>
+                    </TableRow>
+
+                    {/* <th scope="row">4</th> */}
 
 
 
-              </TableBody>
-            </Table>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
           </div>
+
         </div>
 
         <div className="row">

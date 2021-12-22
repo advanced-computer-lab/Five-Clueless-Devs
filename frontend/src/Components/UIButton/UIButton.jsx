@@ -1,14 +1,19 @@
 import './UIButton.css'
-const UIButton = ({ onClick, text, margin, color }) => {
+const UIButton = ({ onClick, text, margin, color, type }) => {
 
+    if(!type){
+        type = 'button';
+    }
     return (
         <>
             <button
                 style={{ margin: margin }}
                 className={`buttonClassUI ${color == 'red' ? 'btn-red' : null} ${color == 'green' ? 'btn-green' : null}`}
                 type="button"
-                onClick={onClick}>
-                {text}
+                onClick={onClick}
+                type = {type}
+                >
+                {text.toUpperCase()}
             </button>
         </>
     );

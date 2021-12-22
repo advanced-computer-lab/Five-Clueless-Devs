@@ -4,6 +4,7 @@ import '../App.css';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import UIButton from './UIButton/UIButton';
 
 
 const Confirmation = () => {
@@ -11,7 +12,7 @@ const Confirmation = () => {
    const from = props.from;
    const too = props.to;
    const cabinClass = props.cabin;*/
-  
+
   let Uid = JSON.parse(localStorage.getItem('user'))?._id;
   let from = 79;
   let too = 8;
@@ -207,7 +208,12 @@ const Confirmation = () => {
   };
   return (
     <div>
-      <Button variant="outlined" onClick={onSubmit}>Confirm</Button>
+      {/* <Button variant="outlined" ></Button> */}
+      <UIButton
+        onClick={onSubmit}
+        text={"Confirm"}
+        margin="10px"
+      />
     </div>
     /*  <div>
              <Dialog
