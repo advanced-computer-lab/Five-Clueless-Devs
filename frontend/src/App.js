@@ -28,6 +28,8 @@ import ViewSummary from './Components/ViewSummary';
 import Confirmation from './Components/Confirmation';
 import ReservationCancel from './Components/ReservationCancel';
 import Login from './Components/Login';
+import StripeCheckout from "react-stripe-checkout";
+import Payment from './Components/Payment';
 function App() {
 
   return (
@@ -66,6 +68,7 @@ function App() {
           <Route path='/Resrevation-cancel' component={ReservationCancel} />
           <Route path='/reserve' component={Confirmation} />
           <Route path='/login' component={Login} />
+          <Route path='/pay' component={Payment} />
 
 
         </Switch>
