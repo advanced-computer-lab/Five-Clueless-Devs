@@ -13,6 +13,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 import UIButton from './UIButton/UIButton';
+import StripeCheckout from 'react-stripe-checkout';
 
 const ResUpdateSummary = (props) => {
     const flight = props.flight;
@@ -28,6 +29,17 @@ const ResUpdateSummary = (props) => {
         console.log(props.newCabin);
         console.log(props.oldCabin);
     })
+
+    const [reservation, setReservation] = useState(null)
+    useEffect(() => {
+        axios.get(BACKEND_URL + "reservations/GetReservation?_id=" + props.reservationId)
+            .then(res => {
+                setReservation(res.data[0]);
+                console.log(reservation)
+            })
+            .catch(err => console.log(err))
+    }, []);
+
 
     const history = useHistory();
     // const handleClick = () => {
@@ -46,20 +58,12 @@ const ResUpdateSummary = (props) => {
         createData('Flight Number', props.selectedDeptFlightId),
         createData('Departure Date and Time', props.deptFlightDeptTime + "   ,   " + props.deptFlightDeptDate.substring(0, 10)),
         createData('Arrival Date and Time', props.deptFlightArrivalTime + "  ,   " + props.deptFlightArrivalDate.substring(0, 10)),
-
-
-
-
     ];
 
     const rowsR = [
         createData('Flight Number', props.retFlightId),
         createData('Departure Date and Time', props.retFlightDeptTime + "   ,   " + props.retFlightDeptDate.substring(0, 10)),
         createData('Arrival Date and Time', props.retFlightArrivalTime + "  ,   " + props.retFlightArrivalDate.substring(0, 10)),
-
-
-
-
     ];
 
 
@@ -68,10 +72,10 @@ const ResUpdateSummary = (props) => {
         if (props.priceToDisplay <= 0) {
 
 
-            rows.push(createData('Additional Fee', Math.abs(props.priceToDisplay)))
+            rows.push(createData('Additional Fee', Math.abs(props.priceToDisplay).toFixed(0)))
         }
         else {
-            rows.push(createData('Amount to be refunded', (props.priceToDisplay)))
+            rows.push(createData('Amount to be refunded', (props.priceToDisplay).toFixed(0)))
         }
         priceToFinalDisplay = props.priceToDisplay;
         rowsR.push(createData('Additional Fee', 0))
@@ -82,11 +86,11 @@ const ResUpdateSummary = (props) => {
 
         if (props.priceToDisplayRet <= 0) {
 
-            rowsR.push(createData('Additional Fee', Math.abs(props.priceToDisplayRet)))
+            rowsR.push(createData('Additional Fee', Math.abs(props.priceToDisplayRet).toFixed(0)))
         }
         else {
 
-            rowsR.push(createData('Amount to be refunded', (props.priceToDisplayRet)))
+            rowsR.push(createData('Amount to be refunded', (props.priceToDisplayRet).toFixed(0)))
         }
         priceToFinalDisplay = props.priceToDisplayRet;
         rows.push(createData('Additional Fee', 0))
@@ -101,6 +105,44 @@ const ResUpdateSummary = (props) => {
             toggleDialog();
         } else {
             history.push('/login');
+        }
+    }
+
+
+    const getPrice = () => {
+        if (window.location.href.includes("Dept")) {
+            return Math.abs(props.priceToDisplay);
+        } else {
+            return Math.abs(props.priceToDisplayRet);
+        }
+    }
+
+
+    const makePayment = () => {
+        let price = 0;
+        if (window.location.href.includes("Dept")) {
+            price = props.priceToDisplay;
+        } else {
+            price = props.priceToDisplayRet;
+        }
+
+        if (price <= 0) {
+            //pay extra
+        } else {
+            //refund
+            console.log(reservation)
+            const body = {
+                // token: token,
+                amount: price,
+                chargeId: reservation.chargeId
+            }
+            console.log(body)
+            axios.post('http://localhost:8082/refund', body)
+                .then(response => {
+                    console.log("RESPONSE", response.data);
+                    onConfirm();
+                })
+                .catch(err => console.log(err));
         }
     }
 
@@ -383,8 +425,8 @@ const ResUpdateSummary = (props) => {
                     </Table>
                 </TableContainer>
 
-                {(priceToFinalDisplay) <= 0 ? <div>Additional Fee: <p style={{ color: "red" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(priceToFinalDisplay)}</span></p> </div> :
-                    <div>Amount to be refunded: <p style={{ color: "green" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(priceToFinalDisplay)}</span></p> </div>}
+                {(priceToFinalDisplay) <= 0 ? <div>Additional Fee: <p style={{ color: "red" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(priceToFinalDisplay).toFixed(0)}</span></p> </div> :
+                    <div>Amount to be refunded: <p style={{ color: "green" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(priceToFinalDisplay).toFixed(0)}</span></p> </div>}
                 <p className="passenger-font">(for {props.seatCount} passengers)</p>
 
                 <button className="confirm-res" onClick={clickConfirm}>Confirm Reservation</button>
@@ -408,13 +450,20 @@ const ResUpdateSummary = (props) => {
                                 text={"back"}
                                 margin="10px"
                             />
-
-                            <UIButton
-                                onClick={onConfirm}
-                                text={"Confirm Reservation"}
-                                margin="10px"
-                                color="green"
-                            />
+                            {/* <StripeCheckout
+                                stripeKey="pk_test_51K9D6UA32Adg2XeIayrvPhQ3Y97itWgoKPGMDyhxforRJofQ1DmX0G66AUBJp2USDguA6DP5KAKireIv4DwbmYSh00oxYvRo7K"
+                                token={makePayment}
+                                name="Buy Ticket"
+                                amount={getPrice() * 100}
+                                email={JSON.parse(localStorage.getItem('user'))?.email}
+                            > */}
+                                <UIButton
+                                    onClick={makePayment}
+                                    text={"Pay/Refund"}
+                                    margin="10px"
+                                    color="green"
+                                />
+                            {/* </StripeCheckout> */}
 
                         </DialogActions>
                     </Dialog>
