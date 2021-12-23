@@ -31,7 +31,7 @@ const Navbar = () => {
           <Button className="admin" color="inherit" onClick={(e) => history.push('/')}>Search for Flights</Button>
         </div>
 
-        {userId == 1 ? <div className="ayesm">
+        {JSON.parse(localStorage.getItem('user'))?.isAdmin? <div className="ayesm">
           <Button color="inherit" onClick={(e) => history.push('/admin-search')}> Admin Panel</Button>
           <Button color="inherit" onClick={(e) => history.push('/flight-schedule')}>Flight Schedule</Button>
           <Button color="inherit" onClick={(e) => history.push('/create-flight')}>Add Flight</Button>

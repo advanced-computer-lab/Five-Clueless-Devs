@@ -55,8 +55,14 @@ const ReservationCancel = (props) => {
     setConfirm(!showConfirm);
   }
 
-  useEffect(() => {
 
+  const [reservation, setReservation] = useState({});
+  useEffect(() => {
+    axios.get(BACKEND_URL + "reservations/GetReservation?_id=" + reservationID)
+      .then(res => {
+        setReservation(res.data[0]);
+        console.log(res.data[0])
+      }).catch(err => console.log(err));
   }, []);
 
 
@@ -135,7 +141,19 @@ const ReservationCancel = (props) => {
             axios
               .delete(BACKEND_URL + "reservations/cancelReservation?_id=" + reservationID)
               .then(res => {
-                history.push("/Reserved-flights");
+                console.log(reservation?.chargeId)
+                reservation?.chargeId.forEach(cId => {
+                  const body = {
+                    chargeId: cId
+                  }
+                  console.log(body)
+                  axios.post('http://localhost:8082/api/payments/refund', body)
+                    .then(response => {
+                      console.log("RESPONSE", response.data);
+                      history.push("/Reserved-flights");
+                    })
+                    .catch(err => console.log(err));
+                })
               })
               .catch(err => {
                 console.log("Error form Cancel Resrevation");

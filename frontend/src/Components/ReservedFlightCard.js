@@ -87,7 +87,7 @@ const ReservedFlightCard = (props) => {
 
     //     </div>
     // )
-    <div className="card-containerRes">
+    <div className="card-containerRes" onClick={handleClick} >
             {/* <img src="https://www.google.com/imgres?imgurl=https%3A%2F%2Fetraveltech.com%2Fwp-content%2Fuploads%2F2021%2F09%2FMW-HE536_airpla_20190225131547_ZH.jpg&imgrefurl=https%3A%2F%2Fetraveltech.com%2Fcheap-flights-cairo-from-to-hurghada%2F&tbnid=-LhKiDUJLgmoMM&vet=12ahUKEwjz18q7vf_zAhXiMewKHadADmkQMygDegUIARDNAQ..i&docid=0R9RSPJABoN1lM&w=890&h=501&q=flight&ved=2ahUKEwjz18q7vf_zAhXiMewKHadADmkQMygDegUIARDNAQ" alt="" />
             <div className="desc">
                 <h2>
@@ -99,7 +99,7 @@ const ReservedFlightCard = (props) => {
                 <p>{flight.to}</p>
             </div> */}
 
-            <div className="flight-card-searchRes" onClick={handleClick} >
+            <div className="flight-card-searchRes">
                 <div className="flight-card-left" >
                     <div className="head-card head-card2">
                         <p className="flight-card-head-type">Departure</p>

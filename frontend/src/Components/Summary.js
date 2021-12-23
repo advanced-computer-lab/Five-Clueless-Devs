@@ -67,7 +67,6 @@ const Summary = (props) => {
         productBy: "FiveCluelessDevs"
     })
    
-   
     let payment = null;
     const makePayment = token => {
         const body = {
@@ -75,7 +74,7 @@ const Summary = (props) => {
             product
         }
 
-        axios.post('http://localhost:8082/payment', body)
+        axios.post('http://localhost:8082/api/payments/payment', body)
             .then(response => {
                 console.log("RESPONSE", response.data);
                 payment = response.data;
@@ -145,7 +144,7 @@ const Summary = (props) => {
                             numberOfSeats: numOfSeats,
                             cabinDeparture: cabin,
                             cabinArrival: cabin,
-                            chargeId: payment?.id
+                            chargeId: [payment?.id]
                         }
                         axios
                             .post(BACKEND_URL + "reservations/createReservation", data)

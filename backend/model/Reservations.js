@@ -32,7 +32,7 @@ const ReservationSchema = new mongoose.Schema({
     type:String,
   },
   chargeId:{
-    type:String
+    type:[String]
   }
 });
 

@@ -31,11 +31,32 @@ const ResUpdateSummary = (props) => {
     })
 
     const [reservation, setReservation] = useState(null)
+    const [charges, setCharges] = useState([]); //[{id: cid, amount: amount left} ]
+    // let payment = [];
+
+    const [payment, setPayment] = useState([]);
+
     useEffect(() => {
+        console.table(payment);
+    }, [payment])
+
+    useEffect(() => {
+        let c = [];
         axios.get(BACKEND_URL + "reservations/GetReservation?_id=" + props.reservationId)
             .then(res => {
                 setReservation(res.data[0]);
                 console.log(reservation)
+                setPayment([...res.data[0].chargeId]);
+
+                res.data[0].chargeId.forEach((cId, index) => {
+                    axios.post(BACKEND_URL + "payments/retrieve", { chargeId: cId })
+                        .then((charge) => {
+                            c[index] = { id: cId, amount: charge.data.amount_captured / 100 };
+                            setCharges(c);
+                            console.log(c);
+                        })
+                        .catch(err => console.log(err))
+                })
             })
             .catch(err => console.log(err))
     }, []);
@@ -118,7 +139,7 @@ const ResUpdateSummary = (props) => {
     }
 
 
-    const makePayment = () => {
+    const makePayment = (token) => {
         let price = 0;
         if (window.location.href.includes("Dept")) {
             price = props.priceToDisplay;
@@ -128,27 +149,68 @@ const ResUpdateSummary = (props) => {
 
         if (price <= 0) {
             //pay extra
-        } else {
-            //refund
-            console.log(reservation)
-            const body = {
-                // token: token,
-                amount: price,
-                chargeId: reservation.chargeId
+
+            const product = {
+                name: `Ticket between ${props.deptFrom} & ${props.deptTo} for user ${userId}`,
+                price: Math.abs(price), ///price of ticket from input //remove hardcode
+                productBy: "FiveCluelessDevs"
             }
-            console.log(body)
-            axios.post('http://localhost:8082/refund', body)
+            const body = {
+                token,
+                product
+            }
+            axios.post('http://localhost:8082/api/payments/payment', body)
                 .then(response => {
                     console.log("RESPONSE", response.data);
-                    onConfirm();
+                    let paymentId = response.data.id;
+                    setPayment(payment.concat([paymentId]))
+                    let payArray = payment.concat([paymentId]);
+                    onConfirm(null, payArray);
                 })
                 .catch(err => console.log(err));
+
+
+        } else {
+            //refund
+            let amountLeft = price;
+            charges.forEach(c => {
+                if (amountLeft > 0 && c.amount > 0) {
+                    if (c.amount >= amountLeft) {
+                        const body = {
+                            amount: amountLeft,
+                            chargeId: c.id
+                        }
+                        console.log(body)
+                        axios.post('http://localhost:8082/api/payments/refund', body)
+                            .then(response => {
+                                console.log("RESPONSE", response.data);
+                                onConfirm();
+                            })
+                            .catch(err => console.log(err));
+
+                        amountLeft = 0;
+                    } else {
+                        const body = {
+                            amount: c.amount,
+                            chargeId: c.id
+                        }
+                        console.log(body)
+                        axios.post('http://localhost:8082/api/payments/refund', body)
+                            .then(response => {
+                                console.log("RESPONSE", response.data);
+                            })
+                            .catch(err => console.log(err));
+                        amountLeft = amountLeft - c.amount;
+                    }
+                }
+            })
+
         }
     }
 
 
 
-    const onConfirm = (e) => {
+    const onConfirm = (e, payArray) => {
         let numOfAdults = props.numOfAdults
         let numOfChildren = props.numOfChildren;
         let numOfSeats = numOfAdults * 1 + numOfChildren * 1;
@@ -166,6 +228,10 @@ const ResUpdateSummary = (props) => {
         let retFlightOld = props.retFlightOld;
         let newCabin = props.newCabin;
         let oldCabin = props.oldCabin;
+
+        if (!payArray) {
+            payArray = payment;
+        }
 
 
 
@@ -268,7 +334,7 @@ const ResUpdateSummary = (props) => {
         console.table(deptFlightOld);
 
 
-
+        console.table(payArray);
         if (window.location.href.includes("Ret")) {
             axios
                 .put(BACKEND_URL + 'flights/update?flightId=' + retFlight?.flightId, retFlight)
@@ -281,11 +347,11 @@ const ResUpdateSummary = (props) => {
                             console.log(res.data);
 
                             const data = {
-
                                 to: retFlight?.flightId,
                                 cabin: cabin,
                                 price: priceOfDept + priceOfRet,
-                                cabinArrival: cabin
+                                cabinArrival: cabin,
+                                chargeId: payArray
                             }
                             axios
                                 .put(BACKEND_URL + "reservations/update?_id=" + reservationId, data)
@@ -326,7 +392,8 @@ const ResUpdateSummary = (props) => {
                                 from: deptFlight?.flightId,
                                 cabin: cabin,
                                 price: priceOfDept + priceOfRet,
-                                cabinDeparture: cabin
+                                cabinDeparture: cabin,
+                                chargeId: payArray
                             }
                             axios
                                 .put(BACKEND_URL + "reservations/update?_id=" + reservationId, data)
@@ -442,29 +509,35 @@ const ResUpdateSummary = (props) => {
                             {"Are you sure you want to confirm the reservation?"}
                         </DialogTitle>
                         <DialogActions>
-                            {/* <Button onClick={toggleDialog} variant="text">back </Button> */}
-                            {/* <Button onClick={onConfirm} variant="text" color="success">Confirm Reservation</Button> */}
 
                             <UIButton
                                 onClick={toggleDialog}
                                 text={"back"}
                                 margin="10px"
                             />
-                            {/* <StripeCheckout
-                                stripeKey="pk_test_51K9D6UA32Adg2XeIayrvPhQ3Y97itWgoKPGMDyhxforRJofQ1DmX0G66AUBJp2USDguA6DP5KAKireIv4DwbmYSh00oxYvRo7K"
-                                token={makePayment}
-                                name="Buy Ticket"
-                                amount={getPrice() * 100}
-                                email={JSON.parse(localStorage.getItem('user'))?.email}
-                            > */}
+
+                            {(priceToFinalDisplay) <= 0 ?
+                                <StripeCheckout
+                                    stripeKey="pk_test_51K9D6UA32Adg2XeIayrvPhQ3Y97itWgoKPGMDyhxforRJofQ1DmX0G66AUBJp2USDguA6DP5KAKireIv4DwbmYSh00oxYvRo7K"
+                                    token={makePayment}
+                                    name="Buy Ticket"
+                                    amount={getPrice() * 100}
+                                    email={JSON.parse(localStorage.getItem('user'))?.email}
+                                >
+                                    <UIButton
+                                        onClick={makePayment}
+                                        text={"Confirm & Pay"}
+                                        margin="10px"
+                                        color="green"
+                                    />
+                                </StripeCheckout>
+                                :
                                 <UIButton
                                     onClick={makePayment}
-                                    text={"Pay/Refund"}
+                                    text={"Confirm & Refund"}
                                     margin="10px"
                                     color="green"
-                                />
-                            {/* </StripeCheckout> */}
-
+                                />}
                         </DialogActions>
                     </Dialog>
                 </div>
