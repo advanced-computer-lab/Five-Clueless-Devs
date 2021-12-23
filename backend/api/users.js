@@ -88,6 +88,88 @@ router.post('/send_mail', cors(), async (req, res) => {
     //console.log("Message sent: %s", info.messageId);  
 })
 
+router.post('/send_mailRes', cors(), async (req, res) => {
+
+  let { deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo, refundedAmount, bookingNumber,
+    departureDateDep,arrivalDateDep,departureTimeDep,arrivalTimeDep,departureTerminalDep,arrivalTerminalDep,cabinClassDep,seatsDep,
+    departureDateRet,arrivalDateRet,departureTimeRet,arrivalTimeRet,departureTerminalRet,arrivalTerminalRet,cabinClassRet,seatsRet,
+    firstName,lastName,
+    to } = req.body
+  const transport = nodemailer.createTransport({
+    host: process.env.MAIL_HOST,
+    port: process.env.MAIL_PORT,
+    auth: {
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASS
+    }
+
+  })
+
+  await transport.sendMail({
+    from: process.env.MAIL_FROM,
+    to: to,
+    subject: "Itinerary ",
+    html: `
+  
+    
+    <div className="email" style="
+        border: 1px solid black;
+        padding: 20px;
+        font-family: sans-serif;
+        line-height: 2;
+        font-size: 20px; 
+        ">
+        <h1 > <span style="color:#59B39E; font-size:25px">Clueless Pilots Aviation</span></h1>
+        <h2> <span style="font-style:italic"> Dear ${firstName} ${lastName}, this email is sent to you per your request with a copy of your itinerary found below. </span> </h2>
+        <hr>
+        <hr>
+        <h2 style="fontStyle:italic;">Departure Flight:</h2>
+
+       
+        <div>
+        
+        
+        <p>Flight ID: ${deptFlightId}</p>
+        <p>From: ${deptFrom}</p>
+        <p>To: ${deptTo}</p>
+        <p>Departure Date: ${departureDateDep}</p>
+        <p>Arrival Date: ${arrivalDateDep}</p>
+        <p>Departure Time: ${departureTimeDep}</p>
+        <p>Arrival Time: ${arrivalTimeDep}</p>
+        <p>Departure Terminal: ${departureTerminalDep}</p>
+        <p>Arrival Terminal: ${arrivalTerminalDep}</p>
+        <p>Cabin Class: ${cabinClassDep}</p>
+        <p>Seats: ${seatsDep}</p>
+        <p></p>
+        </div>
+        <hr>
+        <hr>
+        <h2>Return Flight</h2>
+        
+        <div>
+        <p>Flight ID: ${retFlightId}</p>
+        <p>From: ${retFrom}</p>
+        <p>To: ${retTo}</p>
+        <p>Departure Date: ${departureDateRet}</p>
+        <p>Arrival Date: ${arrivalDateRet}</p>
+        <p>Departure Time: ${departureTimeRet}</p>
+        <p>Arrival Time: ${arrivalTimeRet}</p>
+        <p>Departure Terminal: ${departureTerminalRet}</p>
+        <p>Arrival Terminal: ${arrivalTerminalRet}</p>
+        <p>Cabin Class: ${cabinClassRet}</p>
+        <p>Seats: ${seatsRet}</p>
+        <p></p>
+        </div>
+        <hr>
+        <h3> Booking Number: <span style="font-size:25px; color:blue">
+        ${bookingNumber}</span> </h3>
+    
+        <p>Thank you for choosing Clueless Pilots Airlines. Have a safe flight!</p>
+         </div>
+    `})
+  //console.log("Message sent: %s", info.messageId);  
+})
+
 
 router.put('/update', authenticateToken, (req, res) => {
     let { userId } = req.body
