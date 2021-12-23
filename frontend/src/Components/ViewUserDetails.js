@@ -5,6 +5,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
 import "./FlightCard.css";
+import UIButton from './UIButton/UIButton';
 
 
 const ViewUserDetails = () => {
@@ -181,16 +182,28 @@ const ViewUserDetails = () => {
             </Link>
             <br /> */}
 
-            <Button
+            <UIButton
+              onClick={() => history.push(`/edit-user/${id}`)}
+              text={"Edit Information "}
+              margin="10px"
+            />
+
+            {/* <Button
               onClick={() => history.push(`/edit-user/${id}`)}
               variant="outlined"
               style={{ marginRight: "10px" }}
-            > Edit Information </Button>
-            <Button
+            > Edit Information </Button> */}
+            {/* <Button
               onClick={() => history.push(`/Reserved-flights`)}
               variant="outlined"
               style={{ marginRight: "10px" }}
-            > View Reservations </Button>
+            > View Reservations </Button> */}
+
+            <UIButton
+              onClick={() => history.push(`/Reserved-flights`)}
+              text={"View Reservations"}
+              margin="10px"
+            />
 
             {/*showDelete ? <Button onClick={setConfirmButton} variant="outlined" color="error">Delete </Button> : null*/}
             {/* {showConfirm ? <Button onClick={onDeleteConfirm} variant="outlined" color="error">Confirm</Button> : null} */}

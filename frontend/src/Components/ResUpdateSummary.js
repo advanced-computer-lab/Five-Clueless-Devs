@@ -172,7 +172,7 @@ let priceToFinalDisplay = 0;
                 else if (window.location.href.includes("Ret")) {
                     let retSeatsOld = retFlightOld.seatsBusiness;
                     retSeatsOld = retSeatsOld.map((s) => (s == userId) ? null : s)
-                    // retFlight = { flightId: retFlight.flightId, availableBusiness: retFlight.availableBusiness - numOfSeats };
+                    //  retFlight = { flightId: retFlight.flightId, availableBusiness: retFlight.availableBusiness - numOfSeats };
                     retFlightOld = { flightId : retFlightOld.flightId, availableBusiness: retFlightOld.availableBusiness + numOfSeats, seatsBusiness: retSeatsOld };
                 }
                 break;
