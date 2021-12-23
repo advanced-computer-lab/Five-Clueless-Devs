@@ -19,11 +19,18 @@ import FlightSeats from './FlightSeats/FlightSeats';
 import { set } from 'mongoose';
 import { useHistory } from "react-router";
 import "./Itinerary.css";
+import CardActions from '@mui/material/CardActions';
+import CardMedia from '@mui/material/CardMedia';
+import pyramids from '../assets/great-pyramid.jpg'
+import newYork from '../assets/New_york.jpg'
+import dubai from '../assets/Dubai.jpg'
+import SwipeableTextMobileStepper from './SwipeableTextMobileStepper';
+
 
 
 
 const SearchFlightUser = ({ location }) => {
-     const history = useHistory();
+    const history = useHistory();
     // useState hooks for input and language
 
     const moment = require('moment')
@@ -309,7 +316,7 @@ const SearchFlightUser = ({ location }) => {
         } else {
             setErrorSame("");
         }
-        
+
         if (returnDate && flight.departureDate && flight.departureDate > returnDate) {
             // alert("Departure date cannot be later than return date")
             setErrorDate("Departure date cannot be later than return date")
@@ -589,8 +596,61 @@ const SearchFlightUser = ({ location }) => {
                                         )}
                                     </div>
 
+                                    <div class="strike" style={{marginTop:'40px'}}>
+                                        <span>Popular Destinations</span>
+                                    </div>
 
+                                    <div style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', justifyContent: 'space-around', width: '100%', }}>
+                                        <Card sx={{ maxWidth: 300, maxHeight: 500, marginTop: '90px', marginBottom: '90px' }}>
+                                            <CardMedia
+                                                component="img"
+                                                alt="Egyptian Pyramids"
+                                                height="300"
+                                                src={pyramids}
+                                            />
+                                            <CardContent>
+                                                <Typography gutterBottom variant="h9" component="div">
+                                                    Cairo, Egypt
+                                                </Typography>
 
+                                            </CardContent>
+
+                                        </Card>
+                                        <Card sx={{ maxWidth: 300, maxHeight: 500, marginTop: '90px', marginBottom: '90px' }}>
+                                            <CardMedia
+                                                component="img"
+                                                alt="New York"
+                                                height="300"
+                                                src={newYork}
+                                            />
+                                            <CardContent>
+                                                <Typography gutterBottom variant="h9" component="div">
+                                                    New York, United States
+                                                </Typography>
+
+                                            </CardContent>
+
+                                        </Card>
+                                        <Card sx={{ maxWidth: 300, maxHeight: 500, marginTop: '90px', marginBottom: '90px' }}>
+                                            <CardMedia
+                                                component="img"
+                                                alt="Burj Khalifa"
+                                                height="300"
+
+                                                src={dubai}
+                                            />
+                                            <CardContent>
+                                                <Typography gutterBottom variant="h9" component="div">
+                                                    Dubai, United Arab Kingdom
+                                                </Typography>
+
+                                            </CardContent>
+
+                                        </Card>
+
+                                        <p style={{ color: '#59B39E', fontSize: '30px', fontWeight: 'bold' }}>AND MORE...</p>
+                                        <SwipeableTextMobileStepper />
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -666,7 +726,7 @@ const SearchFlightUser = ({ location }) => {
                                         passRetTo={setRetFlightTo} passRetDuration={setRetFlightDuration} passRetFlightDeptTime={setRetFlightDeptTime}
                                         passRetFlightArrivalTime={setRetFlightArrivalTime} passRetFlightPrice={setRetPrice} passRetFlightDate={setRetDeptDate}
                                         passRetFlightArrivalDate={setRetArrivalDate} passSelectedRetFlight={setSelectedRetFlight} />
-                                ) 
+                                )
                                 :
                                 <div className="no-search">
                                     <img src="https://img.icons8.com/external-kiranshastry-gradient-kiranshastry/64/000000/external-search-airport-kiranshastry-gradient-kiranshastry.png" />
@@ -1051,7 +1111,7 @@ const SearchFlightUser = ({ location }) => {
                     bookingNum={bookingNum}
 
                 />
-                <div><button className="confirm-res" style={{marginBottom:"20px"}} onClick={(e) => history.push('/Reserved-flights')}>View Reservations</button></div>
+                    <div><button className="confirm-res" style={{ marginBottom: "20px" }} onClick={(e) => history.push('/Reserved-flights')}>View Reservations</button></div>
 
                 </div>
 

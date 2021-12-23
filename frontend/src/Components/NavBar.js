@@ -20,7 +20,7 @@ const Navbar = () => {
       <Toolbar >
        
       {<img style={{width:'35px', marginRight:'5px' }} src="https://img.icons8.com/fluency-systems-regular/48/000000/air-pilot-hat.png" />}
-        <p style={{ color: '#59B39E', fontWeight: 'bolder', fontSize: '30px', marginBottom:'4px', marginRight:'300px'}}>Clueless Pilots</p>
+        <p style={{ color: '#59B39E', fontWeight: 'bolder', fontSize: '30px', marginBottom:'4px', marginRight:'300px', }}>Clueless Pilots</p>
         {userId ? <Button className="admin" color="inherit" onClick={(e) => history.push('/user-details/' + JSON.parse(localStorage.getItem('user'))?._id)}>View Profile</Button> : null}
         {userId ? <Button className="admin" color="inherit" onClick={(e) => history.push('/Reserved-flights')}>View Reservations</Button> : null}
         <Button className="admin" color="inherit" onClick={(e) => history.push('/')}>Search for Flights</Button>
