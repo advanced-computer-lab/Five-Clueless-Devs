@@ -128,6 +128,27 @@ router.post("/login" , (req, res) => {
           }  });
     });
   });
+router.put('/changePass',async(req,res)=>{
+  console.log("here");
+  const currUser = req.body.userId;
+  console.log(req.body.userId)
+  User.findOne({ userId:currUser }).then((user) => {
+    //console.log(user);
+    bcrypt
+      .compare(currUser.oldpassword, user.password)
+      .then((isCorrect) => {
+        if (isCorrect) {
+          let newpassword=await bcrypt.hash(req.body.Newpassword,10)
+          User.findOneAndUpdate({userId:user.userId},newpassword)
+          .then(res.status(200).json("updated succesfully"))
+          .catch(err =>
+          res.status(400).json({ error: 'Unable to update the Database' })
+);
+        } else {
+          res.json({ message: "Invalid email or Password" });
+        }  });
+  });
+});
 
 
 
