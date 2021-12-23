@@ -4,6 +4,7 @@ import { BACKEND_URL } from '../API/URLS'
 import axios from 'axios';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
 
@@ -57,6 +58,8 @@ const Login = () => {
 					/>
 					<br />
 					<input type="submit" value="Login" />
+					<br />
+					<Link to="/Register"> Don't have an account? Sign Up! </Link>
 				</form>
 			</div>
 
