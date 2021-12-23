@@ -22,6 +22,8 @@ import "./Itinerary.css";
 import { useLocation } from "react-router-dom";
 import RetFlightCardEdit from './RetFlightCardEdit';
 import ResUpdateSummary from './ResUpdateSummary';
+import UpdateSeats from './UpdateSeats/UpdateSeats';
+import ItineraryUpdate from './ItineraryUpdate';
 
 
 
@@ -38,6 +40,9 @@ const RetUpdateReservation = props => {
     const seatCount = location.state.seatNum;
     const cabin = location.state.cabin;
     const reservationID = location.state.reservationId
+    const cabinReturn = location.state.cabinReturn;
+    const cabinDeparture = location.state.cabinDeparture;
+    const chosenFromSeat= location.state.chosenFromSeat
 
     //const numSeats = location.state.numberOfFromSeats; //add got seats here
     const numSeats = 1;
@@ -54,7 +59,7 @@ const RetUpdateReservation = props => {
     }
 
     const steps = [
-        'Search & Update Departure Flight',
+        'Search & Update Return Flight',
         'View Summary',
         'Select Seats',
         'View Your Itinerary',
@@ -105,7 +110,7 @@ const RetUpdateReservation = props => {
     const [retSeats, setRetSeats] = useState([]);
     //info used in this component
     const [view, setView] = useState(1);
-    const [chosenClass, setClass] = useState('Economy');
+    const [chosenClass, setClass] = useState(cabinReturn.cabinReturn);
     const [returnDate, setReturnDate] = useState('');
     const [adultsNumber, setAdultNumber] = useState(1);
     const [childNumber, setChildNumber] = useState(0);
@@ -114,7 +119,7 @@ const RetUpdateReservation = props => {
     const [flightRes, setResult] = useState([]);
 
     const [bookingNum, setBookingNum] = useState();
-
+    const [priceToDisplayRet, setPriceToDisplayRet] = useState(0);
     const [flight, setFlight] = useState({
         flightId: '',
         from: retFlight.toObj.from,
@@ -362,7 +367,7 @@ const RetUpdateReservation = props => {
                         res.data.forEach((flight, key) => {
                             console.log("I AM HERE")
                             console.log( cabin?.cabin);
-                            if (flight.flightId == retFlight?.toObj?.flightId && chosenClass == cabin?.cabin) {
+                            if (flight.flightId == retFlight?.toObj?.flightId && chosenClass == cabinReturn?.cabinReturn) {
                                 res.data.splice(res.data.indexOf(flight),1);
                             }
                         });
@@ -470,10 +475,11 @@ const RetUpdateReservation = props => {
                                     <div className="list">
                                         { flightRes.map((flight, k) =>
                                     <RetFlightCardEdit flight={flight} data={selectDept} numOfChildren={childNumber} numOfAdults={adultsNumber} chosenClass={chosenClass} key={k}
-                                        passRetId={setRetSelectedId} passRetFrom={setRetFlightFrom}
+                                        passRetId={setRetSelectedId} passRetFrom={setRetFlightFrom} seatCount = {seatCount?.seatCount}
                                         passRetTo={setRetFlightTo} passRetDuration={setRetFlightDuration} passRetFlightDeptTime={setRetFlightDeptTime}
                                         passRetFlightArrivalTime={setRetFlightArrivalTime} passRetFlightPrice={setRetPrice} passRetFlightDate={setRetDeptDate}
-                                        passRetFlightArrivalDate={setRetArrivalDate} passSelectedRetFlight={setSelectedRetFlight} oldPrice={retFlight.toObj.price} />
+                                        passRetFlightArrivalDate={setRetArrivalDate} passSelectedRetFlight={setSelectedRetFlight} oldPrice={retFlight.toObj.price} 
+                                        oldCabin ={cabinReturn.cabinReturn} passPriceToDisplayRet={setPriceToDisplayRet}/>
                                 ) }
                                     </div>
 
@@ -652,11 +658,17 @@ const RetUpdateReservation = props => {
                     numOfAdults={adultsNumber}
                     numOfChildren={childNumber}
                     selectDept={selectDept}
+                    newCabin = {chosenClass}
+                    oldCabin = {cabinReturn.cabinReturn}
+                    oldCabinDept = {cabinDeparture.cabinDeparture}
+
+                    seatCount ={seatCount?.seatCount}
 
                     deptFlight={departFlight.fromObj}
                     retFlight={selectedRetFlight}
                     retFlightOld = {retFlight.toObj}
                     setBookingNum={setBookingNum}
+                    priceToDisplayRet={priceToDisplayRet}
                 />
             </div>
         </>);
@@ -677,17 +689,14 @@ const RetUpdateReservation = props => {
                     </Box>
                 </div>
                 <div>
-                    <FlightSeats
-                        from={selectedDeptFlight}
-                        setFrom={setSelectedDeptFlight}
-                        to={selectedRetFlight}
-                        setTo={setSelectedRetFlight}
-                        maxSeats={adultsNumber + childNumber}
+                <UpdateSeats
+                        flight={selectedRetFlight}
+                        maxSeats={seatCount.seatCount}
                         setView={(num) => setView(num)}
                         cabin={chosenClass}
-                        setDeptSeats={setDeptSeats}
-                        setRetSeats={setRetSeats}
-                    />
+                        setFlightSeats={setRetSeats}
+                        type = {"Arrival"} 
+                />
                 </div>
             </>
         )
@@ -714,12 +723,82 @@ const RetUpdateReservation = props => {
 
 
                         <Card sx={{ maxWidth: 500 }}>
-                            <CardActionArea>
+                        <CardActionArea>
 
 
-                                <CardContent>
-                                    <div className="left-container">
+                            <CardContent>
+                                <div className="left-container">
 
+                                    <div className="left-image">
+                                        <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
+                                            alt="airplaneDepart"
+                                            width="27px"
+                                            height="27px"
+                                        />
+                                    </div>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {departFlight.fromObj.from} ({departFlight.fromObj.departureTime})
+                                    </Typography>
+                                    <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
+                                        alt="arrow"
+                                        width="40px"
+                                        height="27px" />
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {departFlight.fromObj.to} ({departFlight.fromObj.arrivalTime})
+                                    </Typography>
+                                </div>
+                                <Typography variant="body2" color="text.secondary">
+                                    Duration: {getDuration(departFlight.fromObj)}
+                                </Typography>
+                                
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                </div>
+                <div className="column">
+                    <p className="selected-return">Selected Return Flight:</p>
+                    <Card sx={{ maxWidth: 500 }}>
+                        <CardActionArea>
+
+
+                            <CardContent>
+                                <div className="middle-container">
+
+                                    <div className="left-image">
+                                        <img className="flip-image" src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
+                                            alt="airplaneDepart"
+                                            width="27px"
+                                            height="27px"
+                                        />
+                                    </div>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {retFlightFrom} ({retFlightDeptTime})
+                                    </Typography>
+                                    <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
+                                        alt="arrow"
+                                        width="40px"
+                                        height="27px" />
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {retFlightTo} ({retFlightArrivalTime})
+                                    </Typography>
+                                </div>
+                                <Typography variant="body2" color="text.secondary">
+                                    Duration: {getDuration(selectedRetFlight)}
+                                </Typography>
+                                <Typography>
+                                    <button className="editButton" type="button" onClick={editDept}>Edit</button>
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                </div>
+                <div className="column">
+                    <p className="selected-return">Summary:</p>
+                    <Card sx={{ maxWidth: 500 }}>
+                        <CardActionArea>
+                            <CardContent>
+                                <div className="right-container">
+                                    <div className="middle-container">
                                         <div className="left-image">
                                             <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
                                                 alt="airplaneDepart"
@@ -728,33 +807,18 @@ const RetUpdateReservation = props => {
                                             />
                                         </div>
                                         <Typography gutterBottom variant="h5" component="div">
-                                            {deptFlightFrom} ({deptFlightDeptTime})
+                                        {departFlight.fromObj.from} ({departFlight.fromObj.departureTime})
                                         </Typography>
                                         <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
                                             alt="arrow"
                                             width="40px"
                                             height="27px" />
                                         <Typography gutterBottom variant="h5" component="div">
-                                            {deptFlightTo} ({deptFlightArrivalTime})
+                                        {departFlight.fromObj.to} ({departFlight.fromObj.arrivalTime})
                                         </Typography>
                                     </div>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Duration: {getDuration(selectedDeptFlight)}
-                                    </Typography>
 
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </div>
-                    <div className="column">
-                        <p className="selected-return">Selected Return Flight:</p>
-                        <Card sx={{ maxWidth: 500 }}>
-                            <CardActionArea>
-
-
-                                <CardContent>
                                     <div className="middle-container">
-
                                         <div className="left-image">
                                             <img className="flip-image" src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
                                                 alt="airplaneDepart"
@@ -763,85 +827,32 @@ const RetUpdateReservation = props => {
                                             />
                                         </div>
                                         <Typography gutterBottom variant="h5" component="div">
-                                            {retFlightFrom} ({retFlightDeptTime})
+                                        {retFlightFrom} ({retFlightDeptTime})
                                         </Typography>
                                         <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
                                             alt="arrow"
                                             width="40px"
                                             height="27px" />
                                         <Typography gutterBottom variant="h5" component="div">
-                                            {retFlightTo} ({retFlightArrivalTime})
+                                        {retFlightTo} ({retFlightArrivalTime})
                                         </Typography>
                                     </div>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Duration: {getDuration(selectedRetFlight)}
-                                    </Typography>
 
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </div>
-                    <div className="column">
-                        <p className="selected-return">Summary:</p>
-                        <Card sx={{ maxWidth: 500 }}>
-                            <CardActionArea>
-                                <CardContent>
-                                    <div className="right-container">
-                                        <div className="middle-container">
-                                            <div className="left-image">
-                                                <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
-                                                    alt="airplaneDepart"
-                                                    width="27px"
-                                                    height="27px"
-                                                />
-                                            </div>
-                                            <Typography gutterBottom variant="h5" component="div">
-                                                {deptFlightFrom} ({deptFlightDeptTime})
-                                            </Typography>
-                                            <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
-                                                alt="arrow"
-                                                width="40px"
-                                                height="27px" />
-                                            <Typography gutterBottom variant="h5" component="div">
-                                                {deptFlightTo} ({deptFlightArrivalTime})
-                                            </Typography>
-                                        </div>
-
-                                        <div className="middle-container">
-                                            <div className="left-image">
-                                                <img className="flip-image" src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
-                                                    alt="airplaneDepart"
-                                                    width="27px"
-                                                    height="27px"
-                                                />
-                                            </div>
-                                            <Typography gutterBottom variant="h5" component="div">
-                                                {retFlightFrom} ({retFlightDeptTime})
-                                            </Typography>
-                                            <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
-                                                alt="arrow"
-                                                width="40px"
-                                                height="27px" />
-                                            <Typography gutterBottom variant="h5" component="div">
-                                                {retFlightTo} ({retFlightArrivalTime})
-                                            </Typography>
-                                        </div>
-
-                                    </div>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
+                                </div>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
                     </div>
                 </div>
-                <div><Itinerary
-                    deptFrom={deptFlightFrom}
-                    deptTo={deptFlightTo}
-                    deptFlightDeptTime={deptFlightDeptTime}
-                    deptFlightArrivalTime={deptFlightArrivalTime}
-                    deptFlightDeptDate={deptFlightDeptDate}
-                    deptFlightArrivalDate={deptFlightArrivalDate}
+                <div><ItineraryUpdate
+                    deptFrom={departFlight.fromObj.from}
+                    deptTo={departFlight.fromObj.to}
+                    deptFlightDeptTime={departFlight.fromObj.departureTime}
+                    deptFlightArrivalTime={departFlight.fromObj.arrivalTime}
+                    deptFlightDeptDate={departFlight.fromObj.departureDate}
+                    deptFlightArrivalDate={departFlight.fromObj.arrivalDate}
                     chosenClass={chosenClass}
-                    selectedDeptFlightId={selectedDeptFlightId}
+                    selectedDeptFlightId={departFlight.fromObj.flightId}
                     deptFlightPrice={deptFlightPrice}
                     retFlightPrice={retFlightPrice}
                     retFlightDeptTime={retFlightDeptTime}
@@ -851,9 +862,10 @@ const RetUpdateReservation = props => {
                     retFlightId={selectedRetFlightId}
                     numOfAdults={adultsNumber}
                     numOfChildren={childNumber}
-                    deptSeats={deptSeats}
+                    deptSeats={chosenFromSeat?.chosenFromSeat}
                     retSeats={retSeats}
                     bookingNum={bookingNum}
+                    oldCabinDept = {cabinDeparture.cabinDeparture}
 
                 />
                     <div><button className="confirm-res" style={{ marginBottom: "20px" }} onClick={(e) => history.push('/Reserved-flights')}>View Reservations</button></div>
@@ -887,7 +899,7 @@ const RetUpdateReservation = props => {
                 </Box></div>
                 <div className='bg-dark text-light'>
                     <div className='container pt-5' style={{ height: '100vh' }}>
-                        <h1 className="display-4 text-center">Search for flights</h1>
+                        <h1 className="display-4 text-center">Update Return Flight</h1>
 
 
                         <form onSubmit={submitAction} className='mt-5'>

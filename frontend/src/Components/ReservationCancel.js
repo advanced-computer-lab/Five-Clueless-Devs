@@ -14,6 +14,8 @@ const ReservationCancel = (props) => {
   const toSeats = props.toSeats;
   const fromSeats = props.fromSeats;
   const cabin = props.cabin;
+  const cabinDeparture= props.cabinDeparture;
+  const cabinReturn = props.cabinReturn;
   const reservationID = props.reservationId;
   const chosenFromSeat = props.chosenFromSeat;
   const chosenToSeat = props.chosenToSeat;
@@ -153,23 +155,29 @@ const ReservationCancel = (props) => {
     <div>
       <div className='buttonUnder'>
 
-        <Button className="updateButton" style={{ marginBottom: "20px" }} onClick={(e) => history.push(
+        <Button className="updateButton" style={{ marginBottom: "10px", marginTop:"-10px"  }} onClick={(e) => history.push(
           {
             pathname: '/Reservation-Update-Dept',
             state: { departureFrom: { departureFromCountry }, departureTo: { departureToCountry }, numberOfFromSeats: { chosenFromSeat },
-             departFlight: { fromObj }, returnFlight: {toObj}, seatNum: {seatCount}, cabin:{cabin},reservationId:{reservationID}  }
+             departFlight: { fromObj }, returnFlight: {toObj}, seatNum: {seatCount}, cabin:{cabin},reservationId:{reservationID}, cabinDeparture:{cabinDeparture}, 
+             chosenToSeat:{chosenToSeat} , cabinReturn:{cabinReturn} }
           })
-        }>Update Dept Reservation</Button>
-         <Button className="updateButton" style={{ marginBottom: "20px" }} onClick={(e) => history.push(
+        }>Update Depart Reservation</Button>
+         <Button className="updateButton" style={{ marginBottom: "10px", marginTop:"-10px" }} onClick={(e) => history.push(
           {
             pathname: '/Reservation-Update-Ret',
             state: { departureFrom: { departureFromCountry }, departureTo: { departureToCountry }, numberOfFromSeats: { chosenFromSeat },
-             departFlight: { fromObj }, returnFlight: {toObj}, seatNum: {seatCount}, cabin:{cabin},reservationId:{reservationID}  }
+             departFlight: { fromObj }, returnFlight: {toObj}, seatNum: {seatCount}, cabin:{cabin},reservationId:{reservationID}, cabinReturn:{cabinReturn}, 
+             chosenFromSeat:{chosenFromSeat}, cabinDeparture:{cabinDeparture} }
           })
-        }>Update Ret Reservation</Button>
-        <Button variant="outlined" color="error" onClick={toggleDialog}>Cancel Reservation</Button>
+        }>Update Return Reservation</Button>
+        
+
 
       </div>
+      <div>Booking Number: <span>{props.bookingId}</span></div>
+          <div  style={{ marginBottom: "20px" }} >Total Price: EGP <span>{props.reservationPrice}</span></div>
+      <Button variant="outlined" color="error" onClick={toggleDialog}>Cancel Reservation</Button>
       <div>
         <Dialog
           open={showConfirm}

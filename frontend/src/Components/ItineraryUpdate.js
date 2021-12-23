@@ -10,7 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-const Itinerary = (props) => {
+const ItineraryUpdate = (props) => {
     const flight = props.flight;
 
     // const history = useHistory();
@@ -30,22 +30,38 @@ const Itinerary = (props) => {
         createData('Flight Number', props.selectedDeptFlightId),
         createData('Departure Date and Time', props.deptFlightDeptTime + "   ,   " + props.deptFlightDeptDate.substring(0, 10)),
         createData('Arrival Date and Time', props.deptFlightArrivalTime + "  ,   " + props.deptFlightArrivalDate.substring(0, 10)),
-        createData('Chosen Class', props.chosenClass),
-        createData('Chosen Seats', ` ${getSeats(props.deptSeats)}`),
-        createData('Flight Price', props.deptFlightPrice),
+        //createData('Chosen Class', props.chosenClass),
+
+
 
     ];
     const rowsR = [
         createData('Flight Number', props.retFlightId),
         createData('Departure Date and Time', props.retFlightDeptTime + "   ,   " + props.retFlightDeptDate.substring(0, 10)),
         createData('Arrival Date and Time', props.retFlightArrivalTime + "  ,   " + props.retFlightArrivalDate.substring(0, 10)),
-        createData('Chosen Class', props.chosenClass),
-        createData('Chosen Seats', ` ${getSeats(props.retSeats)}`),
-        createData('Flight Price', props.retFlightPrice),
+      //  createData('Chosen Class', props.chosenClass),
+
+
 
 
     ];
-
+    if (window.location.href.includes("Dept")) {
+        rows.push(createData('Chosen Class', ` ${props.chosenClass}`));
+        rows.push(createData('Chosen Seats', ` ${getSeats(props.deptSeats)}`));
+        rowsR.push( createData('Chosen Class', props.oldCabinReturn));
+        rowsR.push(createData('Chosen Seats', ` ${props.retSeats}`));
+        
+       
+    }
+    else if (window.location.href.includes("Ret")) {
+        rows.push(createData('Chosen Class', ` ${props.oldCabinDept}`));
+        rows.push(createData('Chosen Seats', ` ${props.deptSeats}`));
+        rowsR.push( createData('Chosen Class', props.chosenClass));
+        rowsR.push(createData('Chosen Seats', ` ${getSeats(props.retSeats)}`));
+      
+       
+        
+    }
     return (
         <div className="itinerary-container">
 
@@ -118,8 +134,7 @@ const Itinerary = (props) => {
                 </TableContainer>
 
                 <div>Booking Number: <p> <span>{props.bookingNum?.toUpperCase()}</span></p> </div>
-                <div>Total cost: <p> <span><b>EGP</b>{props.deptFlightPrice + props.retFlightPrice}</span></p> </div>
-                <p className="passenger-font">(for {props.numOfAdults + props.numOfChildren} passengers)</p>
+
             </div>
 
 
@@ -127,4 +142,4 @@ const Itinerary = (props) => {
     )
 };
 
-export default Itinerary;
+export default ItineraryUpdate;

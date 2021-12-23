@@ -75,6 +75,7 @@ const Summary = (props) => {
         
         //-------------------------------
 
+
         switch (cabin) {
             case "Economy":
                 console.log(numOfSeats)
@@ -113,7 +114,10 @@ const Summary = (props) => {
                             from: deptFlight?.flightId,
                             to: retFlight?.flightId,
                             cabin: cabin,
-                            price: priceOfDept + priceOfRet
+                            price: priceOfDept + priceOfRet,
+                            numberOfSeats: numOfSeats,
+                            cabinDeparture: cabin,
+                            cabinArrival: cabin
                         }
                         axios
                             .post(BACKEND_URL + "reservations/createReservation", data)
