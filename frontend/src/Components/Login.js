@@ -27,10 +27,10 @@ const Login=()=> {
 		const data = await response.json()
         console.log(data.user)
 		if (data.user) {
-			localStorage.setItem('token', data.user)
+			localStorage.setItem('token', data.token.split(' ')[1])
 			alert('Login successful')
-            localStorage.setItem("user",data.user)
-            localStorage.setItem("userId",data.user.userId)
+            localStorage.setItem("user",JSON.stringify(data.user))
+            localStorage.setItem("userId",JSON.stringify(data.user.userId))
 			window.location.href = '/'
 		} else {
 			alert('Invalid Email or Password')
