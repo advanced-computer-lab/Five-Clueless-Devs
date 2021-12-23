@@ -27,7 +27,7 @@ const Login=()=> {
 		const data = await response.json()
         console.log(data.user)
 		if (data.user) {
-			localStorage.setItem('token', data.token.split(' ')[1])
+			localStorage.setItem('token', data.token)
 			alert('Login successful')
             localStorage.setItem("user",JSON.stringify(data.user))
             localStorage.setItem("userId",JSON.stringify(data.user.userId))
