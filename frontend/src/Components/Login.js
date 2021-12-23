@@ -54,19 +54,11 @@ const Login=()=> {
 		const data = await response.json()
         console.log(data.user)
 		if (data.user) {
-<<<<<<< HEAD
-			// localStorage.setItem('token', data.user)
-			alert('Login successful')
-			localStorage.setItem('token', data.token)
-			localStorage.setItem('user', JSON.stringify(data.user))
-            // localStorage.setItem("userId",data.user._id)
-=======
 			
 			localStorage.setItem('token', data.token)
 			
             localStorage.setItem("user",JSON.stringify(data.user))
             localStorage.setItem("userId",JSON.stringify(data.user.userId))
->>>>>>> 21770237aab3799615ddd54e5534359512565089
 			window.location.href = '/'
 		} else {
 
