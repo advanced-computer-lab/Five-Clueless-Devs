@@ -19,11 +19,12 @@ import FlightSeats from './FlightSeats/FlightSeats';
 import { set } from 'mongoose';
 import { useHistory } from "react-router";
 import "./Itinerary.css";
+import UIButton from './UIButton/UIButton';
 
 
 
 const SearchFlightUser = ({ location }) => {
-     const history = useHistory();
+    const history = useHistory();
     // useState hooks for input and language
 
     const moment = require('moment')
@@ -309,7 +310,7 @@ const SearchFlightUser = ({ location }) => {
         } else {
             setErrorSame("");
         }
-        
+
         if (returnDate && flight.departureDate && flight.departureDate > returnDate) {
             // alert("Departure date cannot be later than return date")
             setErrorDate("Departure date cannot be later than return date")
@@ -572,7 +573,13 @@ const SearchFlightUser = ({ location }) => {
                                         </FormControl>
                                     </div>
                                     <div className='input-group-append'>
-                                        <Button variant="outlined" type="submit">Search</Button>
+                                        {/* <Button variant="outlined" type="submit">Search</Button> */}
+
+                                        <UIButton
+                                            type={"submit"}
+                                            text={"Search"}
+                                            margin="10px"
+                                        />
 
 
                                     </div>
@@ -666,7 +673,7 @@ const SearchFlightUser = ({ location }) => {
                                         passRetTo={setRetFlightTo} passRetDuration={setRetFlightDuration} passRetFlightDeptTime={setRetFlightDeptTime}
                                         passRetFlightArrivalTime={setRetFlightArrivalTime} passRetFlightPrice={setRetPrice} passRetFlightDate={setRetDeptDate}
                                         passRetFlightArrivalDate={setRetArrivalDate} passSelectedRetFlight={setSelectedRetFlight} />
-                                ) 
+                                )
                                 :
                                 <div className="no-search">
                                     <img src="https://img.icons8.com/external-kiranshastry-gradient-kiranshastry/64/000000/external-search-airport-kiranshastry-gradient-kiranshastry.png" />
@@ -1051,7 +1058,7 @@ const SearchFlightUser = ({ location }) => {
                     bookingNum={bookingNum}
 
                 />
-                <div><button className="confirm-res" style={{marginBottom:"20px"}} onClick={(e) => history.push('/Reserved-flights')}>View Reservations</button></div>
+                    <div><button className="confirm-res" style={{ marginBottom: "20px" }} onClick={(e) => history.push('/Reserved-flights')}>View Reservations</button></div>
 
                 </div>
 
@@ -1220,7 +1227,13 @@ const SearchFlightUser = ({ location }) => {
                                         </FormControl>
                                     </div>
                                     <div className='input-group-append'>
-                                        <Button variant="outlined" type="submit">Search</Button>
+                                        {/* <Button variant="outlined" type="submit">Search</Button> */}
+
+                                        <UIButton
+                                           type={"submit"}
+                                            text={"Search"}
+                                            margin="10px"
+                                        />
 
 
                                     </div>

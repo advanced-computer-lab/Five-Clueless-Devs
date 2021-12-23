@@ -52,7 +52,11 @@ const EditUser = () => {
     const onSubmit = (e) => {
         e.preventDefault();
         axios
-            .put(BACKEND_URL + 'users/update?_id=' + id, user)
+            .put(BACKEND_URL + 'users/update?_id=' + id, user, {
+                headers: {
+                    'Authorization': localStorage.getItem('token')
+                }
+            })
             .then(res => {
                 history.push('/user-details/' + user?._id);
                 console.log(res.data);
@@ -219,7 +223,7 @@ const EditUser = () => {
                                     aria-labelledby="alert-dialog-title"
                                     aria-describedby="alert-dialog-description"
                                 >
-                                    <div style={{margin: '0 0 10px 0'}} >
+                                    <div style={{ margin: '0 0 10px 0' }} >
                                         <DialogTitle id="alert-dialog-title">
                                             {"Are you sure you want to edit this user?"}
                                         </DialogTitle>

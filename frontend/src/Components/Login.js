@@ -29,7 +29,7 @@ const Login=()=> {
 		if (data.user) {
 			// localStorage.setItem('token', data.user)
 			alert('Login successful')
-			localStorage.setItem('token', data.token.split(' ')[1])
+			localStorage.setItem('token', data.token)
 			localStorage.setItem('user', JSON.stringify(data.user))
             // localStorage.setItem("userId",data.user._id)
 			window.location.href = '/'

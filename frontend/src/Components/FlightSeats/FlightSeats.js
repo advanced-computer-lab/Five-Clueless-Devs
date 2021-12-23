@@ -7,6 +7,7 @@ import Seats from "../SeatMap/Seats";
 import './DepartureSeats.css';
 import moment from 'moment';
 import ArrowBack from '@mui/icons-material/ArrowBack';
+import UIButton from "../UIButton/UIButton";
 
 
 const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDeptSeats, setRetSeats }) => {
@@ -249,9 +250,14 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
             </div>
 
 
-            <Button variant="outlined" type="submit" onClick={onSubmit}>
-                Confirm {type} Seats
-            </Button>
+            {/* <Button variant="outlined" type="submit" onClick={onSubmit}>{`Confirm ${type} Seats`}</Button> */}
+
+            <UIButton
+                onClick={onSubmit}
+                type={'submit'}
+                text={`Confirm ${type} Seats`}
+                margin="10px"
+            />
             <Typography style={{ color: '#ff3333' }}>
                 {errMsg}
             </Typography>

@@ -112,12 +112,9 @@ const ViewUserDetails = () => {
               <TableContainer component={Paper}>
                 <Table sx={{ maxWidth: 500 }} className="table table-hover table-dark">
                   <TableBody>
+               
                     <TableRow>
-                      <TableCell>User ID</TableCell>
-                      <TableCell align="right">{user?._id}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Username</TableCell>
+                      <TableCell><span className="info-header-font">Username</span></TableCell>
                       <TableCell align="right">{user?.username}</TableCell>
                     </TableRow>
 
