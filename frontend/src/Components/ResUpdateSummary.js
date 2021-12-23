@@ -12,10 +12,11 @@ import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
+import UIButton from './UIButton/UIButton';
 
 const ResUpdateSummary = (props) => {
     const flight = props.flight;
-let priceToFinalDisplay = 0;
+    let priceToFinalDisplay = 0;
 
     useEffect(() => {
         console.log(props.retFlightOld);
@@ -62,7 +63,7 @@ let priceToFinalDisplay = 0;
     ];
 
 
-    
+
     if (window.location.href.includes("Dept")) {
         if (props.priceToDisplay <= 0) {
 
@@ -78,13 +79,13 @@ let priceToFinalDisplay = 0;
         rowsR.push(createData('Chosen Class', props.oldCabinReturn))
     }
     else if (window.location.href.includes("Ret")) {
-     
+
         if (props.priceToDisplayRet <= 0) {
-            
+
             rowsR.push(createData('Additional Fee', Math.abs(props.priceToDisplayRet)))
         }
         else {
-            
+
             rowsR.push(createData('Amount to be refunded', (props.priceToDisplayRet)))
         }
         priceToFinalDisplay = props.priceToDisplayRet;
@@ -139,13 +140,13 @@ let priceToFinalDisplay = 0;
                     let deptSeatsOld = deptFlightOld.seatsEconomy;
                     deptSeatsOld = deptSeatsOld.map((s) => (s == userId) ? null : s)
                     // deptFlight = {  flightId: deptFlight.flightId, availableEconomy: deptFlight.availableEconomy - numOfSeats };
-                    deptFlightOld = {flightId: deptFlightOld.flightId, availableEconomy: deptFlightOld.availableEconomy + numOfSeats, seatsEconomy: deptSeatsOld };
+                    deptFlightOld = { flightId: deptFlightOld.flightId, availableEconomy: deptFlightOld.availableEconomy + numOfSeats, seatsEconomy: deptSeatsOld };
                 }
                 else if (window.location.href.includes("Ret")) {
                     let retSeatsOld = retFlightOld.seatsEconomy;
                     retSeatsOld = retSeatsOld.map((s) => (s == userId) ? null : s)
                     // retFlight = { flightId: retFlight.flightId, availableEconomy: retFlight.availableEconomy - numOfSeats };
-                    retFlightOld = {  flightId : retFlightOld.flightId, availableEconomy: retFlightOld.availableEconomy + numOfSeats, seatsEconomy: retSeatsOld };
+                    retFlightOld = { flightId: retFlightOld.flightId, availableEconomy: retFlightOld.availableEconomy + numOfSeats, seatsEconomy: retSeatsOld };
                 }
                 break;
             case "First":
@@ -159,7 +160,7 @@ let priceToFinalDisplay = 0;
                     let retSeatsOld = retFlightOld.seatsFirst;
                     retSeatsOld = retSeatsOld.map((s) => (s == userId) ? null : s)
                     // retFlight = { flightId: retFlight.flightId, availableFirst: retFlight.availableFirst - numOfSeats };
-                    retFlightOld = { flightId : retFlightOld.flightId, availableFirst: retFlightOld.availableFirst + numOfSeats, seatsFirst: retSeatsOld };
+                    retFlightOld = { flightId: retFlightOld.flightId, availableFirst: retFlightOld.availableFirst + numOfSeats, seatsFirst: retSeatsOld };
                 }
                 break;
             case "Business":
@@ -173,7 +174,7 @@ let priceToFinalDisplay = 0;
                     let retSeatsOld = retFlightOld.seatsBusiness;
                     retSeatsOld = retSeatsOld.map((s) => (s == userId) ? null : s)
                     //  retFlight = { flightId: retFlight.flightId, availableBusiness: retFlight.availableBusiness - numOfSeats };
-                    retFlightOld = { flightId : retFlightOld.flightId, availableBusiness: retFlightOld.availableBusiness + numOfSeats, seatsBusiness: retSeatsOld };
+                    retFlightOld = { flightId: retFlightOld.flightId, availableBusiness: retFlightOld.availableBusiness + numOfSeats, seatsBusiness: retSeatsOld };
                 }
                 break;
             default:
@@ -197,7 +198,7 @@ let priceToFinalDisplay = 0;
             case "First":
                 if (window.location.href.includes("Dept")) {
 
-                    deptFlight = {  flightId: deptFlight.flightId, availableFirst: deptFlight.availableFirst - numOfSeats };
+                    deptFlight = { flightId: deptFlight.flightId, availableFirst: deptFlight.availableFirst - numOfSeats };
 
                 }
                 else if (window.location.href.includes("Ret")) {
@@ -209,7 +210,7 @@ let priceToFinalDisplay = 0;
             case "Business":
                 if (window.location.href.includes("Dept")) {
 
-                    deptFlight = {  flightId: deptFlight.flightId, availableBusiness: deptFlight.availableBusiness - numOfSeats };
+                    deptFlight = { flightId: deptFlight.flightId, availableBusiness: deptFlight.availableBusiness - numOfSeats };
 
                 }
                 else if (window.location.href.includes("Ret")) {
@@ -399,8 +400,22 @@ let priceToFinalDisplay = 0;
                             {"Are you sure you want to confirm the reservation?"}
                         </DialogTitle>
                         <DialogActions>
-                            <Button onClick={toggleDialog} variant="text">back </Button>
-                            <Button onClick={onConfirm} variant="text" color="success">Confirm Reservation</Button>
+                            {/* <Button onClick={toggleDialog} variant="text">back </Button> */}
+                            {/* <Button onClick={onConfirm} variant="text" color="success">Confirm Reservation</Button> */}
+
+                            <UIButton
+                                onClick={toggleDialog}
+                                text={"back"}
+                                margin="10px"
+                            />
+
+                            <UIButton
+                                onClick={onConfirm}
+                                text={"Confirm Reservation"}
+                                margin="10px"
+                                color="green"
+                            />
+
                         </DialogActions>
                     </Dialog>
                 </div>

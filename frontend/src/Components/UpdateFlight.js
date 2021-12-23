@@ -6,6 +6,7 @@ import { BACKEND_URL } from '../API/URLS';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import './SearchFlightCriteria.css';
+import UIButton from './UIButton/UIButton';
 
 
 const UpdateFlight = () => {
@@ -45,28 +46,28 @@ const UpdateFlight = () => {
     }
 
     const onChange = (e) => {
-        if(e.target.name == 'availableEconomy'){
+        if (e.target.name == 'availableEconomy') {
             let tmp = flight.seatsEconomy;
-            let i = e.target.value*1 - flight.availableEconomy;
-            while(i > 0){
+            let i = e.target.value * 1 - flight.availableEconomy;
+            while (i > 0) {
                 tmp.push(null);
                 i--;
             }
             setFlight({ ...flight, seatsEconomy: tmp })
         }
-        else if(e.target.name == 'availableFirst'){
+        else if (e.target.name == 'availableFirst') {
             let tmp = flight.seatsFirst;
-            let i = e.target.value*1 - flight.availableFirst;
-            while(i > 0){
+            let i = e.target.value * 1 - flight.availableFirst;
+            while (i > 0) {
                 tmp.push(null);
                 i--;
             }
             setFlight({ ...flight, seatsFirst: tmp })
         }
-        else if(e.target.name == 'availableBusiness'){
+        else if (e.target.name == 'availableBusiness') {
             let tmp = flight.seatsBusiness;
-            let i = e.target.value*1 - flight.availableBusiness;
-            while(i > 0){
+            let i = e.target.value * 1 - flight.availableBusiness;
+            while (i > 0) {
                 tmp.push(null);
                 i--;
             }
@@ -99,7 +100,7 @@ const UpdateFlight = () => {
                 <div className="row">
 
                     <div className="col-md-8 m-auto">
-                        <h1 className="display-4 text-center" style={{margin:"10px 0"}}>Update Flight</h1>
+                        <h1 className="display-4 text-center" style={{ margin: "10px 0" }}>Update Flight</h1>
 
 
                         <form noValidate onSubmit={onSubmit}>
@@ -249,8 +250,14 @@ const UpdateFlight = () => {
 
 
                             <div className='input-group-append'>
-                                    <Button variant="outlined" type="submit">Update Flight</Button>
-                                </div>
+                                {/* <Button variant="outlined" type="submit">Update Flight</Button> */}
+
+                                <UIButton
+                                    type={'submit'}
+                                    text={"Update Flight"}
+                                    margin="10px"
+                                />
+                            </div>
                         </form>
                     </div>
                 </div>

@@ -37,10 +37,11 @@ const Login=()=> {
 		const data = await response.json()
         console.log(data.user)
 		if (data.user) {
-			localStorage.setItem('token', data.user)
+			// localStorage.setItem('token', data.user)
 			alert('Login successful')
-            localStorage.setItem("user",data.user)
-            localStorage.setItem("userId",data.user.userId)
+			localStorage.setItem('token', data.token)
+			localStorage.setItem('user', JSON.stringify(data.user))
+            // localStorage.setItem("userId",data.user._id)
 			window.location.href = '/'
             console.log("i am here")
 		} else {

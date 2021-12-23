@@ -29,7 +29,7 @@ const ViewSummary = () => {
 
       console.log(email);
       //  BACKEND_URL + "users/search?userId=" + id)
-      await axios.post(BACKEND_URL + "users/send_mail?userId=" + Uid, {
+      await axios.post(BACKEND_URL + "users/send_mail?_id=" + Uid, {
         text2, to: email
       })
     } catch (error) {
@@ -74,7 +74,7 @@ const ViewSummary = () => {
     getSummary();
 
     axios
-      .get(BACKEND_URL + "users/search?userId=" + Uid)
+      .get(BACKEND_URL + "users/search?_id=" + Uid)
       .then(res => {
         console.log(res.data);
         setEmail(res.data[0].email);

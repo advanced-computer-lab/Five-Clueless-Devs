@@ -12,6 +12,7 @@ import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
+import UIButton from './UIButton/UIButton';
 
 const Summary = (props) => {
     const flight = props.flight;
@@ -231,8 +232,22 @@ const Summary = (props) => {
                             {"Are you sure you want to confirm the reservation?"}
                         </DialogTitle>
                         <DialogActions>
-                            <Button onClick={toggleDialog} variant="text">back </Button>
-                            <Button onClick={onConfirm} variant="text" color="success">Confirm Reservation</Button>
+                            {/* <Button onClick={toggleDialog} variant="text">back </Button> */}
+                            {/* <Button onClick={onConfirm} variant="text" color="success">Confirm Reservation</Button> */}
+
+                            
+                            <UIButton
+                                onClick={toggleDialog}
+                                text={"back"}
+                                margin="10px"
+                            />
+                            
+                            <UIButton
+                                onClick={onConfirm}
+                                text={"Confirm Reservation"}
+                                margin="10px"
+                                color={'green'}
+                            />
                         </DialogActions>
                     </Dialog>
                 </div>

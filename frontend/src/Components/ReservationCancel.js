@@ -203,8 +203,20 @@ const ReservationCancel = (props) => {
             {"Are you sure you want to cancel the reservation?"}
           </DialogTitle>
           <DialogActions>
-            <Button onClick={toggleDialog} variant="text">back </Button>
-            <Button onClick={onSubmit} variant="text" color="error">cancel Reservation</Button>
+            {/* <Button onClick={toggleDialog} variant="text">back </Button> */}
+            <UIButton
+              onClick={toggleDialog}
+              text={"back"}
+              margin="10px"
+            />
+
+            <UIButton
+              onClick={onSubmit}
+              text={"Cancel Reservation"}
+              margin="10px"
+              color="red"
+            />
+            {/* <Button onClick={onSubmit} variant="text" color="error">cancel Reservation</Button> */}
           </DialogActions>
         </Dialog>
       </div>

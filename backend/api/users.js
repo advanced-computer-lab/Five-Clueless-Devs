@@ -84,7 +84,7 @@ router.post('/send_mail', cors(), async (req, res) => {
 })
 
 
-router.put('/update', (req, res) => {
+router.put('/update', authenticateToken, (req, res) => {
     let { userId } = req.body
     console.log("updating user with id: " + userId);
     User.findOneAndUpdate(req.query, req.body)
@@ -151,6 +151,17 @@ router.put('/changePass',async(req,res)=>{
 });
 
 
-
-
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]
+  
+    if(!token) res.sendStatus(401);
+  
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) =>{
+      if(err) res.sendStatus(403);
+      req.user = user
+      next()
+    })
+  }
+  
 module.exports = router;
