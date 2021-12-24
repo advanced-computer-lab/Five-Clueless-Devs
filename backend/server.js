@@ -8,7 +8,7 @@ const app= express();
 app.use(express.json());
 app.use(cors());
 
-app.post("/payment",(req,res)=> {
+app.post("/payment/payment",(req,res)=> {
   const {product,token} = req.body;
   console.log("PRODUCT",product);
   console.log("PRICE",product.price);

@@ -272,11 +272,11 @@ const DepartureFlightCardEdit = (props) => {
                         <div style={{ textAlign: "center", marginBottom: "-20px", marginTop: "10px", }}>Save:</div>}
                     <div className="middle-price" style={{ marginRight: "-10px" }}>
 
-                        {oldPrice - checkTotal() < 0 ? <p style={{ color: "red", marginTop: "20px" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(oldPrice - checkTotal())}</span></p>
-                            : <p style={{ color: "green", marginTop: "20px" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(oldPrice - checkTotal())}</span></p>}
+                        {oldPrice - checkTotal() < 0 ? <p style={{ color: "red", marginTop: "20px" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(oldPrice - checkTotal()).toFixed(0)}</span></p>
+                            : <p style={{ color: "green", marginTop: "20px" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(oldPrice - checkTotal()).toFixed(0)}</span></p>}
 
                     </div>
-                    <p className="passenger-font" onClick={handleClick}>(for {props.numOfAdults + props.numOfChildren} passengers)</p>
+                    <p className="passenger-font" onClick={handleClick}>(for {props.seatCount} passengers)</p>
                     {/* {props.oldPrice - checkTotal() < 0 ? <p style={{ marginLeft:"9px", textAlign: "center", fontSize:"14px"}}>
                         Pay Additional: <p style={{ color: "red", textAlign: "center", fontSize:"20px" }}> <b style={{color:"black", fontSize:"12px"}}>EGP </b>
                         {Math.abs(props.oldPrice - checkTotal())} </p></p> :

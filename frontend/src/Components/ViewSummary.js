@@ -14,23 +14,97 @@ const ViewSummary = () => {
   //let seatCount = 0;
   const [seatCount, setSeatCount] = useState(0);
   let Uid = JSON.parse(localStorage.getItem('user'))?._id;
+  let emailSearch = JSON.parse(localStorage.getItem('user'))?.email;
 
   let currEmail = "";
   let text2 = "";
+  let showConfirmation = false;
   const [sent, setSent] = useState(false)
   const [text, setText] = useState("")
   const [email, setEmail] = useState("")
-
+  const [firstName, setFirstName] = useState("")
+  let deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo, refundedAmount, bookingNumber;
+  let  departureDateDep,arrivalDateDep,departureTimeDep,arrivalTimeDep,departureTerminalDep,arrivalTerminalDep,cabinClassDep,seatsDep,departureDateRet,
+  arrivalDateRet,departureTimeRet,arrivalTimeRet,departureTerminalRet,arrivalTerminalRet,cabinClassRet,seatsRet, Name, lastName;
   const handleSend = async (e) => {
-    text2 = "Refunded : " + reservation?.price;
-    console.log(text2);
+    refundedAmount = reservation?.price
+    deptFlightId = fromflight?.flightId
+    retFlightId = toflight?.flightId
+    deptFrom = fromflight?.from
+    deptTo = fromflight?.to
+    retFrom = toflight?.from
+    retTo = toflight?.to
+    bookingNumber = bookingId
+    
+
+  
+
+    
     setSent(true)
+    
     try {
 
       console.log(email);
       //  BACKEND_URL + "users/search?userId=" + id)
-      await axios.post(BACKEND_URL + "users/send_mail?_id=" + Uid, {
-        text2, to: email
+      await axios.post(BACKEND_URL + "users/send_mail?email=" + emailSearch, {
+        deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo, refundedAmount, bookingNumber, to: email
+      })
+    } catch (error) {
+
+      console.error(error)
+    }
+  }
+
+  const handleSendRes = async (e) => {
+    refundedAmount = reservation?.price
+    deptFlightId = fromflight?.flightId
+    retFlightId = toflight?.flightId
+    deptFrom = fromflight?.from
+    deptTo = fromflight?.to
+    retFrom = toflight?.from
+    retTo = toflight?.to
+    bookingNumber = bookingId
+
+
+
+    departureDateDep= fromflight?.departureDate.substring(0, 10);
+    arrivalDateDep= fromflight?.arrivalDate.substring(0, 10);
+    departureTimeDep=fromflight?.departureTime;
+    arrivalTimeDep=fromflight?.arrivalTime;
+    departureTerminalDep= fromflight?.departureTerminal;
+    arrivalTerminalDep= fromflight?.arrivalTerminal;
+    cabinClassDep=reservation?.cabinDeparture;
+    seatsDep= seatsFrom;
+
+    departureDateRet=toflight?.departureDate.substring(0, 10);
+    arrivalDateRet=toflight?.arrivalDate.substring(0, 10);
+    departureTimeRet=toflight?.departureTime;
+    arrivalTimeRet=toflight?.arrivalTime;
+    departureTerminalRet=toflight?.departureTerminal;
+    arrivalTerminalRet=toflight?.arrivalTerminal;
+    cabinClassRet=reservation?.cabinArrival;
+    seatsRet=seatsTO;
+
+    Name = JSON.parse(localStorage.getItem('user'))?.firstName;
+    lastName = JSON.parse(localStorage.getItem('user'))?.lastName;
+
+    console.log("sending");
+
+    alert("An email has been sent to " + emailSearch);
+    //showConfirmation = true;
+    
+    setSent(true)
+    
+    try {
+
+      console.log(email);
+      //  BACKEND_URL + "users/search?userId=" + id)
+      await axios.post(BACKEND_URL + "users/send_mailRes?email=" + emailSearch, {
+        deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo, refundedAmount, bookingNumber, 
+        departureDateDep,arrivalDateDep,departureTimeDep,arrivalTimeDep,departureTerminalDep,arrivalTerminalDep,cabinClassDep,seatsDep,
+        departureDateRet,arrivalDateRet,departureTimeRet,arrivalTimeRet,departureTerminalRet,arrivalTerminalRet,cabinClassRet,seatsRet,
+        firstName,lastName,
+        to: email
       })
     } catch (error) {
 
@@ -74,11 +148,12 @@ const ViewSummary = () => {
     getSummary();
 
     axios
-      .get(BACKEND_URL + "users/search?_id=" + Uid)
+      .get(BACKEND_URL + "users/search?email=" + emailSearch)
       .then(res => {
         console.log(res.data);
         setEmail(res.data[0].email);
-        console.log(currEmail);
+        console.log(email);
+        setFirstName(res.data[0].firstName)
 
 
       })
@@ -207,6 +282,7 @@ const ViewSummary = () => {
       })
     setText("Refunded :" + reservation?.price);
     console.log(reservation?.price);
+    console.log(emailSearch);
 
   }
   const getSeatNumber = (i) => {
@@ -280,14 +356,15 @@ const ViewSummary = () => {
         <div className="row">
           <br />
           <div className="col-md-8 m-auto">
-            <h1 className="display-4 text-center">Flights' Record</h1>
-            <p className="lead text-center">
-              View Flights' Info
-            </p>
+            <h1 className="display-4 text-center">{firstName}'s Reservation Details</h1>
+            
             <hr /> <br />
           </div>
         </div>
         <div>
+        <Button className="updateButton" style={{ marginBottom: "10px", marginTop:"-10px"  }} onClick={(e) => handleSendRes(e)}>
+        Email Reservation Itinerary</Button>
+        {/* { showConfirmation ? <p style={{fontSize: '12px'}}>An email has been sent to {emailSearch}</p>: null} */}
           <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", margin: "10px" }}>
             <div className='view-summary-card'>
 

@@ -12,7 +12,10 @@ import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import UIButton from './UIButton/UIButton';
+import StripeCheckout from 'react-stripe-checkout';
+import LoadingPayment from './LoadingPayment/LoadingPayment';
 
 const Summary = (props) => {
     const flight = props.flight;
@@ -25,10 +28,12 @@ const Summary = (props) => {
         return { name, calories };
     }
 
+    const [loading, setLoading] = useState("");
+
     const [showConfirm, setConfirm] = useState(false);
 
     const toggleDialog = () => {
-      setConfirm(!showConfirm);
+        setConfirm(!showConfirm);
     }
     const rows = [
         createData('Flight Number', props.selectedDeptFlightId),
@@ -47,23 +52,50 @@ const Summary = (props) => {
 
         createData('Flight Price', props.retFlightPrice),
     ];
-    
+
     let userId = JSON.parse(localStorage.getItem('user'))?._id;
 
-    const clickConfirm = () =>{
-        if(userId){
+    const clickConfirm = () => {
+        if (userId) {
             toggleDialog();
-        }else{
+        } else {
             history.push('/login');
         }
     }
 
 
 
+    const [product, setproduct] = useState({
+        name: `Ticket between ${props.deptFrom} & ${props.deptTo} for user ${userId}`,
+        price: props.deptFlightPrice + props.retFlightPrice, ///price of ticket from input //remove hardcode
+        productBy: "FiveCluelessDevs"
+    })
+
+    let payment = null;
+    const makePayment = token => {
+        const body = {
+            token,
+            product
+        }
+        setLoading("Payment");
+        axios.post('http://localhost:8082/api/payments/payment', body)
+            .then(response => {
+                console.log("RESPONSE", response.data);
+                payment = response.data;
+                setLoading('success')
+                onConfirm();
+            })
+            .catch(err => {
+                setLoading('error');
+                console.log(err)
+                setTimeout(() => setLoading(''), 1000);
+              });
+    };
+
     const onConfirm = (e) => {
         let numOfAdults = props.numOfAdults
         let numOfChildren = props.numOfChildren;
-        let numOfSeats = numOfAdults*1 + numOfChildren*1;
+        let numOfSeats = numOfAdults * 1 + numOfChildren * 1;
         let priceOfDept = props.deptFlightPrice;
         let priceOfRet = props.retFlightPrice;
         console.log(props)
@@ -73,8 +105,10 @@ const Summary = (props) => {
         let retFlight = props.retFlight;
 
         //-------------------------------
-        
+
         //-------------------------------
+
+
 
 
         switch (cabin) {
@@ -118,7 +152,8 @@ const Summary = (props) => {
                             price: priceOfDept + priceOfRet,
                             numberOfSeats: numOfSeats,
                             cabinDeparture: cabin,
-                            cabinArrival: cabin
+                            cabinArrival: cabin,
+                            chargeId: [payment?.id]
                         }
                         axios
                             .post(BACKEND_URL + "reservations/createReservation", data)
@@ -127,9 +162,11 @@ const Summary = (props) => {
                                 console.log(res.data);
                                 props.setBookingNum(res.data._id);
                                 props.selectDept();
+                                setLoading("");
                             })
                             .catch(err => {
                                 console.log("Error from Confirm Resrevation: " + err);
+                                setLoading("");
                             })
 
 
@@ -217,7 +254,7 @@ const Summary = (props) => {
                 </TableContainer>
 
                 <div>Total cost: <p> <span><b>EGP</b>{props.deptFlightPrice + props.retFlightPrice}</span></p> </div>
-                <p className="passenger-font">(for {props.numOfAdults + props.numOfChildren} passengers)</p>
+                <p className="passenger-font">(for {1 * props.numOfAdults + 1 * props.numOfChildren} passengers)</p>
 
                 <button className="confirm-res" onClick={clickConfirm}>Confirm Reservation</button>
 
@@ -235,21 +272,34 @@ const Summary = (props) => {
                             {/* <Button onClick={toggleDialog} variant="text">back </Button> */}
                             {/* <Button onClick={onConfirm} variant="text" color="success">Confirm Reservation</Button> */}
 
-                            
+
                             <UIButton
                                 onClick={toggleDialog}
                                 text={"back"}
                                 margin="10px"
                             />
-                            
-                            <UIButton
-                                onClick={onConfirm}
-                                text={"Confirm Reservation"}
-                                margin="10px"
-                                color={'green'}
-                            />
+
+
+                            <StripeCheckout
+                                stripeKey="pk_test_51K9D6UA32Adg2XeIayrvPhQ3Y97itWgoKPGMDyhxforRJofQ1DmX0G66AUBJp2USDguA6DP5KAKireIv4DwbmYSh00oxYvRo7K"
+                                token={makePayment}
+                                name="Buy Ticket"
+                                amount={product.price * 100}
+                                email={JSON.parse(localStorage.getItem('user'))?.email}
+                            >
+                                <UIButton
+                                    // onClick={onConfirm}
+                                    text={"Confirm & Pay"}
+                                    margin="10px"
+                                    color={'green'}
+                                />
+                            </StripeCheckout>
+
+
                         </DialogActions>
                     </Dialog>
+
+                    {loading && <LoadingPayment text={loading}/>}
                 </div>
             </div>
 

@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField';
 import './SearchFlightCriteria.css';   // create one for users
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Table, TableBody, TableCell, TableRow } from '@mui/material';
 import UIButton from './UIButton/UIButton';
+import LoadingPayment from './LoadingPayment/LoadingPayment';
 
 const EditUser = () => {
     const history = useHistory();
@@ -60,7 +61,8 @@ const EditUser = () => {
             .then(res => {
                 history.push('/user-details/' + user?._id);
                 console.log(res.data);
-
+                console.log(user);
+                localStorage.setItem('user',JSON.stringify(user))
             })
             .catch(err => {
                 console.log(err);
