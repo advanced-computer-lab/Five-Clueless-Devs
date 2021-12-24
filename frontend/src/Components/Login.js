@@ -32,9 +32,7 @@ const Login = () => {
     if (user)
       history.push("/")
 
-  }
-
-    , [])
+  } , [])
 
   async function loginUser(event) {
     event.preventDefault()
@@ -95,33 +93,10 @@ const Login = () => {
     )
     return Object.values(temp).every(x => x == "")
   }
-  return (/*
-		<div>
-			<h1>Login</h1>
-			<form onSubmit={loginUser}>
-				<input
-					value={email}
-					onChange={(e) => setEmail(e.target.value)}
-					type="email"
-					placeholder="Email"
-				/>
-				<br />
-				<input
-					value={password}
-					onChange={(e) => setPassword(e.target.value)}
-					type="password"
-					placeholder="Password"
-				/>
-				<br />
-				<input type="submit" value="Login" />
-                <br />
-                <Link to="/Register"> Don't have an account? Sign Up! </Link>
-			</form>
-		</div>
-	*/
-    // return (
+  return (
+
     <ThemeProvider theme={theme}>
-      <Grid container component="main" sx={{ height: '100vh' }}>
+      <Grid container component="main" sx={{ height: 'calc(100vh - 70px);' }}>
         <CssBaseline />
         <Grid
           item

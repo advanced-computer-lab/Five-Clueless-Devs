@@ -5,15 +5,13 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 var bodyParser = require('body-parser')
 
-const User = require('../model/User');
-
 require("dotenv").config
 
 const nodemailer = require("nodemailer")
 const cors = require('cors');
 
 // Load User model
-
+const User = require('../model/User');
 
 // @route GET api/users/test
 // @description tests users route
@@ -249,7 +247,27 @@ router.post("/login", (req, res) => {
       });
   });
 });
-
+router.put('/changePass',async(req,res)=>{
+  console.log("here");
+  const currUser = req.body.email;
+ // console.log(req.body.userId)
+  User.findOne({ email:currUser }).then((user) => {
+   // console.log(user);
+    bcrypt
+      .compare(req.body.oldpassword, user.password)
+      .then(async(isCorrect) => {
+        if (isCorrect) {
+          let newpassword=await bcrypt.hash(req.body.Newpassword,10)
+          User.findOneAndUpdate({email:user.email},{password:newpassword})
+          .then(res.status(200).json("updated succesfully"))
+          .catch(err =>
+          res.status(400).json({ error: 'Unable to update the Database' })
+);
+        } else {
+          res.json({ message: "Invalid Password" });
+        }  });
+  });
+});
 
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];

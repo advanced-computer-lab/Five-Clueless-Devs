@@ -132,7 +132,7 @@ const ReservationCancel = (props) => {
     OnCancel();
     props.handleSend(e);
     e.preventDefault();
-    setLoading('Refund');
+    setLoading( "EGP" + props.reservationPrice + ' Refund');
     axios
       .put(BACKEND_URL + 'flights/update?flightId=' + from, f)
       .then(res => {

@@ -161,7 +161,7 @@ const ResUpdateSummary = (props) => {
                 token,
                 product
             } 
-            setLoading('Payment');
+            setLoading("EGP" + Math.abs(price).toFixed(0) +' Payment');
             axios.post('http://localhost:8082/api/payments/payment', body)
                 .then(response => {
                     // console.log("RESPONSE", response.data);
@@ -180,7 +180,7 @@ const ResUpdateSummary = (props) => {
 
         } else {
             //refund
-            setLoading('Refund');
+            setLoading("EGP" + Math.abs(price).toFixed(0) +' Refund');
             let amountLeft = price;
             charges.forEach(c => {
                 if (amountLeft > 0 && c.amount > 0) {
@@ -542,6 +542,7 @@ const ResUpdateSummary = (props) => {
                                     name="Buy Ticket"
                                     amount={getPrice() * 100}
                                     email={JSON.parse(localStorage.getItem('user'))?.email}
+                                    currency='egp'
                                 >
                                     <UIButton
                                         text={"Confirm & Pay"}

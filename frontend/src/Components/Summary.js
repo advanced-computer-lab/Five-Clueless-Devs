@@ -16,6 +16,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import UIButton from './UIButton/UIButton';
 import StripeCheckout from 'react-stripe-checkout';
 import LoadingPayment from './LoadingPayment/LoadingPayment';
+import SignInDialog from './SignInDialog';
+import { useEffect } from 'react';
 
 const Summary = (props) => {
     const flight = props.flight;
@@ -55,11 +57,17 @@ const Summary = (props) => {
 
     let userId = JSON.parse(localStorage.getItem('user'))?._id;
 
+    const [loginDialog, setLoginDialog] = useState(false);
+    useEffect(() => {
+        userId = JSON.parse(localStorage.getItem('user'))?._id;
+    }, [loginDialog])
+
     const clickConfirm = () => {
         if (userId) {
             toggleDialog();
         } else {
-            history.push('/login');
+            // history.push('/login');
+            setLoginDialog(true)
         }
     }
 
@@ -77,7 +85,7 @@ const Summary = (props) => {
             token,
             product
         }
-        setLoading("Payment");
+        setLoading("EGP " + Math.abs(props.deptFlightPrice + props.retFlightPrice).toFixed(0) + " Payment");
         axios.post('http://localhost:8082/api/payments/payment', body)
             .then(response => {
                 console.log("RESPONSE", response.data);
@@ -89,7 +97,7 @@ const Summary = (props) => {
                 setLoading('error');
                 console.log(err)
                 setTimeout(() => setLoading(''), 1000);
-              });
+            });
     };
 
     const onConfirm = (e) => {
@@ -286,6 +294,7 @@ const Summary = (props) => {
                                 name="Buy Ticket"
                                 amount={product.price * 100}
                                 email={JSON.parse(localStorage.getItem('user'))?.email}
+                                currency='egp'
                             >
                                 <UIButton
                                     // onClick={onConfirm}
@@ -294,12 +303,12 @@ const Summary = (props) => {
                                     color={'green'}
                                 />
                             </StripeCheckout>
-
-
                         </DialogActions>
                     </Dialog>
 
-                    {loading && <LoadingPayment text={loading}/>}
+                    {loading && <LoadingPayment text={loading} />}
+
+                    <SignInDialog show={loginDialog} setShow={setLoginDialog} setConfirm={toggleDialog} />
                 </div>
             </div>
 
