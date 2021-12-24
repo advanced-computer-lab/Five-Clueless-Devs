@@ -82,6 +82,7 @@ function App() {
           <Route path='/editSeats/:reservationId' component={EditSeatsOutside} />
           <Route path='/pay' component={Payment} />
            <Route path='/passwordChange' component={ChangePassword}/>
+           <Route path='/register'component={Register} />
 
 
         </Switch>
