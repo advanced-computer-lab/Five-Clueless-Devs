@@ -6,6 +6,7 @@ import { BACKEND_URL } from '../API/URLS';
 import './CreateFlight.css';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
+import UIButton from './UIButton/UIButton';
 
 
 class CreateFlight extends Component {
@@ -25,7 +26,7 @@ class CreateFlight extends Component {
             arrivalTerminal: '',
             departureTerminal: '',
             baggageAllowance: '',
-            price:'',
+            price: '',
             seatsEconomy: [],
             seatsBusiness: [],
             seatsFirst: [],
@@ -44,14 +45,14 @@ class CreateFlight extends Component {
         let seatsBusiness1 = [];
         let seatsFirst1 = [];
 
-        for(let i = 0; i < this.state.availableEconomy*1; i++){
+        for (let i = 0; i < this.state.availableEconomy * 1; i++) {
             seatsEconomy1.push(null);
         }
 
-        for(let i = 0; i < this.state.availableBusiness*1; i++){
+        for (let i = 0; i < this.state.availableBusiness * 1; i++) {
             seatsBusiness1.push(null);
         }
-        for(let i = 0; i < this.state.availableFirst*1; i++){
+        for (let i = 0; i < this.state.availableFirst * 1; i++) {
             seatsFirst1.push(null);
         }
 
@@ -95,7 +96,7 @@ class CreateFlight extends Component {
                     seatsEconomy: [],
                     seatsBusiness: [],
                     seatsFirst: [],
-                    price:''
+                    price: ''
                 })
                 this.props.history.push('/search');
             })
@@ -264,7 +265,7 @@ class CreateFlight extends Component {
                                             value={this.state.baggageAllowance}
                                             onChange={this.onChange}
                                         />
-                                         <TextField
+                                        <TextField
                                             id="outlined"
                                             className='form-control'
                                             label='Price'
@@ -280,7 +281,12 @@ class CreateFlight extends Component {
                                     this.state.err ? <p>Cannot add flight, Ensure FlightID is unique and all fields are filled</p> : null
                                 }
                                 <div className='button'>
-                                    <Button variant="outlined" type="submit">Submit</Button>
+                                    {/* <Button variant="outlined" type="submit">Submit</Button> */}
+                                    <UIButton
+                                        text={"Submit"}
+                                        margin="0px"
+                                        type = "submit"
+                                    />
                                 </div>
                             </form>
                         </div>

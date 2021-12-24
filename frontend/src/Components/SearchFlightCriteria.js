@@ -5,6 +5,7 @@ import FlightCard from './FlightCard';
 import TextField from '@mui/material/TextField';
 import './SearchFlightCriteria.css';
 import { Button } from '@mui/material';
+import UIButton from './UIButton/UIButton';
 
 const SearchFlightCriteria = ({ location }) => {
   // const history = useHistory();
@@ -216,7 +217,13 @@ const SearchFlightCriteria = ({ location }) => {
 
 
                 <div className='input-group-append'>
-                <Button variant="outlined" type="submit">Search</Button>
+                  {/* <Button variant="outlined" type="submit">Search</Button> */}
+
+                  <UIButton
+                    type={'submit'}
+                    text={"Search"}
+                    margin="10px"
+                  />
                   {/* <button className='btn btn-primary' type='submit'>
                     Search
                   </button> */}

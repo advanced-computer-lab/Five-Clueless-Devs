@@ -24,6 +24,7 @@ import DepartureFlightCardEdit from './DepartureFlightCardEdit';
 import ResUpdateSummary from './ResUpdateSummary';
 import UpdateSeats from './UpdateSeats/UpdateSeats';
 import ItineraryUpdate from './ItineraryUpdate';
+import UIButton from './UIButton/UIButton';
 
 
 
@@ -40,7 +41,7 @@ const DeptUpdateReservation = props => {
     const seatCount = location.state.seatNum;
     const cabin = location.state.cabin;
     const reservationID = location.state.reservationId
-    const cabinDeparture= location.state.cabinDeparture;
+    const cabinDeparture = location.state.cabinDeparture;
     const chosenToSeat = location.state.chosenToSeat;
     const cabinReturn = location.state.cabinReturn;
 
@@ -471,7 +472,12 @@ const DeptUpdateReservation = props => {
 
                                     </div>
                                     <div className='input-group-append'>
-                                        <Button variant="outlined" type="submit">Search</Button>
+                                        {/* <Button variant="outlined" type="submit">Search</Button> */}
+                                        <UIButton
+                                            text={"Search"}
+                                            margin="10px"
+                                            type={'submit'}
+                                        />
 
 
                                     </div>
@@ -479,12 +485,12 @@ const DeptUpdateReservation = props => {
 
                                     <div className="list">
                                         {flightRes.map((flight, k) =>
-                                            <DepartureFlightCardEdit flight={flight} numOfChildren={childNumber} numOfAdults={adultsNumber} seatCount = {seatCount?.seatCount}
+                                            <DepartureFlightCardEdit flight={flight} numOfChildren={childNumber} numOfAdults={adultsNumber} seatCount={seatCount?.seatCount}
                                                 chosenClass={chosenClass} data={selectDept} key={k} passDeptId={setDeptSelectedId} passDeptFrom={setDeptFlightFrom}
                                                 passDeptTo={setDeptFlightTo} passDeptDuration={setDeptFlightDuration} passDeptFlightDeptTime={setDeptFlightDeptTime}
                                                 passDeptFlightArrivalTime={setDeptFlightArrivalTime} passDeptFlightDeptDate={setDeptDeptDate}
                                                 passDeptFlightArrivalDate={setDeptArrivalDate} passDeptFlightPrice={setDeptPrice}
-                                                passSelectedDeptFlight={setSelectedDeptFlight} passPriceToDisplay={setPriceToDisplay} oldPrice={departFlight.fromObj.price} oldCabin={cabinDeparture.cabinDeparture}/>
+                                                passSelectedDeptFlight={setSelectedDeptFlight} passPriceToDisplay={setPriceToDisplay} oldPrice={departFlight.fromObj.price} oldCabin={cabinDeparture.cabinDeparture} />
                                         )}
                                     </div>
 
@@ -661,12 +667,12 @@ const DeptUpdateReservation = props => {
                     retFlightArrivalTime={retFlight.toObj.arrivalTime}
                     retFlightArrivalDate={retFlight.toObj.arrivalDate}
                     retFlightId={retFlight.toObj.flightId}
-                    newCabin = {chosenClass}
-                    oldCabin = {cabinDeparture.cabinDeparture}
-                    oldCabinReturn = {cabinReturn.cabinReturn}
+                    newCabin={chosenClass}
+                    oldCabin={cabinDeparture.cabinDeparture}
+                    oldCabinReturn={cabinReturn.cabinReturn}
                     numOfAdults={adultsNumber}
                     numOfChildren={childNumber}
-                    seatCount = {seatCount.seatCount}
+                    seatCount={seatCount.seatCount}
                     selectDept={selectDept}
                     reservationId={reservationID.reservationID}
                     deptFlight={selectedDeptFlight}
@@ -700,7 +706,7 @@ const DeptUpdateReservation = props => {
                         setView={(num) => setView(num)}
                         cabin={chosenClass}
                         setFlightSeats={setDeptSeats}
-                        type = {"Departure"} 
+                        type={"Departure"}
                     />
                 </div>
             </>
@@ -728,84 +734,12 @@ const DeptUpdateReservation = props => {
 
 
                         <Card sx={{ maxWidth: 500 }}>
-                        <CardActionArea>
+                            <CardActionArea>
 
 
-                            <CardContent>
-                                <div className="left-container">
+                                <CardContent>
+                                    <div className="left-container">
 
-                                    <div className="left-image">
-                                        <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
-                                            alt="airplaneDepart"
-                                            width="27px"
-                                            height="27px"
-                                        />
-                                    </div>
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        {deptFlightFrom} ({deptFlightDeptTime})
-                                    </Typography>
-                                    <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
-                                        alt="arrow"
-                                        width="40px"
-                                        height="27px" />
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        {deptFlightTo} ({deptFlightArrivalTime})
-                                    </Typography>
-                                </div>
-                                <Typography variant="body2" color="text.secondary">
-                                    Duration: {getDuration(selectedDeptFlight)}
-                                </Typography>
-                                <Typography>
-                                    <button className="editButton" type="button" onClick={editDept}>Edit</button>
-                                </Typography>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card>
-                </div>
-                <div className="column">
-                    <p className="selected-return">Selected Return Flight:</p>
-                    <Card sx={{ maxWidth: 500 }}>
-                        <CardActionArea>
-
-
-                            <CardContent>
-                                <div className="middle-container">
-
-                                    <div className="left-image">
-                                        <img className="flip-image" src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
-                                            alt="airplaneDepart"
-                                            width="27px"
-                                            height="27px"
-                                        />
-                                    </div>
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        {retFlight.toObj.from} ({retFlight.toObj.departureTime})
-                                    </Typography>
-                                    <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
-                                        alt="arrow"
-                                        width="40px"
-                                        height="27px" />
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        {retFlight.toObj.to} ({retFlight.toObj.arrivalTime})
-                                    </Typography>
-                                </div>
-                                <Typography variant="body2" color="text.secondary">
-                                    Duration: {getDuration(retFlight.toObj)}
-                                </Typography>
-                                <Typography>
-
-                                </Typography>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card>
-                </div>
-                <div className="column">
-                    <p className="selected-return">Summary:</p>
-                    <Card sx={{ maxWidth: 500 }}>
-                        <CardActionArea>
-                            <CardContent>
-                                <div className="right-container">
-                                    <div className="middle-container">
                                         <div className="left-image">
                                             <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
                                                 alt="airplaneDepart"
@@ -824,8 +758,25 @@ const DeptUpdateReservation = props => {
                                             {deptFlightTo} ({deptFlightArrivalTime})
                                         </Typography>
                                     </div>
+                                    <Typography variant="body2" color="text.secondary">
+                                        Duration: {getDuration(selectedDeptFlight)}
+                                    </Typography>
+                                    <Typography>
+                                        <button className="editButton" type="button" onClick={editDept}>Edit</button>
+                                    </Typography>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                    </div>
+                    <div className="column">
+                        <p className="selected-return">Selected Return Flight:</p>
+                        <Card sx={{ maxWidth: 500 }}>
+                            <CardActionArea>
 
+
+                                <CardContent>
                                     <div className="middle-container">
+
                                         <div className="left-image">
                                             <img className="flip-image" src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
                                                 alt="airplaneDepart"
@@ -844,11 +795,66 @@ const DeptUpdateReservation = props => {
                                             {retFlight.toObj.to} ({retFlight.toObj.arrivalTime})
                                         </Typography>
                                     </div>
+                                    <Typography variant="body2" color="text.secondary">
+                                        Duration: {getDuration(retFlight.toObj)}
+                                    </Typography>
+                                    <Typography>
 
-                                </div>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card>
+                                    </Typography>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                    </div>
+                    <div className="column">
+                        <p className="selected-return">Summary:</p>
+                        <Card sx={{ maxWidth: 500 }}>
+                            <CardActionArea>
+                                <CardContent>
+                                    <div className="right-container">
+                                        <div className="middle-container">
+                                            <div className="left-image">
+                                                <img src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
+                                                    alt="airplaneDepart"
+                                                    width="27px"
+                                                    height="27px"
+                                                />
+                                            </div>
+                                            <Typography gutterBottom variant="h5" component="div">
+                                                {deptFlightFrom} ({deptFlightDeptTime})
+                                            </Typography>
+                                            <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
+                                                alt="arrow"
+                                                width="40px"
+                                                height="27px" />
+                                            <Typography gutterBottom variant="h5" component="div">
+                                                {deptFlightTo} ({deptFlightArrivalTime})
+                                            </Typography>
+                                        </div>
+
+                                        <div className="middle-container">
+                                            <div className="left-image">
+                                                <img className="flip-image" src="https://img.icons8.com/ios/50/000000/airplane-mode-on--v1.png"
+                                                    alt="airplaneDepart"
+                                                    width="27px"
+                                                    height="27px"
+                                                />
+                                            </div>
+                                            <Typography gutterBottom variant="h5" component="div">
+                                                {retFlight.toObj.from} ({retFlight.toObj.departureTime})
+                                            </Typography>
+                                            <img src="https://img.icons8.com/material-sharp/24/000000/long-arrow-right.png"
+                                                alt="arrow"
+                                                width="40px"
+                                                height="27px" />
+                                            <Typography gutterBottom variant="h5" component="div">
+                                                {retFlight.toObj.to} ({retFlight.toObj.arrivalTime})
+                                            </Typography>
+                                        </div>
+
+                                    </div>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
                     </div>
                 </div>
                 <div><ItineraryUpdate
@@ -872,7 +878,7 @@ const DeptUpdateReservation = props => {
                     deptSeats={deptSeats}
                     retSeats={chosenToSeat?.chosenToSeat}
                     bookingNum={bookingNum}
-                    oldCabinReturn = {cabinReturn.cabinReturn}
+                    oldCabinReturn={cabinReturn.cabinReturn}
 
                 />
                     <div><button className="confirm-res" style={{ marginBottom: "20px" }} onClick={(e) => history.push('/Reserved-flights')}>View Reservations</button></div>
@@ -953,7 +959,12 @@ const DeptUpdateReservation = props => {
 
                                     </div>
                                     <div className='input-group-append'>
-                                        <Button variant="outlined" type="submit">Search</Button>
+                                        {/* <Button variant="outlined" type="submit">Search</Button> */}
+                                        <UIButton
+                                            text={"Search"}
+                                            margin="10px"
+                                            type={'submit'}
+                                        />
 
 
                                     </div>

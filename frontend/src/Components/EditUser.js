@@ -6,7 +6,9 @@ import { BACKEND_URL } from '../API/URLS';
 import TextField from '@mui/material/TextField';
 
 import './SearchFlightCriteria.css';   // create one for users
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import UIButton from './UIButton/UIButton';
+import LoadingPayment from './LoadingPayment/LoadingPayment';
 
 const EditUser = () => {
     const history = useHistory();
@@ -51,7 +53,11 @@ const EditUser = () => {
     const onSubmit = (e) => {
         e.preventDefault();
         axios
-            .put(BACKEND_URL + 'users/update?_id=' + id, user)
+            .put(BACKEND_URL + 'users/update?_id=' + id, user, {
+                headers: {
+                    'Authorization': localStorage.getItem('token')
+                }
+            })
             .then(res => {
                 history.push('/user-details/' + user?._id);
                 console.log(res.data);
@@ -195,8 +201,20 @@ const EditUser = () => {
 
 
                             <div className='input-group-append'>
-                                <Button style={{ marginRight: "10px" }} onClick={() => history.push('/user-details/' + JSON.parse(localStorage.getItem('user'))?._id)} variant="outlined">Back</Button>
-                                <Button onClick={toggleDialog} variant="outlined" >Edit User</Button>
+                                {/* <Button style={{ marginRight: "10px" }} variant="outlined">Back</Button> */}
+
+                                <UIButton
+                                    onClick={() => history.push('/user-details/' + JSON.parse(localStorage.getItem('user'))?._id)}
+                                    text={"Back"}
+                                    margin="10px"
+                                />
+
+                                <UIButton
+                                    onClick={toggleDialog}
+                                    text={"Edit User"}
+                                    margin="10px"
+                                />
+                                {/* <Button onClick={toggleDialog} variant="outlined" >Edit User</Button> */}
 
                             </div>
                             <div>
@@ -207,13 +225,27 @@ const EditUser = () => {
                                     aria-labelledby="alert-dialog-title"
                                     aria-describedby="alert-dialog-description"
                                 >
-                                    <DialogTitle id="alert-dialog-title">
-                                        {"Are you sure you want to edit this user?"}
-                                    </DialogTitle>
-                                    <DialogActions>
-                                        <Button onClick={toggleDialog} variant="text">Cancel </Button>
-                                        <Button onClick={ onSubmit} variant="text" type="submit" color="success" >Confirm Edit</Button>
-                                    </DialogActions>
+                                    <div style={{ margin: '0 0 10px 0' }} >
+                                        <DialogTitle id="alert-dialog-title">
+                                            {"Are you sure you want to edit this user?"}
+                                        </DialogTitle>
+                                        <DialogActions>
+                                            {/* <Button onClick={toggleDialog} variant="text">Cancel </Button> */}
+                                            <UIButton
+                                                text={"Cancel"}
+                                                margin="0px 5px"
+                                                color={'red'}
+                                                onClick={toggleDialog}
+                                            />
+                                            {/* <Button onClick={onSubmit} variant="text" type="submit" color="success" >Confirm Edit</Button> */}
+                                            <UIButton
+                                                text={"Confirm Edit"}
+                                                margin="0px 5px"
+                                                onClick={onSubmit}
+                                                color={'green'}
+                                            />
+                                        </DialogActions>
+                                    </div>
                                 </Dialog>
 
                             </div>

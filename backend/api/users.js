@@ -186,14 +186,14 @@ router.post('/send_mailRes', cors(), async (req, res) => {
 })
 
 
-router.put('/update', (req, res) => {
-  let { userId } = req.body
-  console.log("updating user with id: " + userId);
-  User.findOneAndUpdate(req.query, req.body)
-    .then(res.status(200).json("updated succesfully"))
-    .catch(err =>
-      res.status(400).json({ error: 'Unable to update the Database' })
-    );
+router.put('/update', authenticateToken, (req, res) => {
+    let { userId } = req.body
+    console.log("updating user with id: " + userId);
+    User.findOneAndUpdate(req.query, req.body)
+        .then(res.status(200).json("updated succesfully"))
+        .catch(err =>
+            res.status(400).json({ error: 'Unable to update the Database' })
+        );
 });
 
 router.post('/register', async (req, res) => {
@@ -238,7 +238,7 @@ router.post("/login", (req, res) => {
               if (err) {
                 return res.json({ message: "error" });
               }
-              return res.json({ message: "Success", token: "Bearer " + token, user });
+              return res.json({ message: "Success", token: "Bearer " + token, user:user });
             }
           );
         } else {
@@ -249,6 +249,17 @@ router.post("/login", (req, res) => {
 });
 
 
-
-
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]
+  
+    if(!token) res.sendStatus(401);
+  
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) =>{
+      if(err) res.sendStatus(403);
+      req.user = user
+      next()
+    })
+  }
+  
 module.exports = router;

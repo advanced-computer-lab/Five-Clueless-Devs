@@ -27,6 +27,8 @@ import dubai from '../assets/Dubai.jpg'
 import SwipeableTextMobileStepper from './SwipeableTextMobileStepper';
 import { Parallax } from 'react-parallax';
 import { width } from '@mui/system';
+import UIButton from './UIButton/UIButton';
+
 
 
 
@@ -46,7 +48,7 @@ const SearchFlightUser = ({ location }) => {
         'https://data.1freewallpapers.com/download/sunset-tree-lake-sky-water-evening-purple.jpg'
 
     const image3 =
-    "https://data.1freewallpapers.com/download/horizon-sea-sunset-sky-3840x2400.jpg"
+        "https://www.wallpapers13.com/wp-content/uploads/2016/01/Sunset_sailing_birds_sweden_boat_nature_ultra-2560X1600-Hd-wallpaper-1600x1200.jpg"
     const moment = require('moment')
     const getDuration = (flight) => {
         console.log('----duraton----')
@@ -358,7 +360,7 @@ const SearchFlightUser = ({ location }) => {
 
         if (goAhead) {
             console.log("This is the flight:")
-
+            window.scrollBy(0, 400);
             returnFlight.to = flight.from;
             returnFlight.from = flight.to;
             returnFlight.departureDate = returnDate;
@@ -443,7 +445,7 @@ const SearchFlightUser = ({ location }) => {
                     console.log(err);
                 })
         }
-        window.scrollBy(0, 400);
+        
     };
 
     //SEARCHING AND SELECTING DEPARTURE FLIGHT------------------------------------------------------------------------------------------------------------------------------------------
@@ -497,7 +499,7 @@ const SearchFlightUser = ({ location }) => {
                                                         options={allFlights.map(flight => flight.to)
                                                             .filter((value, index, self) => self.indexOf(value) === index)}
                                                         sx={{ width: 300 }}
-                                                        
+
 
                                                         // onChange={(e) => onChange(e)}
 
@@ -616,7 +618,12 @@ const SearchFlightUser = ({ location }) => {
 
                                             </div>
                                             <div className='input-group-append'>
-                                                <Button variant="outlined" type="submit">Search</Button>
+                                                <UIButton
+                                                    type={"submit"}
+                                                    text={"Search"}
+                                                    margin="10px"
+                                                    color={"blue"}
+                                                />
 
 
                                             </div>
@@ -1328,7 +1335,12 @@ const SearchFlightUser = ({ location }) => {
                                                 </FormControl>
                                             </div>
                                             <div className='input-group-append'>
-                                                <Button variant="outlined" type="submit">Search</Button>
+                                            <UIButton
+                                            type={"submit"}
+                                            text={"Search"}
+                                            margin="10px"
+                                            color={"blue"}
+                                        />
 
 
                                             </div>
@@ -1339,7 +1351,7 @@ const SearchFlightUser = ({ location }) => {
                                     <div className="no-search"> <img src="https://img.icons8.com/external-kiranshastry-gradient-kiranshastry/64/000000/external-search-airport-kiranshastry-gradient-kiranshastry.png" />
                                         <h1>Sorry, No Results Found</h1></div>
 
-                                        <div class="strike" style={{ marginTop: '40px' }}>
+                                    <div class="strike" style={{ marginTop: '40px' }}>
                                         <span>Popular Destinations</span>
                                     </div>
 

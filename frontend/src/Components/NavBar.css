@@ -1,9 +1,26 @@
 .admin{
-    
     margin-right: auto;
 }
 .ayesm{
-    
-    margin-left: 500px;
-   display:flex;
+    /* margin-left: 500px; */
+    display:flex;
+}
+
+.nav-logo-cont{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toolbar{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.nav-logo{
+    cursor: pointer;
+    user-select: none;
 }

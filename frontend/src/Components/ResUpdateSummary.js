@@ -12,10 +12,13 @@ import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
+import UIButton from './UIButton/UIButton';
+import StripeCheckout from 'react-stripe-checkout';
+import LoadingPayment from './LoadingPayment/LoadingPayment';
 
 const ResUpdateSummary = (props) => {
     const flight = props.flight;
-let priceToFinalDisplay = 0;
+    let priceToFinalDisplay = 0;
 
     useEffect(() => {
         console.log(props.retFlightOld);
@@ -27,6 +30,40 @@ let priceToFinalDisplay = 0;
         console.log(props.newCabin);
         console.log(props.oldCabin);
     })
+
+    const [reservation, setReservation] = useState(null)
+    const [charges, setCharges] = useState([]); //[{id: cid, amount: amount left} ]
+    // let payment = [];
+
+    const [payment, setPayment] = useState([]);
+
+    const [loading, setLoading] = useState('');
+
+    useEffect(() => {
+        console.table(payment);
+    }, [payment])
+
+    useEffect(() => {
+        let c = [];
+        axios.get(BACKEND_URL + "reservations/GetReservation?_id=" + props.reservationId)
+            .then(res => {
+                setReservation(res.data[0]);
+                console.log(reservation)
+                setPayment([...res.data[0].chargeId]);
+
+                res.data[0].chargeId.forEach((cId, index) => {
+                    axios.post(BACKEND_URL + "payments/retrieve", { chargeId: cId })
+                        .then((charge) => {
+                            c[index] = { id: cId, amount: charge.data.amount_captured / 100 };
+                            setCharges(c);
+                            console.log(c);
+                        })
+                        .catch(err => console.log(err))
+                })
+            })
+            .catch(err => console.log(err))
+    }, []);
+
 
     const history = useHistory();
     // const handleClick = () => {
@@ -45,32 +82,23 @@ let priceToFinalDisplay = 0;
         createData('Flight Number', props.selectedDeptFlightId),
         createData('Departure Date and Time', props.deptFlightDeptTime + "   ,   " + props.deptFlightDeptDate.substring(0, 10)),
         createData('Arrival Date and Time', props.deptFlightArrivalTime + "  ,   " + props.deptFlightArrivalDate.substring(0, 10)),
-
-
-
-
     ];
 
     const rowsR = [
         createData('Flight Number', props.retFlightId),
         createData('Departure Date and Time', props.retFlightDeptTime + "   ,   " + props.retFlightDeptDate.substring(0, 10)),
         createData('Arrival Date and Time', props.retFlightArrivalTime + "  ,   " + props.retFlightArrivalDate.substring(0, 10)),
-
-
-
-
     ];
 
 
-    
+
     if (window.location.href.includes("Dept")) {
         if (props.priceToDisplay <= 0) {
 
-
-            rows.push(createData('Additional Fee', Math.abs(props.priceToDisplay)))
+            rows.push(createData('Additional Fee', Math.abs(props.priceToDisplay).toFixed(0)))
         }
         else {
-            rows.push(createData('Amount to be refunded', (props.priceToDisplay)))
+            rows.push(createData('Amount to be refunded', (props.priceToDisplay).toFixed(0)))
         }
         priceToFinalDisplay = props.priceToDisplay;
         rowsR.push(createData('Additional Fee', 0))
@@ -78,14 +106,14 @@ let priceToFinalDisplay = 0;
         rowsR.push(createData('Chosen Class', props.oldCabinReturn))
     }
     else if (window.location.href.includes("Ret")) {
-     
+
         if (props.priceToDisplayRet <= 0) {
-            
-            rowsR.push(createData('Additional Fee', Math.abs(props.priceToDisplayRet)))
+
+            rowsR.push(createData('Additional Fee', Math.abs(props.priceToDisplayRet).toFixed(0)))
         }
         else {
-            
-            rowsR.push(createData('Amount to be refunded', (props.priceToDisplayRet)))
+
+            rowsR.push(createData('Amount to be refunded', (props.priceToDisplayRet).toFixed(0)))
         }
         priceToFinalDisplay = props.priceToDisplayRet;
         rows.push(createData('Additional Fee', 0))
@@ -104,8 +132,100 @@ let priceToFinalDisplay = 0;
     }
 
 
+    const getPrice = () => {
+        if (window.location.href.includes("Dept")) {
+            return Math.abs(props.priceToDisplay);
+        } else {
+            return Math.abs(props.priceToDisplayRet);
+        }
+    }
 
-    const onConfirm = (e) => {
+
+    const makePayment = (token) => {
+        let price = 0;
+        if (window.location.href.includes("Dept")) {
+            price = props.priceToDisplay;
+        } else {
+            price = props.priceToDisplayRet;
+        }
+
+        if (price <= 0) {
+            //pay extra
+           
+            const product = {
+                name: `Ticket between ${props.deptFrom} & ${props.deptTo} for user ${userId}`,
+                price: Math.abs(price), ///price of ticket from input //remove hardcode
+                productBy: "FiveCluelessDevs"
+            }
+            const body = {
+                token,
+                product
+            } 
+            setLoading('Payment');
+            axios.post('http://localhost:8082/api/payments/payment', body)
+                .then(response => {
+                    // console.log("RESPONSE", response.data);
+                    let paymentId = response.data.id;
+                    setPayment(payment.concat([paymentId]))
+                    let payArray = payment.concat([paymentId]);
+                    setLoading('success');
+                    onConfirm(null, payArray);
+                })
+                .catch(err => {
+                    setLoading('error');
+                    console.log(err)
+                    setTimeout(() => setLoading(''), 1000);
+                  });
+
+
+        } else {
+            //refund
+            setLoading('Refund');
+            let amountLeft = price;
+            charges.forEach(c => {
+                if (amountLeft > 0 && c.amount > 0) {
+                    if (c.amount >= amountLeft) {
+                        const body = {
+                            amount: amountLeft,
+                            chargeId: c.id
+                        }
+                        console.log(body)
+                        axios.post('http://localhost:8082/api/payments/refund', body)
+                            .then(response => {
+                                console.log("RESPONSE", response.data);
+                                setLoading('success');
+                                onConfirm();
+                            })
+                            .catch(err => {
+                                setLoading('error');
+                                console.log(err)
+                                setTimeout(() => setLoading(''), 1000);
+                              });
+                        amountLeft = 0;
+                    } else {
+                        const body = {
+                            amount: c.amount,
+                            chargeId: c.id
+                        }
+                        console.log(body)
+                        axios.post('http://localhost:8082/api/payments/refund', body)
+                            .then(response => {
+                                console.log("RESPONSE", response.data);
+                            })
+                            .catch(err => {
+                                setLoading('error');
+                                console.log(err)
+                                setTimeout(() => setLoading(''), 1000);
+                              });
+                        amountLeft = amountLeft - c.amount;
+                    }
+                }
+            })
+
+        }
+    }
+
+    const onConfirm = (e, payArray) => {
         let numOfAdults = props.numOfAdults
         let numOfChildren = props.numOfChildren;
         let numOfSeats = numOfAdults * 1 + numOfChildren * 1;
@@ -124,6 +244,10 @@ let priceToFinalDisplay = 0;
         let newCabin = props.newCabin;
         let oldCabin = props.oldCabin;
 
+        if (!payArray) {
+            payArray = payment;
+        }
+
 
 
         //-------------------------------
@@ -139,13 +263,13 @@ let priceToFinalDisplay = 0;
                     let deptSeatsOld = deptFlightOld.seatsEconomy;
                     deptSeatsOld = deptSeatsOld.map((s) => (s == userId) ? null : s)
                     // deptFlight = {  flightId: deptFlight.flightId, availableEconomy: deptFlight.availableEconomy - numOfSeats };
-                    deptFlightOld = {flightId: deptFlightOld.flightId, availableEconomy: deptFlightOld.availableEconomy + numOfSeats, seatsEconomy: deptSeatsOld };
+                    deptFlightOld = { flightId: deptFlightOld.flightId, availableEconomy: deptFlightOld.availableEconomy + numOfSeats, seatsEconomy: deptSeatsOld };
                 }
                 else if (window.location.href.includes("Ret")) {
                     let retSeatsOld = retFlightOld.seatsEconomy;
                     retSeatsOld = retSeatsOld.map((s) => (s == userId) ? null : s)
                     // retFlight = { flightId: retFlight.flightId, availableEconomy: retFlight.availableEconomy - numOfSeats };
-                    retFlightOld = {  flightId : retFlightOld.flightId, availableEconomy: retFlightOld.availableEconomy + numOfSeats, seatsEconomy: retSeatsOld };
+                    retFlightOld = { flightId: retFlightOld.flightId, availableEconomy: retFlightOld.availableEconomy + numOfSeats, seatsEconomy: retSeatsOld };
                 }
                 break;
             case "First":
@@ -159,7 +283,7 @@ let priceToFinalDisplay = 0;
                     let retSeatsOld = retFlightOld.seatsFirst;
                     retSeatsOld = retSeatsOld.map((s) => (s == userId) ? null : s)
                     // retFlight = { flightId: retFlight.flightId, availableFirst: retFlight.availableFirst - numOfSeats };
-                    retFlightOld = { flightId : retFlightOld.flightId, availableFirst: retFlightOld.availableFirst + numOfSeats, seatsFirst: retSeatsOld };
+                    retFlightOld = { flightId: retFlightOld.flightId, availableFirst: retFlightOld.availableFirst + numOfSeats, seatsFirst: retSeatsOld };
                 }
                 break;
             case "Business":
@@ -172,8 +296,8 @@ let priceToFinalDisplay = 0;
                 else if (window.location.href.includes("Ret")) {
                     let retSeatsOld = retFlightOld.seatsBusiness;
                     retSeatsOld = retSeatsOld.map((s) => (s == userId) ? null : s)
-                    // retFlight = { flightId: retFlight.flightId, availableBusiness: retFlight.availableBusiness - numOfSeats };
-                    retFlightOld = { flightId : retFlightOld.flightId, availableBusiness: retFlightOld.availableBusiness + numOfSeats, seatsBusiness: retSeatsOld };
+                    //  retFlight = { flightId: retFlight.flightId, availableBusiness: retFlight.availableBusiness - numOfSeats };
+                    retFlightOld = { flightId: retFlightOld.flightId, availableBusiness: retFlightOld.availableBusiness + numOfSeats, seatsBusiness: retSeatsOld };
                 }
                 break;
             default:
@@ -197,7 +321,7 @@ let priceToFinalDisplay = 0;
             case "First":
                 if (window.location.href.includes("Dept")) {
 
-                    deptFlight = {  flightId: deptFlight.flightId, availableFirst: deptFlight.availableFirst - numOfSeats };
+                    deptFlight = { flightId: deptFlight.flightId, availableFirst: deptFlight.availableFirst - numOfSeats };
 
                 }
                 else if (window.location.href.includes("Ret")) {
@@ -209,7 +333,7 @@ let priceToFinalDisplay = 0;
             case "Business":
                 if (window.location.href.includes("Dept")) {
 
-                    deptFlight = {  flightId: deptFlight.flightId, availableBusiness: deptFlight.availableBusiness - numOfSeats };
+                    deptFlight = { flightId: deptFlight.flightId, availableBusiness: deptFlight.availableBusiness - numOfSeats };
 
                 }
                 else if (window.location.href.includes("Ret")) {
@@ -225,7 +349,7 @@ let priceToFinalDisplay = 0;
         console.table(deptFlightOld);
 
 
-
+        console.table(payArray);
         if (window.location.href.includes("Ret")) {
             axios
                 .put(BACKEND_URL + 'flights/update?flightId=' + retFlight?.flightId, retFlight)
@@ -238,11 +362,11 @@ let priceToFinalDisplay = 0;
                             console.log(res.data);
 
                             const data = {
-
                                 to: retFlight?.flightId,
                                 cabin: cabin,
                                 price: priceOfDept + priceOfRet,
-                                cabinArrival: cabin
+                                cabinArrival: cabin,
+                                chargeId: payArray
                             }
                             axios
                                 .put(BACKEND_URL + "reservations/update?_id=" + reservationId, data)
@@ -251,9 +375,11 @@ let priceToFinalDisplay = 0;
                                     console.log(res.data);
                                     props.setBookingNum(res.data._id);
                                     props.selectDept();
+                                    setLoading('');
                                 })
                                 .catch(err => {
                                     console.log("Error updating reservation: " + err);
+                                    setLoading('');
                                 })
 
 
@@ -283,7 +409,8 @@ let priceToFinalDisplay = 0;
                                 from: deptFlight?.flightId,
                                 cabin: cabin,
                                 price: priceOfDept + priceOfRet,
-                                cabinDeparture: cabin
+                                cabinDeparture: cabin,
+                                chargeId: payArray
                             }
                             axios
                                 .put(BACKEND_URL + "reservations/update?_id=" + reservationId, data)
@@ -292,9 +419,11 @@ let priceToFinalDisplay = 0;
                                     console.log(res.data);
                                     props.setBookingNum(res.data._id);
                                     props.selectDept();
+                                    setLoading('');
                                 })
                                 .catch(err => {
                                     console.log("Error updating reservation: " + err);
+                                    setLoading('');
                                 })
 
 
@@ -382,8 +511,8 @@ let priceToFinalDisplay = 0;
                     </Table>
                 </TableContainer>
 
-                {(priceToFinalDisplay) <= 0 ? <div>Additional Fee: <p style={{ color: "red" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(priceToFinalDisplay)}</span></p> </div> :
-                    <div>Amount to be refunded: <p style={{ color: "green" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(priceToFinalDisplay)}</span></p> </div>}
+                {(priceToFinalDisplay) <= 0 ? <div>Additional Fee: <p style={{ color: "red" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(priceToFinalDisplay).toFixed(0)}</span></p> </div> :
+                    <div>Amount to be refunded: <p style={{ color: "green" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(priceToFinalDisplay).toFixed(0)}</span></p> </div>}
                 <p className="passenger-font">(for {props.seatCount} passengers)</p>
 
                 <button className="confirm-res" onClick={clickConfirm}>Confirm Reservation</button>
@@ -399,10 +528,38 @@ let priceToFinalDisplay = 0;
                             {"Are you sure you want to confirm the reservation?"}
                         </DialogTitle>
                         <DialogActions>
-                            <Button onClick={toggleDialog} variant="text">back </Button>
-                            <Button onClick={onConfirm} variant="text" color="success">Confirm Reservation</Button>
+
+                            <UIButton
+                                onClick={toggleDialog}
+                                text={"back"}
+                                margin="10px"
+                            />
+
+                            {(priceToFinalDisplay) <= 0 ?
+                                <StripeCheckout
+                                    stripeKey="pk_test_51K9D6UA32Adg2XeIayrvPhQ3Y97itWgoKPGMDyhxforRJofQ1DmX0G66AUBJp2USDguA6DP5KAKireIv4DwbmYSh00oxYvRo7K"
+                                    token={makePayment}
+                                    name="Buy Ticket"
+                                    amount={getPrice() * 100}
+                                    email={JSON.parse(localStorage.getItem('user'))?.email}
+                                >
+                                    <UIButton
+                                        text={"Confirm & Pay"}
+                                        margin="10px"
+                                        color="green"
+                                    />
+                                </StripeCheckout>
+                                :
+                                <UIButton
+                                    onClick={makePayment}
+                                    text={"Confirm & Refund"}
+                                    margin="10px"
+                                    color="green"
+                                />}
                         </DialogActions>
                     </Dialog>
+
+                    {loading && <LoadingPayment text={loading}/>}
                 </div>
             </div>
 

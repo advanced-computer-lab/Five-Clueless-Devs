@@ -31,6 +31,9 @@ const ReservationSchema = new mongoose.Schema({
   cabinArrival:{
     type:String,
   },
+  chargeId:{
+    type:[String]
+  }
 });
 
 module.exports = Reservation = mongoose.model('reservation', ReservationSchema);

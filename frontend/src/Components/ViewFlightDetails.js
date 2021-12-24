@@ -4,6 +4,7 @@ import '../App.css';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import UIButton from './UIButton/UIButton';
 
 
 const ViewFlightDetails = () => {
@@ -168,13 +169,26 @@ const ViewFlightDetails = () => {
             </Link>
             <br /> */}
 
-            <Button
+            {/* <Button
               onClick={() => history.push(`/update-flight/${id}`)}
               variant="outlined"
               style={{ marginRight: "10px" }}
-            > Edit </Button>
+            > Edit </Button> */}
 
-            {showDelete ? <Button onClick={setConfirmButton} variant="outlined" color="error">Delete </Button> : null}
+            <UIButton
+              onClick={() => history.push(`/update-flight/${id}`)}
+              text={"Edit"}
+              margin="10px"
+            />
+
+            {/* {showDelete ? <Button onClick={setConfirmButton} variant="outlined" color="error">Delete </Button> : null} */}
+            {showDelete ? <UIButton
+              onClick={setConfirmButton}
+              text={"Delete"}
+              margin="10px"
+              color={'red'}
+            />: null}
+
             {/* {showConfirm ? <Button onClick={onDeleteConfirm} variant="outlined" color="error">Confirm</Button> : null} */}
 
           </div>

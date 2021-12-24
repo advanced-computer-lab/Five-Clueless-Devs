@@ -4,6 +4,7 @@ import '../App.css';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import UIButton from './UIButton/UIButton';
 
 
 const ViewDetailsUser = () => {
@@ -20,8 +21,8 @@ const ViewDetailsUser = () => {
     availableEconomy: '',
     availableBusiness: '',
     availableFirst: '',
-    baggageAllowance:'',
-    duration:''
+    baggageAllowance: '',
+    duration: ''
   });
   let { id } = useParams();
 
@@ -142,18 +143,30 @@ const ViewDetailsUser = () => {
             </Link>
             <br /> */}
 
- 
+            {/* 
             <Button
               onClick={() => history.push(`/update-flight/${id}`)}
               variant="outlined"
               style={{ marginRight: "10px" }}
-            > Edit </Button>
+            > Edit </Button> */}
 
-            <Button
+            <UIButton
+              onClick={() => history.push(`/update-flight/${id}`)}
+              text={"Edit"}
+              margin="10px"
+            />
+
+            {/* <Button
               onClick={() => history.push(`/search-user/${id}`)}
               variant="outlined"
               style={{ marginRight: "10px" }}
-            > Back </Button>
+            > Back </Button> */}
+
+            <UIButton
+              onClick={() => history.push(`/search-user/${id}`)}
+              text={"Back"}
+              margin="10px"
+            />
 
 
           </div>
@@ -161,7 +174,7 @@ const ViewDetailsUser = () => {
       </div>
 
 
-     
+
 
     </div>
   )

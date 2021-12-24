@@ -256,11 +256,11 @@ const FlightCard = (props) => {
                     {oldPrice - checkTotal() < 0 ? <div style={{ textAlign: "right", marginBottom: "-20px", marginTop: "10px", marginRight: "-8px" }}>Pay Additional:</div> :
                         <div style={{ textAlign: "center", marginBottom: "-20px", marginTop: "10px", }}>Save:</div>}
                     <div className="middle-price">
-                    {oldPrice - checkTotal() < 0 ? <p style={{ color: "red", marginTop: "20px" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(oldPrice - checkTotal())}</span></p>
-                            : <p style={{ color: "green", marginTop: "20px" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(oldPrice - checkTotal())}</span></p>}
+                    {oldPrice - checkTotal() < 0 ? <p style={{ color: "red", marginTop: "20px" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(oldPrice - checkTotal()).toFixed(0)}</span></p>
+                            : <p style={{ color: "green", marginTop: "20px" }}> <span><b style={{ color: "black" }}>EGP</b>{Math.abs(oldPrice - checkTotal()).toFixed(0)}</span></p>}
 
                     </div>
-                    <p className="passenger-font" onClick={handleClick}>(for {props.numOfAdults + props.numOfChildren} passengers)</p>
+                    <p className="passenger-font" onClick={handleClick}>(for {props.seatCount} passengers)</p>
                 </div>
             </div>
 

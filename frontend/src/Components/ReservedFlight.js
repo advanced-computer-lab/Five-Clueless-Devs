@@ -101,6 +101,7 @@ const ReservedFlight = () => {
                         <h1>You haven't made any reservations yet!</h1></div>
                 }
             </div>
+            
 
         </div>
         )

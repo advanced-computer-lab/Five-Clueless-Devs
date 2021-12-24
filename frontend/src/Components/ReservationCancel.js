@@ -5,6 +5,8 @@ import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
 import './ReservationCancel.css';
+import UIButton from './UIButton/UIButton';
+import LoadingPayment from './LoadingPayment/LoadingPayment';
 
 const ReservationCancel = (props) => {
   const history = useHistory();
@@ -14,7 +16,7 @@ const ReservationCancel = (props) => {
   const toSeats = props.toSeats;
   const fromSeats = props.fromSeats;
   const cabin = props.cabin;
-  const cabinDeparture= props.cabinDeparture;
+  const cabinDeparture = props.cabinDeparture;
   const cabinReturn = props.cabinReturn;
   const reservationID = props.reservationId;
   const chosenFromSeat = props.chosenFromSeat;
@@ -54,8 +56,14 @@ const ReservationCancel = (props) => {
     setConfirm(!showConfirm);
   }
 
-  useEffect(() => {
 
+  const [reservation, setReservation] = useState({});
+  useEffect(() => {
+    axios.get(BACKEND_URL + "reservations/GetReservation?_id=" + reservationID)
+      .then(res => {
+        setReservation(res.data[0]);
+        console.log(res.data[0])
+      }).catch(err => console.log(err));
   }, []);
 
 
@@ -119,10 +127,12 @@ const ReservationCancel = (props) => {
   };
 
 
+  const [loading, setLoading] = useState('');
   const onSubmit = (e) => {
     OnCancel();
     props.handleSend(e);
     e.preventDefault();
+    setLoading('Refund');
     axios
       .put(BACKEND_URL + 'flights/update?flightId=' + from, f)
       .then(res => {
@@ -134,7 +144,25 @@ const ReservationCancel = (props) => {
             axios
               .delete(BACKEND_URL + "reservations/cancelReservation?_id=" + reservationID)
               .then(res => {
-                history.push("/Reserved-flights");
+                console.log(reservation?.chargeId)
+                reservation?.chargeId.forEach(cId => {
+                  const body = {
+                    chargeId: cId
+                  }
+                  console.log(body)
+                  axios.post('http://localhost:8082/api/payments/refund', body)
+                    .then(response => {
+                      console.log("RESPONSE", response.data);
+                      setLoading('success');
+                      setTimeout(() => history.push("/Reserved-flights"), 500)
+                    })
+                    .catch(err => {
+                      setLoading('error');
+                      console.log(err)
+                      setTimeout(() => setLoading(''), 1000);
+                    });
+                  
+                })
               })
               .catch(err => {
                 console.log("Error form Cancel Resrevation");
@@ -155,29 +183,42 @@ const ReservationCancel = (props) => {
     <div>
       <div className='buttonUnder'>
 
-        <Button className="updateButton" style={{ marginBottom: "10px", marginTop:"-10px"  }} onClick={(e) => history.push(
+        <Button className="updateButton" style={{ marginBottom: "10px", marginTop: "-10px" }} onClick={(e) => history.push(
           {
             pathname: '/Reservation-Update-Dept',
-            state: { departureFrom: { departureFromCountry }, departureTo: { departureToCountry }, numberOfFromSeats: { chosenFromSeat },
-             departFlight: { fromObj }, returnFlight: {toObj}, seatNum: {seatCount}, cabin:{cabin},reservationId:{reservationID}, cabinDeparture:{cabinDeparture}, 
-             chosenToSeat:{chosenToSeat} , cabinReturn:{cabinReturn} }
+            state: {
+              departureFrom: { departureFromCountry }, departureTo: { departureToCountry }, numberOfFromSeats: { chosenFromSeat },
+              departFlight: { fromObj }, returnFlight: { toObj }, seatNum: { seatCount }, cabin: { cabin }, reservationId: { reservationID }, cabinDeparture: { cabinDeparture },
+              chosenToSeat: { chosenToSeat }, cabinReturn: { cabinReturn }
+            }
           })
         }>Update Depart Reservation</Button>
-         <Button className="updateButton" style={{ marginBottom: "10px", marginTop:"-10px" }} onClick={(e) => history.push(
+        <Button className="updateButton" style={{ marginBottom: "10px", marginTop: "-10px" }} onClick={(e) => history.push(
           {
             pathname: '/Reservation-Update-Ret',
-            state: { departureFrom: { departureFromCountry }, departureTo: { departureToCountry }, numberOfFromSeats: { chosenFromSeat },
-             departFlight: { fromObj }, returnFlight: {toObj}, seatNum: {seatCount}, cabin:{cabin},reservationId:{reservationID}, cabinReturn:{cabinReturn}, 
-             chosenFromSeat:{chosenFromSeat}, cabinDeparture:{cabinDeparture} }
+            state: {
+              departureFrom: { departureFromCountry }, departureTo: { departureToCountry }, numberOfFromSeats: { chosenFromSeat },
+              departFlight: { fromObj }, returnFlight: { toObj }, seatNum: { seatCount }, cabin: { cabin }, reservationId: { reservationID }, cabinReturn: { cabinReturn },
+              chosenFromSeat: { chosenFromSeat }, cabinDeparture: { cabinDeparture }
+            }
           })
         }>Update Return Reservation</Button>
-        
+
 
 
       </div>
       <div>Booking Number: <span>{props.bookingId}</span></div>
-          <div  style={{ marginBottom: "20px" }} >Total Price: EGP <span>{props.reservationPrice}</span></div>
-      <Button variant="outlined" color="error" onClick={toggleDialog}>Cancel Reservation</Button>
+      <div style={{ marginBottom: "20px" }} >Total Price: EGP <span>{props.reservationPrice}</span></div>
+
+
+      <UIButton
+        onClick={toggleDialog}
+        text={"Cancel Reservation"}
+        margin="10px"
+        color="red"
+      />
+
+      {/* <Button variant="outlined" color="error" onClick={toggleDialog}>Cancel Reservation</Button> */}
       <div>
         <Dialog
           open={showConfirm}
@@ -189,11 +230,29 @@ const ReservationCancel = (props) => {
             {"Are you sure you want to cancel the reservation?"}
           </DialogTitle>
           <DialogActions>
-            <Button onClick={toggleDialog} variant="text">back </Button>
-            <Button onClick={onSubmit} variant="text" color="error">cancel Reservation</Button>
+            {/* <Button onClick={toggleDialog} variant="text">back </Button> */}
+            <UIButton
+              onClick={toggleDialog}
+              text={"back"}
+              margin="10px"
+            />
+
+            <UIButton
+              onClick={onSubmit}
+              text={"Cancel Reservation"}
+              margin="10px"
+              color="red"
+            />
+            {/* <Button onClick={onSubmit} variant="text" color="error">cancel Reservation</Button> */}
           </DialogActions>
         </Dialog>
+
+        {loading && <LoadingPayment text={loading} />}
+
+        {/* {showConfirm && <LoadingPayment text={"error"} />} */}
+
       </div>
+
     </div>
   )
 }
