@@ -32,16 +32,17 @@ const Register = () => {
 
 
 	const handleErrors = () => {
-		if (activeStep == 0) {
-			let e = error;
 
-			if (!(email.includes('@') && email.includes("."))) {
-				e = { ...e, email: "email must be in form example@mail.com" }
-				setError(e)
-				return false;
-			}
+
+		if (activeStep == 0) {
+			let e = initialError;
 
 			if (username && email && password) {
+				if (!(email.includes('@') && email.includes("."))) {
+					e = { ...e, email: "email must be in form example@mail.com" }
+					setError(e)
+					return false;
+				}
 				handleComplete();
 				return true;
 			} else {
@@ -62,16 +63,9 @@ const Register = () => {
 				return false;
 			}
 		} else if (activeStep == 1) {
-			if (firstName && lastName && telephone) {
-				handleComplete();
-				return true;
-			} else {
-				const newCompleted = completed;
-				newCompleted[activeStep] = false;
-				setCompleted(newCompleted);
 
-				return false;
-			}
+			handleComplete();
+			return true;
 
 		}
 	}
@@ -87,10 +81,6 @@ const Register = () => {
 					: activeStep + 1;
 			setActiveStep(newActiveStep);
 		}
-	};
-
-	const handleBack = () => {
-		setActiveStep((prevActiveStep) => prevActiveStep - 1);
 	};
 
 	const handleStep = (step) => () => {
@@ -140,6 +130,15 @@ const Register = () => {
 	})
 
 	async function registerUser() {
+		if(completed[0] != true){
+			setActiveStep(0);
+			return;
+		}
+		if(completed[1] != true){
+			setActiveStep(1);
+			return;
+		}
+
 
 		try {
 			const response = await fetch(BACKEND_URL + 'users/register', {
