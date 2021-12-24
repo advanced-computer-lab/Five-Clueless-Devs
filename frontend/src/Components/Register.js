@@ -5,6 +5,7 @@ import axios from 'axios';
 import TextField from '@mui/material/TextField';
 import { Button, Step, StepButton, Stepper } from '@mui/material';
 import './Register.css';
+import UIButton from './UIButton/UIButton';
 
 
 const steps = ['Account Details', 'Personal Details', 'Travel Details'];
@@ -29,15 +30,65 @@ const Register = () => {
 		return completedSteps() === totalSteps();
 	};
 
+
+	const handleErrors = () => {
+		if (activeStep == 0) {
+			let e = error;
+
+			if (!(email.includes('@') && email.includes("."))) {
+				e = { ...e, email: "email must be in form example@mail.com" }
+				setError(e)
+				return false;
+			}
+
+			if (username && email && password) {
+				handleComplete();
+				return true;
+			} else {
+				const newCompleted = completed;
+				newCompleted[activeStep] = false;
+				setCompleted(newCompleted);
+
+				if (!username) {
+					e = { ...e, username: "username cannot be empty" }
+				}
+				if (!email) {
+					e = { ...e, email: "email cannot be empty" }
+				}
+				if (!password) {
+					e = { ...e, password: "password cannot be empty" }
+				}
+				setError(e)
+				return false;
+			}
+		} else if (activeStep == 1) {
+			if (firstName && lastName && telephone) {
+				handleComplete();
+				return true;
+			} else {
+				const newCompleted = completed;
+				newCompleted[activeStep] = false;
+				setCompleted(newCompleted);
+
+				return false;
+			}
+
+		}
+	}
+
 	const handleNext = () => {
-		const newActiveStep =
-			isLastStep() && !allStepsCompleted()
-				? // It's the last step, but not all steps have been completed,
-				// find the first step that has been completed
-				steps.findIndex((step, i) => !(i in completed))
-				: activeStep + 1;
-		setActiveStep(newActiveStep);
+		if (handleErrors()) {
+			setError(initialError);
+			const newActiveStep =
+				isLastStep() && !allStepsCompleted()
+					? // It's the last step, but not all steps have been completed,
+					// find the first step that has been completed
+					steps.findIndex((step, i) => !(i in completed))
+					: activeStep + 1;
+			setActiveStep(newActiveStep);
+		}
 	};
+
 	const handleBack = () => {
 		setActiveStep((prevActiveStep) => prevActiveStep - 1);
 	};
@@ -50,9 +101,7 @@ const Register = () => {
 		const newCompleted = completed;
 		newCompleted[activeStep] = true;
 		setCompleted(newCompleted);
-		handleNext();
 	};
-
 
 	const history = useHistory()
 	const [userId, setUserId] = useState('')
@@ -65,10 +114,32 @@ const Register = () => {
 	const [countryCode, setcountryCode] = useState('')
 	const [telephone, setTelephone] = useState('')
 	const [passportNumber, setPassportNumber] = useState('')
-	const [reservations, setReservations] = useState([])
 
-	async function registerUser(event) {
-		event.preventDefault()
+	let initialError = {
+		username: "",
+		email: "",
+		password: "",
+		firstName: "",
+		lastName: "",
+		homeAddress: "",
+		countryCode: "",
+		telephone: "",
+		passportNumber: "",
+	}
+
+	const [error, setError] = useState({
+		username: "",
+		email: "",
+		password: "",
+		firstName: "",
+		lastName: "",
+		homeAddress: "",
+		countryCode: "",
+		telephone: "",
+		passportNumber: "",
+	})
+
+	async function registerUser() {
 
 		try {
 			const response = await fetch(BACKEND_URL + 'users/register', {
@@ -86,13 +157,25 @@ const Register = () => {
 					countryCode,
 					telephone,
 					passportNumber,
-					reservations
 				}),
 			})
-
 			const data = await response.json()
 			console.log(data);
-			if (data.status === 'ok') {
+			if (data.message && data.message == 'email taken') {
+				setError({ ...error, email: 'This email is already registered' });
+				const newCompleted = completed;
+				newCompleted[0] = false;
+				setCompleted(newCompleted);
+				setActiveStep(0);
+			}
+			if (data.message && data.message == 'username taken') {
+				setError({ ...error, username: 'This username is taken' });
+				const newCompleted = completed;
+				newCompleted[0] = false;
+				setCompleted(newCompleted);
+				setActiveStep(0);
+			}
+			else if (data.status === 'ok') {
 				history.push('/login')
 			}
 		} catch (error) {
@@ -103,44 +186,59 @@ const Register = () => {
 	if (activeStep == 0) {
 		return (
 			<div>
-				<h1>Register</h1>
+				<h1 style={{ marginBottom: '15px' }}>Register</h1>
+				<div className='stepper'>
+					<Stepper nonLinear alternativeLabel activeStep={activeStep}>
+						{steps.map((label, index) => (
+							<Step key={label} completed={completed[index]}>
+								<StepButton color="inherit" onClick={handleStep(index)}>
+									{label}
+								</StepButton>
+							</Step>
+						))}
+					</Stepper>
+				</div>
 
-				<Stepper nonLinear alternativeLabel activeStep={activeStep}>
-					{steps.map((label, index) => (
-						<Step key={label} completed={completed[index]}>
-							<StepButton color="inherit" onClick={handleStep(index)}>
-								{label}
-							</StepButton>
-						</Step>
-					))}
-				</Stepper>
+				<div className='register-container' >
+					<div className='register-box-container'>
+						<TextField
+							value={username}
+							onChange={(e) => setUsername(e.target.value)}
+							type="text"
+							placeholder="Username"
+							label="Username"
+							helperText={error.username}
+							error={error.username}
+						/>
 
-				<div className='register-box-container'>
-					<TextField
-						value={username}
-						onChange={(e) => setUsername(e.target.value)}
-						type="text"
-						placeholder="Username"
-					/>
+						<TextField
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							type="email"
+							placeholder="Email"
+							label="Email"
+							type="email"
+							helperText={error.email}
+							error={error.email}
+						/>
 
-					<TextField
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-						type="email"
-						placeholder="Email"
-					/>
+						<TextField
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+							type="password"
+							placeholder="Password"
+							label="Password"
+							helperText={error.password}
+							error={error.password}
+						/>
 
-					<TextField
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						type="password"
-						placeholder="Password"
-					/>
-					<br />
+						<UIButton
+							onClick={handleNext}
+							text={"Next"}
+							margin="10px"
+						/>
 
-					<Button onClick={handleNext} sx={{ mr: 1 }}>
-						Next
-					</Button>
+					</div>
 				</div>
 			</div>
 
@@ -148,79 +246,101 @@ const Register = () => {
 	} else if (activeStep == 1) {
 		return (
 			<div>
-				<h1>Register</h1>
+				<h1 style={{ marginBottom: '15px' }}>Register</h1>
+				<div className='stepper'>
+					<Stepper nonLinear alternativeLabel activeStep={activeStep}>
+						{steps.map((label, index) => (
+							<Step key={label} completed={completed[index]}>
+								<StepButton color="inherit" onClick={handleStep(index)}>
+									{label}
+								</StepButton>
+							</Step>
+						))}
+					</Stepper>
+				</div>
 
-				<Stepper nonLinear alternativeLabel activeStep={activeStep}>
-					{steps.map((label, index) => (
-						<Step key={label} completed={completed[index]}>
-							<StepButton color="inherit" onClick={handleStep(index)}>
-								{label}
-							</StepButton>
-						</Step>
-					))}
-				</Stepper>
+				<div className='register-container' >
+					<div className='register-box-container'>
+						<TextField
+							value={firstName}
+							onChange={(e) => setFirstName(e.target.value)}
+							type="text"
+							placeholder="First Name"
+							label='First Name'
+						/>
+						<TextField
+							value={lastName}
+							onChange={(e) => setLastName(e.target.value)}
+							type="text"
+							placeholder="Last Name"
+							label="Last Name"
+						/>
 
+						<TextField
+							value={telephone}
+							onChange={(e) => setTelephone(e.target.value)}
+							placeholder="Telephone"
+							label="Telephone"
+						/>
 
-				<TextField
-					value={firstName}
-					onChange={(e) => setFirstName(e.target.value)}
-					type="text"
-					placeholder="First Name"
-				/>
-				<TextField
-					value={lastName}
-					onChange={(e) => setLastName(e.target.value)}
-					type="text"
-					placeholder="Last Name"
-				/>
-
-				<TextField
-					value={telephone}
-					onChange={(e) => setTelephone(e.target.value)}
-					placeholder="Telephone"
-				/>
-
-				<Button onClick={handleNext} sx={{ mr: 1 }}>
-					Next
-				</Button>
+						<UIButton
+							onClick={handleNext}
+							text={"Next"}
+							margin="10px"
+						/>
+					</div>
+				</div>
 			</div>
 		)
 	} else {
 
 		return (
 			<div>
-				<h1>Register</h1>
+				<h1 style={{ marginBottom: '15px' }}>Register</h1>
+				<div className='stepper'>
+					<Stepper nonLinear alternativeLabel activeStep={activeStep}>
+						{steps.map((label, index) => (
+							<Step key={label} completed={completed[index]}>
+								<StepButton color="inherit" onClick={handleStep(index)}>
+									{label}
+								</StepButton>
+							</Step>
+						))}
+					</Stepper>
+				</div>
 
-				<Stepper nonLinear alternativeLabel activeStep={activeStep}>
-					{steps.map((label, index) => (
-						<Step key={label} completed={completed[index]}>
-							<StepButton color="inherit" onClick={handleStep(index)}>
-								{label}
-							</StepButton>
-						</Step>
-					))}
-				</Stepper>
-				<br />
-				<TextField
-					value={homeAddress}
-					onChange={(e) => setHomeAddress(e.target.value)}
-					placeholder="Home Address"
-				/>
-				<TextField
-					value={countryCode}
-					onChange={(e) => setcountryCode(e.target.value)}
-					placeholder="Country Code"
-				/>
-				<br />
-				<TextField
-					value={passportNumber}
-					onChange={(e) => setPassportNumber(e.target.value)}
-					placeholder="Passport Number"
-				/>
-				<br />
+				<div className='register-container' >
+					<div className='register-box-container'>
+						<TextField
+							value={homeAddress}
+							onChange={(e) => setHomeAddress(e.target.value)}
+							placeholder="Home Address"
+							label="Home Address"
+						/>
+						<TextField
+							value={countryCode}
+							onChange={(e) => setcountryCode(e.target.value)}
+							placeholder="Country Code"
+							label="Country Code"
+						/>
 
-				<input type="submit" value="Register" />
+						<TextField
+							value={passportNumber}
+							onChange={(e) => setPassportNumber(e.target.value)}
+							placeholder="Passport Number"
+							label="Passport Number"
+						/>
+
+						<UIButton
+							onClick={registerUser}
+							text={"Register"}
+							margin="10px"
+						/>
+						{/* <input type="submit" value="Register" /> */}
+					</div>
+				</div>
 			</div>
+
 		)
 	}
 }
