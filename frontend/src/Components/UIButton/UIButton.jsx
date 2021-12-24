@@ -8,7 +8,7 @@ const UIButton = ({ onClick, text, margin, color, type }) => {
         <>
             <button
                 style={{ margin: margin }}
-                className={`buttonClassUI ${color == 'red' ? 'btn-red' : null} ${color == 'green' ? 'btn-green' : null}`}
+                className={`buttonClassUI ${color == 'red' ? 'btn-red' : null} ${color == 'green' ? 'btn-green' : null} ${color == 'blue' ? 'btn-blue' : null}`}
                 type="button"
                 onClick={onClick}
                 type = {type}

@@ -16,9 +16,8 @@ const ViewSummary = () => {
   let Uid = JSON.parse(localStorage.getItem('user'))?._id;
   let emailSearch = JSON.parse(localStorage.getItem('user'))?.email;
 
-  let currEmail = "";
-  let text2 = "";
-  let showConfirmation = false;
+  
+  const [showConfirmation, setShow] = useState(false);
   const [sent, setSent] = useState(false)
   const [text, setText] = useState("")
   const [email, setEmail] = useState("")
@@ -90,8 +89,8 @@ const ViewSummary = () => {
 
     console.log("sending");
 
-    alert("An email has been sent to " + emailSearch);
-    //showConfirmation = true;
+    //alert("An email has been sent to " + emailSearch);
+    setShow(true);
     
     setSent(true)
     
@@ -364,7 +363,7 @@ const ViewSummary = () => {
         <div>
         <Button className="updateButton" style={{ marginBottom: "10px", marginTop:"-10px"  }} onClick={(e) => handleSendRes(e)}>
         Email Reservation Itinerary</Button>
-        {/* { showConfirmation ? <p style={{fontSize: '12px'}}>An email has been sent to {emailSearch}</p>: null} */}
+        { showConfirmation ? <p style={{fontSize: '12px', color:'green'}}>An email has been sent to {emailSearch} !</p>: null}
           <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", margin: "10px" }}>
             <div className='view-summary-card'>
 
