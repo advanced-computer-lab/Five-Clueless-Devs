@@ -25,6 +25,11 @@ import pyramids from '../assets/great-pyramid.jpg'
 import newYork from '../assets/New_york.jpg'
 import dubai from '../assets/Dubai.jpg'
 import SwipeableTextMobileStepper from './SwipeableTextMobileStepper';
+import { Parallax } from 'react-parallax';
+import { width } from '@mui/system';
+
+
+
 
 
 
@@ -33,6 +38,15 @@ const SearchFlightUser = ({ location }) => {
     const history = useHistory();
     // useState hooks for input and language
 
+    const [place, setPlace] = useState("");
+    const [image, setImage] = useState("https://images.pexels.com/photos/1631678/pexels-photo-1631678.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200");
+    const image1 =
+        "https://images.pexels.com/photos/1631678/pexels-photo-1631678.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200";
+    const image2 =
+        'https://data.1freewallpapers.com/download/sunset-tree-lake-sky-water-evening-purple.jpg'
+
+    const image3 =
+    "https://data.1freewallpapers.com/download/horizon-sea-sunset-sky-3840x2400.jpg"
     const moment = require('moment')
     const getDuration = (flight) => {
         console.log('----duraton----')
@@ -148,6 +162,16 @@ const SearchFlightUser = ({ location }) => {
             .catch(err => {
                 console.log(err);
             })
+
+        let r = Math.floor(Math.random() * 2);
+        console.log(r)
+        if (r == 0) {
+            setImage(image1);
+        }
+        else {
+            setImage(image2);
+        }
+        console.log(image)
     }, []);
 
 
@@ -301,6 +325,13 @@ const SearchFlightUser = ({ location }) => {
             })
         //clearAll(e);
     };
+    const scrollUp = (e) => {
+
+        window.scrollTo(window.top);
+        setPlace("CAI")
+        console.log(place);
+    };
+
 
 
     const [errorSame, setErrorSame] = useState("");
@@ -412,7 +443,7 @@ const SearchFlightUser = ({ location }) => {
                     console.log(err);
                 })
         }
-
+        window.scrollBy(0, 400);
     };
 
     //SEARCHING AND SELECTING DEPARTURE FLIGHT------------------------------------------------------------------------------------------------------------------------------------------
@@ -420,172 +451,184 @@ const SearchFlightUser = ({ location }) => {
         return (
             <>
 
-                <div className="stepper-space"><Box sx={{ width: '100%' }}>
-                    <Stepper activeStep={0} alternativeLabel>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
-                </Box></div>
+
                 <div className='bg-dark text-light'>
+
                     <div className='container pt-5' style={{ height: '100vh' }}>
-                        <h1 className="display-4 text-center">Search for flights</h1>
+
 
 
                         <form onSubmit={submitAction} className='mt-5'>
                             <div className='input-group'>
                                 <div className='criteria-form-group'>
+                                    <Parallax bgImage={image1} strength={450}>
+                                        <div style={{ height: '650px', width: '100%' }}>
+                                            <div className="stepper-space"><Box sx={{ width: '100%' }}>
+                                                <Stepper activeStep={0} alternativeLabel>
+                                                    {steps.map((label) => (
+                                                        <Step key={label}>
+                                                            <StepLabel>{label}</StepLabel>
+                                                        </Step>
+                                                    ))}
+                                                </Stepper>
+                                            </Box></div>
+                                            <h1 className="display-4 text-center">Search for flights</h1>
+                                            <div>
 
-                                    <div>
+                                                <div className='search-center'>
+                                                    <Autocomplete
+                                                        disablePortal
+                                                        id="combo-box-demo"
+                                                        options={allFlights.map(flight => flight.from)
+                                                            .filter((value, index, self) => self.indexOf(value) === index)}
+                                                        sx={{ width: 300 }}
 
-                                        <div className='search-center'>
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={allFlights.map(flight => flight.from)
-                                                    .filter((value, index, self) => self.indexOf(value) === index)}
-                                                sx={{ width: 300 }}
+                                                        // onChange={(e) => onChange(e)}
 
-                                                // onChange={(e) => onChange(e)}
+                                                        renderInput={(params) => <TextField {...params} error={errorSame !== ""} required label="From" />}
+                                                        // name="to"
+                                                        // value={flight.to}
+                                                        onChange={handleChangeFrom}
 
-                                                renderInput={(params) => <TextField {...params} error={errorSame !== ""} required label="From" />}
-                                                // name="to"
-                                                // value={flight.to}
-                                                onChange={handleChangeFrom}
+                                                    />
+                                                    <Autocomplete
+                                                        disablePortal
+                                                        id="combo-box-demo"
+                                                        options={allFlights.map(flight => flight.to)
+                                                            .filter((value, index, self) => self.indexOf(value) === index)}
+                                                        sx={{ width: 300 }}
+                                                        
 
-                                            />
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={allFlights.map(flight => flight.to)
-                                                    .filter((value, index, self) => self.indexOf(value) === index)}
-                                                sx={{ width: 300 }}
+                                                        // onChange={(e) => onChange(e)}
 
-                                                // onChange={(e) => onChange(e)}
+                                                        renderInput={(params) =>
+                                                            <TextField
+                                                                {...params}
+                                                                required
+                                                                label="To"
+                                                                error={errorSame !== ""}
+                                                                helperText={errorSame}
+                                                            />}
+                                                        // name="to"
+                                                        // value={flight.to}
+                                                        onChange={handleChangeTo}
 
-                                                renderInput={(params) =>
+
+                                                    />
+                                                </div>
+                                                <span className={flight.departureDate === "" ? "criteria-hide" : ""}>
                                                     <TextField
-                                                        {...params}
-                                                        required
-                                                        label="To"
-                                                        error={errorSame !== ""}
-                                                        helperText={errorSame}
-                                                    />}
-                                                // name="to"
-                                                // value={flight.to}
-                                                onChange={handleChangeTo}
+                                                        //required
+                                                        id="dateInput"
+                                                        type="date"
+                                                        className='form-control'
+                                                        label='Departure Date'
+                                                        name="departureDate"
+                                                        value={flight.departureDate}
+                                                        onChange={(e) => onChange(e)}
+                                                        error={errorDate !== ""}
+                                                        helperText={errorDate}
+                                                    />
+                                                </span>
+                                                <span className={returnDate === "" ? "criteria-hide" : ""}>
+                                                    <TextField
+                                                        //required
+                                                        id="dateInput"
+                                                        type='date'
+                                                        className='form-control'
+                                                        label='Return Date'
+                                                        name="returnDate"
+                                                        value={returnDate}
+                                                        onChange={(e) => onChooseReturnDate(e)}
+                                                        error={errorDate !== ""}
+                                                    />
+                                                </span>
+                                                <div>
+                                                    <FormControl sx={{ m: 1, minWidth: 120 }} >
+                                                        <InputLabel id="demo-simple-select-label">Class</InputLabel>
+                                                        <Select
+                                                            labelId="demo-simple-select-label"
+                                                            id="select"
+
+                                                            value={chosenClass}
+                                                            label="Class"
+                                                            onChange={(e) => onChooseClass(e)}
+
+                                                        >
+
+                                                            <MenuItem value={'Economy'} >Economy</MenuItem>
+                                                            <MenuItem value={'Business'} >Business</MenuItem>
+                                                            <MenuItem value={'First'} >First</MenuItem>
+
+                                                        </Select>
+                                                    </FormControl>
+                                                </div>
+                                                <FormControl sx={{ m: 1, minWidth: 120 }} >
+                                                    <InputLabel id="demo-simple-select-label">Adults</InputLabel>
+                                                    <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="select"
+
+                                                        value={adultsNumber}
+                                                        label="Adults"
+                                                        onChange={(e) => onChooseAdult(e)}
+
+                                                    >
 
 
-                                            />
+                                                        <MenuItem value={1} >1</MenuItem>
+                                                        <MenuItem value={2} >2</MenuItem>
+                                                        <MenuItem value={3} >3</MenuItem>
+                                                        <MenuItem value={4} >4</MenuItem>
+                                                        <MenuItem value={5} >5</MenuItem>
+                                                        <MenuItem value={6} >6</MenuItem>
+                                                        <MenuItem value={7} >7</MenuItem>
+                                                        <MenuItem value={8} >8</MenuItem>
+                                                        <MenuItem value={9} >9</MenuItem>
+
+                                                    </Select>
+                                                </FormControl>
+                                                <FormControl sx={{ m: 1, minWidth: 120 }} >
+                                                    <InputLabel id="demo-simple-select-label">Children</InputLabel>
+                                                    <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="select"
+
+                                                        value={childNumber}
+                                                        label="Children"
+                                                        onChange={(e) => onChooseChild(e)}
+
+                                                    >
+
+                                                        <MenuItem value={0} >0</MenuItem>
+                                                        <MenuItem value={1} >1</MenuItem>
+                                                        <MenuItem value={2} >2</MenuItem>
+                                                        <MenuItem value={3} >3</MenuItem>
+                                                        <MenuItem value={4} >4</MenuItem>
+                                                        <MenuItem value={5} >5</MenuItem>
+                                                        <MenuItem value={6} >6</MenuItem>
+                                                        <MenuItem value={7} >7</MenuItem>
+                                                        <MenuItem value={8} >8</MenuItem>
+                                                        <MenuItem value={9} >9</MenuItem>
+
+                                                    </Select>
+                                                </FormControl>
+
+                                            </div>
+                                            <div className='input-group-append'>
+                                                <Button variant="outlined" type="submit">Search</Button>
+
+
+                                            </div>
                                         </div>
-                                        <span className={flight.departureDate === "" ? "criteria-hide" : ""}>
-                                            <TextField
-                                                //required
-                                                id="dateInput"
-                                                type="date"
-                                                className='form-control'
-                                                label='Departure Date'
-                                                name="departureDate"
-                                                value={flight.departureDate}
-                                                onChange={(e) => onChange(e)}
-                                                error={errorDate !== ""}
-                                                helperText={errorDate}
-                                            />
-                                        </span>
-                                        <span className={returnDate === "" ? "criteria-hide" : ""}>
-                                            <TextField
-                                                //required
-                                                id="dateInput"
-                                                type='date'
-                                                className='form-control'
-                                                label='Return Date'
-                                                name="returnDate"
-                                                value={returnDate}
-                                                onChange={(e) => onChooseReturnDate(e)}
-                                                error={errorDate !== ""}
-                                            />
-                                        </span>
-                                        <div>
-                                            <FormControl sx={{ m: 1, minWidth: 120 }} >
-                                                <InputLabel id="demo-simple-select-label">Class</InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="select"
-
-                                                    value={chosenClass}
-                                                    label="Class"
-                                                    onChange={(e) => onChooseClass(e)}
-
-                                                >
-
-                                                    <MenuItem value={'Economy'} >Economy</MenuItem>
-                                                    <MenuItem value={'Business'} >Business</MenuItem>
-                                                    <MenuItem value={'First'} >First</MenuItem>
-
-                                                </Select>
-                                            </FormControl>
-                                        </div>
-                                        <FormControl sx={{ m: 1, minWidth: 120 }} >
-                                            <InputLabel id="demo-simple-select-label">Adults</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="select"
-
-                                                value={adultsNumber}
-                                                label="Adults"
-                                                onChange={(e) => onChooseAdult(e)}
-
-                                            >
-
-
-                                                <MenuItem value={1} >1</MenuItem>
-                                                <MenuItem value={2} >2</MenuItem>
-                                                <MenuItem value={3} >3</MenuItem>
-                                                <MenuItem value={4} >4</MenuItem>
-                                                <MenuItem value={5} >5</MenuItem>
-                                                <MenuItem value={6} >6</MenuItem>
-                                                <MenuItem value={7} >7</MenuItem>
-                                                <MenuItem value={8} >8</MenuItem>
-                                                <MenuItem value={9} >9</MenuItem>
-
-                                            </Select>
-                                        </FormControl>
-                                        <FormControl sx={{ m: 1, minWidth: 120 }} >
-                                            <InputLabel id="demo-simple-select-label">Children</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="select"
-
-                                                value={childNumber}
-                                                label="Children"
-                                                onChange={(e) => onChooseChild(e)}
-
-                                            >
-
-                                                <MenuItem value={0} >0</MenuItem>
-                                                <MenuItem value={1} >1</MenuItem>
-                                                <MenuItem value={2} >2</MenuItem>
-                                                <MenuItem value={3} >3</MenuItem>
-                                                <MenuItem value={4} >4</MenuItem>
-                                                <MenuItem value={5} >5</MenuItem>
-                                                <MenuItem value={6} >6</MenuItem>
-                                                <MenuItem value={7} >7</MenuItem>
-                                                <MenuItem value={8} >8</MenuItem>
-                                                <MenuItem value={9} >9</MenuItem>
-
-                                            </Select>
-                                        </FormControl>
-                                    </div>
-                                    <div className='input-group-append'>
-                                        <Button variant="outlined" type="submit">Search</Button>
-
-
-                                    </div>
-
+                                    </Parallax>
+                                    {flightRes.length == 0 ? null : <div class="strike" style={{ marginTop: '40px' }}>
+                                        <span>Search Results</span>
+                                    </div>}
 
                                     <div className="list">
+
+
                                         {flightRes.map((flight, k) =>
                                             <DepartureFlightCard flight={flight} numOfChildren={childNumber} numOfAdults={adultsNumber}
                                                 chosenClass={chosenClass} data={selectDept} key={k} passDeptId={setDeptSelectedId} passDeptFrom={setDeptFlightFrom}
@@ -596,12 +639,12 @@ const SearchFlightUser = ({ location }) => {
                                         )}
                                     </div>
 
-                                    <div class="strike" style={{marginTop:'40px'}}>
+                                    <div class="strike" style={{ marginTop: '40px' }}>
                                         <span>Popular Destinations</span>
                                     </div>
 
                                     <div style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', justifyContent: 'space-around', width: '100%', }}>
-                                        <Card sx={{ maxWidth: 300, maxHeight: 500, marginTop: '90px', marginBottom: '90px' }}>
+                                        <Card sx={{ maxWidth: 300, maxHeight: 500, marginTop: '90px', marginBottom: '90px' }} >
                                             <CardMedia
                                                 component="img"
                                                 alt="Egyptian Pyramids"
@@ -651,11 +694,12 @@ const SearchFlightUser = ({ location }) => {
                                         <p style={{ color: '#59B39E', fontSize: '30px', fontWeight: 'bold' }}>AND MORE...</p>
                                         <SwipeableTextMobileStepper />
                                     </div>
+                                    {/* <Parall /> */}
                                 </div>
                             </div>
                         </form>
                     </div>
-                </div>
+                </div >
             </>
         );
     }
@@ -1131,163 +1175,225 @@ const SearchFlightUser = ({ location }) => {
         return (
             <>
 
-                <div className="stepper-space"><Box sx={{ width: '100%' }}>
-                    <Stepper activeStep={0} alternativeLabel>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
-                </Box></div>
+
                 <div className='bg-dark text-light'>
                     <div className='container pt-5' style={{ height: '100vh' }}>
-                        <h1 className="display-4 text-center">Search for flights</h1>
+
 
 
                         <form onSubmit={submitAction} className='mt-5'>
                             <div className='input-group'>
                                 <div className='criteria-form-group'>
+                                    <Parallax bgImage={image1} strength={450}>
+                                        <div style={{ height: '650px', width: '100%' }}>
+                                            <div className="stepper-space"><Box sx={{ width: '100%' }}>
+                                                <Stepper activeStep={0} alternativeLabel>
+                                                    {steps.map((label) => (
+                                                        <Step key={label}>
+                                                            <StepLabel>{label}</StepLabel>
+                                                        </Step>
+                                                    ))}
+                                                </Stepper>
+                                            </Box></div>
+                                            <h1 className="display-4 text-center">Search for flights</h1>
 
-                                    <div>
+                                            <div>
 
-                                        <div className='search-center'>
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={allFlights.map(flight => flight.from)
-                                                    .filter((value, index, self) => self.indexOf(value) === index)}
-                                                sx={{ width: 300 }}
+                                                <div className='search-center'>
+                                                    <Autocomplete
+                                                        disablePortal
+                                                        id="combo-box-demo"
+                                                        options={allFlights.map(flight => flight.from)
+                                                            .filter((value, index, self) => self.indexOf(value) === index)}
+                                                        sx={{ width: 300 }}
 
-                                                // onChange={(e) => onChange(e)}
+                                                        // onChange={(e) => onChange(e)}
 
-                                                renderInput={(params) => <TextField {...params} required label="From" />}
-                                                // name="to"
-                                                // value={flight.to}
-                                                onChange={handleChangeFrom}
+                                                        renderInput={(params) => <TextField {...params} required label="From" />}
+                                                        // name="to"
+                                                        // value={flight.to}
+                                                        onChange={handleChangeFrom}
 
-                                            />
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={allFlights.map(flight => flight.to)
-                                                    .filter((value, index, self) => self.indexOf(value) === index)}
-                                                sx={{ width: 300 }}
+                                                    />
+                                                    <Autocomplete
+                                                        disablePortal
+                                                        id="combo-box-demo"
+                                                        options={allFlights.map(flight => flight.to)
+                                                            .filter((value, index, self) => self.indexOf(value) === index)}
+                                                        sx={{ width: 300 }}
 
-                                                // onChange={(e) => onChange(e)}
+                                                        // onChange={(e) => onChange(e)}
 
-                                                renderInput={(params) => <TextField {...params} required label="To" />}
-                                                // name="to"
-                                                // value={flight.to}
-                                                onChange={handleChangeTo}
+                                                        renderInput={(params) => <TextField {...params} required label="To" />}
+                                                        // name="to"
+                                                        // value={flight.to}
+                                                        onChange={handleChangeTo}
 
 
-                                            />
+                                                    />
+                                                </div>
+                                                <span className={flight.departureDate === "" ? "criteria-hide" : ""}>
+                                                    <TextField
+                                                        //required
+                                                        id="dateInput"
+                                                        type="date"
+                                                        className='form-control'
+                                                        label='Departure Date'
+                                                        name="departureDate"
+                                                        value={flight.departureDate}
+                                                        onChange={(e) => onChange(e)}
+                                                    />
+                                                </span>
+                                                <span className={returnDate === "" ? "criteria-hide" : ""}>
+                                                    <TextField
+                                                        // required
+                                                        id="dateInput"
+                                                        type='date'
+                                                        className='form-control'
+                                                        label='Return Date'
+                                                        name="returnDate"
+                                                        value={returnDate}
+                                                        onChange={(e) => onChooseReturnDate(e)}
+                                                    />
+                                                </span>
+                                                <div>
+                                                    <FormControl sx={{ m: 1, minWidth: 120 }} >
+                                                        <InputLabel id="demo-simple-select-label">Class</InputLabel>
+                                                        <Select
+                                                            labelId="demo-simple-select-label"
+                                                            id="select"
+
+                                                            value={chosenClass}
+                                                            label="Class"
+                                                            onChange={(e) => onChooseClass(e)}
+
+                                                        >
+
+                                                            <MenuItem value={'Economy'} >Economy</MenuItem>
+                                                            <MenuItem value={'Business'} >Business</MenuItem>
+                                                            <MenuItem value={'First'} >First</MenuItem>
+
+                                                        </Select>
+                                                    </FormControl>
+                                                </div>
+                                                <FormControl sx={{ m: 1, minWidth: 120 }} >
+                                                    <InputLabel id="demo-simple-select-label">Adults</InputLabel>
+                                                    <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="select"
+
+                                                        value={adultsNumber}
+                                                        label="Adults"
+                                                        onChange={(e) => onChooseAdult(e)}
+
+                                                    >
+
+
+                                                        <MenuItem value={1} >1</MenuItem>
+                                                        <MenuItem value={2} >2</MenuItem>
+                                                        <MenuItem value={3} >3</MenuItem>
+                                                        <MenuItem value={4} >4</MenuItem>
+                                                        <MenuItem value={5} >5</MenuItem>
+                                                        <MenuItem value={6} >6</MenuItem>
+                                                        <MenuItem value={7} >7</MenuItem>
+                                                        <MenuItem value={8} >8</MenuItem>
+                                                        <MenuItem value={9} >9</MenuItem>
+
+                                                    </Select>
+                                                </FormControl>
+                                                <FormControl sx={{ m: 1, minWidth: 120 }} >
+                                                    <InputLabel id="demo-simple-select-label">Children</InputLabel>
+                                                    <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="select"
+
+                                                        value={childNumber}
+                                                        label="Children"
+                                                        onChange={(e) => onChooseChild(e)}
+
+                                                    >
+
+                                                        <MenuItem value={0} >0</MenuItem>
+                                                        <MenuItem value={1} >1</MenuItem>
+                                                        <MenuItem value={2} >2</MenuItem>
+                                                        <MenuItem value={3} >3</MenuItem>
+                                                        <MenuItem value={4} >4</MenuItem>
+                                                        <MenuItem value={5} >5</MenuItem>
+                                                        <MenuItem value={6} >6</MenuItem>
+                                                        <MenuItem value={7} >7</MenuItem>
+                                                        <MenuItem value={8} >8</MenuItem>
+                                                        <MenuItem value={9} >9</MenuItem>
+
+                                                    </Select>
+                                                </FormControl>
+                                            </div>
+                                            <div className='input-group-append'>
+                                                <Button variant="outlined" type="submit">Search</Button>
+
+
+                                            </div>
                                         </div>
-                                        <span className={flight.departureDate === "" ? "criteria-hide" : ""}>
-                                            <TextField
-                                                //required
-                                                id="dateInput"
-                                                type="date"
-                                                className='form-control'
-                                                label='Departure Date'
-                                                name="departureDate"
-                                                value={flight.departureDate}
-                                                onChange={(e) => onChange(e)}
-                                            />
-                                        </span>
-                                        <span className={returnDate === "" ? "criteria-hide" : ""}>
-                                            <TextField
-                                                // required
-                                                id="dateInput"
-                                                type='date'
-                                                className='form-control'
-                                                label='Return Date'
-                                                name="returnDate"
-                                                value={returnDate}
-                                                onChange={(e) => onChooseReturnDate(e)}
-                                            />
-                                        </span>
-                                        <div>
-                                            <FormControl sx={{ m: 1, minWidth: 120 }} >
-                                                <InputLabel id="demo-simple-select-label">Class</InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="select"
-
-                                                    value={chosenClass}
-                                                    label="Class"
-                                                    onChange={(e) => onChooseClass(e)}
-
-                                                >
-
-                                                    <MenuItem value={'Economy'} >Economy</MenuItem>
-                                                    <MenuItem value={'Business'} >Business</MenuItem>
-                                                    <MenuItem value={'First'} >First</MenuItem>
-
-                                                </Select>
-                                            </FormControl>
-                                        </div>
-                                        <FormControl sx={{ m: 1, minWidth: 120 }} >
-                                            <InputLabel id="demo-simple-select-label">Adults</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="select"
-
-                                                value={adultsNumber}
-                                                label="Adults"
-                                                onChange={(e) => onChooseAdult(e)}
-
-                                            >
-
-
-                                                <MenuItem value={1} >1</MenuItem>
-                                                <MenuItem value={2} >2</MenuItem>
-                                                <MenuItem value={3} >3</MenuItem>
-                                                <MenuItem value={4} >4</MenuItem>
-                                                <MenuItem value={5} >5</MenuItem>
-                                                <MenuItem value={6} >6</MenuItem>
-                                                <MenuItem value={7} >7</MenuItem>
-                                                <MenuItem value={8} >8</MenuItem>
-                                                <MenuItem value={9} >9</MenuItem>
-
-                                            </Select>
-                                        </FormControl>
-                                        <FormControl sx={{ m: 1, minWidth: 120 }} >
-                                            <InputLabel id="demo-simple-select-label">Children</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="select"
-
-                                                value={childNumber}
-                                                label="Children"
-                                                onChange={(e) => onChooseChild(e)}
-
-                                            >
-
-                                                <MenuItem value={0} >0</MenuItem>
-                                                <MenuItem value={1} >1</MenuItem>
-                                                <MenuItem value={2} >2</MenuItem>
-                                                <MenuItem value={3} >3</MenuItem>
-                                                <MenuItem value={4} >4</MenuItem>
-                                                <MenuItem value={5} >5</MenuItem>
-                                                <MenuItem value={6} >6</MenuItem>
-                                                <MenuItem value={7} >7</MenuItem>
-                                                <MenuItem value={8} >8</MenuItem>
-                                                <MenuItem value={9} >9</MenuItem>
-
-                                            </Select>
-                                        </FormControl>
-                                    </div>
-                                    <div className='input-group-append'>
-                                        <Button variant="outlined" type="submit">Search</Button>
-
-
-                                    </div>
+                                    </Parallax>
 
 
                                     <div className="no-search"> <img src="https://img.icons8.com/external-kiranshastry-gradient-kiranshastry/64/000000/external-search-airport-kiranshastry-gradient-kiranshastry.png" />
                                         <h1>Sorry, No Results Found</h1></div>
+
+                                        <div class="strike" style={{ marginTop: '40px' }}>
+                                        <span>Popular Destinations</span>
+                                    </div>
+
+                                    <div style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', justifyContent: 'space-around', width: '100%', }}>
+                                        <Card sx={{ maxWidth: 300, maxHeight: 500, marginTop: '90px', marginBottom: '90px' }} onClick={(e) => scrollUp(e)}>
+                                            <CardMedia
+                                                component="img"
+                                                alt="Egyptian Pyramids"
+                                                height="300"
+                                                src={pyramids}
+                                            />
+                                            <CardContent>
+                                                <Typography gutterBottom variant="h9" component="div">
+                                                    Cairo, Egypt
+                                                </Typography>
+
+                                            </CardContent>
+
+                                        </Card>
+                                        <Card sx={{ maxWidth: 300, maxHeight: 500, marginTop: '90px', marginBottom: '90px' }}>
+                                            <CardMedia
+                                                component="img"
+                                                alt="New York"
+                                                height="300"
+                                                src={newYork}
+                                            />
+                                            <CardContent>
+                                                <Typography gutterBottom variant="h9" component="div">
+                                                    New York, United States
+                                                </Typography>
+
+                                            </CardContent>
+
+                                        </Card>
+                                        <Card sx={{ maxWidth: 300, maxHeight: 500, marginTop: '90px', marginBottom: '90px' }}>
+                                            <CardMedia
+                                                component="img"
+                                                alt="Burj Khalifa"
+                                                height="300"
+
+                                                src={dubai}
+                                            />
+                                            <CardContent>
+                                                <Typography gutterBottom variant="h9" component="div">
+                                                    Dubai, United Arab Kingdom
+                                                </Typography>
+
+                                            </CardContent>
+
+                                        </Card>
+
+                                        <p style={{ color: '#59B39E', fontSize: '30px', fontWeight: 'bold' }}>AND MORE...</p>
+                                        <SwipeableTextMobileStepper />
+                                    </div>
 
                                 </div>
                             </div>
