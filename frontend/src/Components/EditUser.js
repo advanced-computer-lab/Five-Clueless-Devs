@@ -214,6 +214,11 @@ const EditUser = () => {
                                     text={"Edit User"}
                                     margin="10px"
                                 />
+                                <UIButton
+                                    onClick={()=>history.push('/passwordChange')}
+                                    text={"change password"}
+                                    margin="10px"
+                                />
                                 {/* <Button onClick={toggleDialog} variant="outlined" >Edit User</Button> */}
 
                             </div>

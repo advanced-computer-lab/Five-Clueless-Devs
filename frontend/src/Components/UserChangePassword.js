@@ -78,6 +78,10 @@ const ChangePassword=()=>{
             if(newpass==confirmpass){
                 ready=true;
                 setSubmit({oldpassword:oldpass,Newpassword:newpass,email:Uid})
+                setnewempty("");
+                setconempty("");
+                setoldempty("");
+
             }
             else{
                 setnewempty("those fields should match");
@@ -88,6 +92,7 @@ const ChangePassword=()=>{
         }
         if(ready){
            let data={oldpassword:oldpass,Newpassword:newpass,email:Uid};
+           setoldempty("");
             axios
             .put(BACKEND_URL + "users/changePass",data)
             .then(res => {
@@ -169,7 +174,12 @@ const ChangePassword=()=>{
                             </div>
 
                             <div className='input-group-append'>
-                                    <Button variant="outlined" type="submit">Update Password</Button>
+                                    {/* <Button variant="outlined" type="submit">Update Password</Button> */}
+                                    <UIButton
+                                    type={"submit"}
+                                    text={"update Password"}
+                                    margin="10px"
+                                />
                                 </div>
                         </form>
                     </div>
