@@ -22,21 +22,21 @@ router.get('/test', (req, res) => res.send('user route testing!'));
 // @route GET api/users
 // @description Get all users
 // @access Public
-router.get('/', (req, res) => {
+router.get('/',authenticateToken, (req, res) => {
   User.find()
     .then(users => res.json(users))
     .catch(err => res.status(404).json({ noUsersFound: 'No Users found' }));
 });
 
 
-router.post('/createAdmin', (req, res) => {
+router.post('/createAdmin', authenticateToken, (req, res) => {
   console.log(req.body);
   User.create({ ...req.body, isAdmin: "true" })
     .then(users => res.json({ msg: 'Admin added successfully' }))
     .catch(err => res.status(400).json({ error: err }));
 });
 
-router.post('/createUser', (req, res) => {
+router.post('/createUser', authenticateToken, (req, res) => {
   currEmail = req.body.email;
   console.log(currEmail);
   User.create({ ...req.body, isAdmin: "false" })
@@ -45,10 +45,10 @@ router.post('/createUser', (req, res) => {
 
 });
 
-router.get('/search', (req, res) => {
+router.get('/search', authenticateToken, (req, res) => {
   User.find(req.query)
     .then(user => res.json(user))
-    .catch(err => res.status(404).json({ nobookfound: 'No users found' }));
+    .catch(err => res.status(404).json({err}));
 });
 
 
@@ -247,7 +247,7 @@ router.post("/login", (req, res) => {
       });
   });
 });
-router.put('/changePass',async(req,res)=>{
+router.put('/changePass',authenticateToken, async(req,res)=>{
   console.log("here");
   const currUser = req.body.email;
  // console.log(req.body.userId)

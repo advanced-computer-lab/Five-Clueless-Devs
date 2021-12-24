@@ -53,7 +53,11 @@ class CreateUser extends Component {
         };
 
         axios
-            .post(BACKEND_URL + 'users/createUser', data)
+            .post(BACKEND_URL + 'users/createUser', data, {
+                headers: {
+                    'Authorization': localStorage.getItem('token')
+                }
+            })
             .then(res => {
                 this.setState({
                     userId: '',

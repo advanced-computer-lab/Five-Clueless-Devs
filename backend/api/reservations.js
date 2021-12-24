@@ -2,6 +2,7 @@ const express = require('express');
 const { models } = require('mongoose');
 const router = express.Router();
 var bodyParser = require('body-parser')
+const jwt = require("jsonwebtoken")
 
 
 // Load User model
@@ -23,13 +24,13 @@ router.delete('/cancelReservation', (req, res) => {
         .then(Reservations => res.json(Reservations))
         .catch(err => res.status(404).json(err));
 });
-router.get('/GetReservation', (req, res) => {
+router.get('/GetReservation', authenticateToken, (req, res) => {
     Reservations.find(req.query)
         .then(Reservations => res.json(Reservations))
         .catch(err => res.status(404).json({ noreservationfound: 'No Reservation found' }));
 });
 
-router.put('/update', (req, res) => {
+router.put('/update',authenticateToken, (req, res) => {
     Reservations.findOneAndUpdate(req.query, req.body)
         .then(reservation => res.json(reservation))
         .catch(err =>
@@ -37,6 +38,18 @@ router.put('/update', (req, res) => {
         );
 });
 
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]
+  
+    if(!token) res.sendStatus(401);
+  
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) =>{
+      if(err) res.sendStatus(403);
+      req.user = user
+      next()
+    })
+  }
 
 
 module.exports = router;

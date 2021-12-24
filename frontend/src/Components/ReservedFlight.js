@@ -24,7 +24,11 @@ const ReservedFlight = () => {
         let fromtemp = [];
         let totemp = [];
 
-        axios.get(BACKEND_URL + "reservations/GetReservation?UserID=" + Uid)
+        axios.get(BACKEND_URL + "reservations/GetReservation?UserID=" + Uid,{
+            headers:{
+              'Authorization': localStorage.getItem('token')
+            }
+          })
             .then(res => {
                 var temp = [];
                 //  console.log(res.data);

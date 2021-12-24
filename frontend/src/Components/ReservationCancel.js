@@ -59,7 +59,11 @@ const ReservationCancel = (props) => {
 
   const [reservation, setReservation] = useState({});
   useEffect(() => {
-    axios.get(BACKEND_URL + "reservations/GetReservation?_id=" + reservationID)
+    axios.get(BACKEND_URL + "reservations/GetReservation?_id=" + reservationID,{
+      headers:{
+        'Authorization': localStorage.getItem('token')
+      }
+    })
       .then(res => {
         setReservation(res.data[0]);
         console.log(res.data[0])
@@ -134,11 +138,19 @@ const ReservationCancel = (props) => {
     e.preventDefault();
     setLoading( "EGP" + props.reservationPrice + ' Refund');
     axios
-      .put(BACKEND_URL + 'flights/update?flightId=' + from, f)
+      .put(BACKEND_URL + 'flights/update?flightId=' + from, f,{
+        headers: {
+            'Authorization': localStorage.getItem('token')
+        }
+    })
       .then(res => {
         console.log(res.data);
         axios
-          .put(BACKEND_URL + 'flights/update?flightId=' + to, t)
+          .put(BACKEND_URL + 'flights/update?flightId=' + to, t,{
+            headers: {
+                'Authorization': localStorage.getItem('token')
+            }
+        })
           .then(res => {
             console.log(res.data);
             axios
@@ -150,7 +162,11 @@ const ReservationCancel = (props) => {
                     chargeId: cId
                   }
                   console.log(body)
-                  axios.post('http://localhost:8082/api/payments/refund', body)
+                  axios.post('http://localhost:8082/api/payments/refund', body,{
+                    headers: {
+                        'Authorization': localStorage.getItem('token')
+                    }
+                })
                     .then(response => {
                       console.log("RESPONSE", response.data);
                       setLoading('success');

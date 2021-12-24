@@ -54,7 +54,7 @@ const Navbar = () => {
           <Button color="inherit" onClick={(e) => history.push('/create-flight')}>Add Flight</Button>
         </div> : null}
 
-        {userId ? <Button className="admin" color="inherit" onClick={(e) => {
+        {userId ? <Button className="admin logout" color="inherit" onClick={(e) => {
           localStorage.removeItem('user');
           localStorage.removeItem('token');
           history.push('/');

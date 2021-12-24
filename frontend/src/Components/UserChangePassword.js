@@ -103,7 +103,11 @@ const ChangePassword = () => {
             let data = { oldpassword: oldpass, Newpassword: newpass, email: Uid };
             setoldempty("");
             axios
-                .put(BACKEND_URL + "users/changePass", data)
+                .put(BACKEND_URL + "users/changePass", data, {
+                    headers: {
+                        'Authorization': localStorage.getItem('token')
+                    }
+                })
                 .then(res => {
                     console.log(res.data);
                     if (res.data.message == "Invalid Password") {

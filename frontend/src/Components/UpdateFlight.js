@@ -79,7 +79,11 @@ const UpdateFlight = () => {
     const onSubmit = (e) => {
         e.preventDefault();
         axios
-            .put(BACKEND_URL + 'flights/update?flightId=' + id, flight)
+            .put(BACKEND_URL + 'flights/update?flightId=' + id, flight,{
+                headers: {
+                    'Authorization': localStorage.getItem('token')
+                }
+            })
             .then(res => {
                 console.log(res.data);
                 history.push('/search');

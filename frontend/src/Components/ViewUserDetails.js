@@ -54,11 +54,12 @@ const ViewUserDetails = () => {
   useEffect(() => {
     console.log("Print id: " + { id });
     axios
-      .get(BACKEND_URL + "users/search?_id=" + id)
+      .get(BACKEND_URL + "users/search?_id=" + id,{
+        headers:{
+          'Authorization': localStorage.getItem('token')
+        }
+      })
       .then(res => {
-        //console.log(res.data);
-        //console.log(res.data[0].email);
-        //currEmail=res.data.email;
         setUser(res.data[0] || {});
       })
       .catch(err => {
@@ -101,11 +102,11 @@ const ViewUserDetails = () => {
         <div className="row">
           <br />
           <div className="col-md-8 m-auto">
-            <h1 className="display-4 text-center">User's Record</h1>
-            <p className="lead text-center">
+            <h1 style={{marginBottom:"15px"}} className="display-4 text-center">User's Record</h1>
+            {/* <p className="lead text-center">
               View User's Info
             </p>
-            <hr /> <br />
+            <hr /> <br /> */}
           </div>
         </div>
         <div>

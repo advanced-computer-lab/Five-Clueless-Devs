@@ -77,7 +77,11 @@ class CreateFlight extends Component {
         };
 
         axios
-            .post(BACKEND_URL + 'flights/createFlight', data)
+            .post(BACKEND_URL + 'flights/createFlight', data,{
+                headers: {
+                    'Authorization': localStorage.getItem('token')
+                }
+            })
             .then(res => {
                 this.setState({
                     flightId: '',

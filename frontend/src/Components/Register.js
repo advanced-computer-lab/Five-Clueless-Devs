@@ -167,13 +167,6 @@ const Register = () => {
 				setCompleted(newCompleted);
 				setActiveStep(0);
 			}
-			if (data.message && data.message == 'username taken') {
-				setError({ ...error, username: 'This username is taken' });
-				const newCompleted = completed;
-				newCompleted[0] = false;
-				setCompleted(newCompleted);
-				setActiveStep(0);
-			}
 			else if (data.status === 'ok') {
 				history.push('/login')
 			}

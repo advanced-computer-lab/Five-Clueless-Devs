@@ -45,14 +45,22 @@ const ResUpdateSummary = (props) => {
 
     useEffect(() => {
         let c = [];
-        axios.get(BACKEND_URL + "reservations/GetReservation?_id=" + props.reservationId)
+        axios.get(BACKEND_URL + "reservations/GetReservation?_id=" + props.reservationId,{
+            headers:{
+              'Authorization': localStorage.getItem('token')
+            }
+          })
             .then(res => {
                 setReservation(res.data[0]);
                 console.log(reservation)
                 setPayment([...res.data[0].chargeId]);
 
                 res.data[0].chargeId.forEach((cId, index) => {
-                    axios.post(BACKEND_URL + "payments/retrieve", { chargeId: cId })
+                    axios.post(BACKEND_URL + "payments/retrieve", { chargeId: cId },{
+                        headers: {
+                            'Authorization': localStorage.getItem('token')
+                        }
+                    })
                         .then((charge) => {
                             c[index] = { id: cId, amount: charge.data.amount_captured / 100 };
                             setCharges(c);
@@ -151,7 +159,7 @@ const ResUpdateSummary = (props) => {
 
         if (price <= 0) {
             //pay extra
-           
+
             const product = {
                 name: `Ticket between ${props.deptFrom} & ${props.deptTo} for user ${userId}`,
                 price: Math.abs(price), ///price of ticket from input //remove hardcode
@@ -160,9 +168,13 @@ const ResUpdateSummary = (props) => {
             const body = {
                 token,
                 product
-            } 
-            setLoading("EGP" + Math.abs(price).toFixed(0) +' Payment');
-            axios.post('http://localhost:8082/api/payments/payment', body)
+            }
+            setLoading("EGP" + Math.abs(price).toFixed(0) + ' Payment');
+            axios.post('http://localhost:8082/api/payments/payment', body,{
+                headers: {
+                    'Authorization': localStorage.getItem('token')
+                }
+            })
                 .then(response => {
                     // console.log("RESPONSE", response.data);
                     let paymentId = response.data.id;
@@ -175,12 +187,12 @@ const ResUpdateSummary = (props) => {
                     setLoading('error');
                     console.log(err)
                     setTimeout(() => setLoading(''), 1000);
-                  });
+                });
 
 
         } else {
             //refund
-            setLoading("EGP" + Math.abs(price).toFixed(0) +' Refund');
+            setLoading("EGP" + Math.abs(price).toFixed(0) + ' Refund');
             let amountLeft = price;
             charges.forEach(c => {
                 if (amountLeft > 0 && c.amount > 0) {
@@ -190,7 +202,11 @@ const ResUpdateSummary = (props) => {
                             chargeId: c.id
                         }
                         console.log(body)
-                        axios.post('http://localhost:8082/api/payments/refund', body)
+                        axios.post('http://localhost:8082/api/payments/refund', body,{
+                            headers: {
+                                'Authorization': localStorage.getItem('token')
+                            }
+                        })
                             .then(response => {
                                 console.log("RESPONSE", response.data);
                                 setLoading('success');
@@ -200,7 +216,7 @@ const ResUpdateSummary = (props) => {
                                 setLoading('error');
                                 console.log(err)
                                 setTimeout(() => setLoading(''), 1000);
-                              });
+                            });
                         amountLeft = 0;
                     } else {
                         const body = {
@@ -208,7 +224,11 @@ const ResUpdateSummary = (props) => {
                             chargeId: c.id
                         }
                         console.log(body)
-                        axios.post('http://localhost:8082/api/payments/refund', body)
+                        axios.post('http://localhost:8082/api/payments/refund', body,{
+                            headers: {
+                                'Authorization': localStorage.getItem('token')
+                            }
+                        })
                             .then(response => {
                                 console.log("RESPONSE", response.data);
                             })
@@ -216,7 +236,7 @@ const ResUpdateSummary = (props) => {
                                 setLoading('error');
                                 console.log(err)
                                 setTimeout(() => setLoading(''), 1000);
-                              });
+                            });
                         amountLeft = amountLeft - c.amount;
                     }
                 }
@@ -352,12 +372,20 @@ const ResUpdateSummary = (props) => {
         console.table(payArray);
         if (window.location.href.includes("Ret")) {
             axios
-                .put(BACKEND_URL + 'flights/update?flightId=' + retFlight?.flightId, retFlight)
+                .put(BACKEND_URL + 'flights/update?flightId=' + retFlight?.flightId, retFlight,{
+                    headers: {
+                        'Authorization': localStorage.getItem('token')
+                    }
+                })
                 .then(res => {
                     console.log(res.data);
 
                     axios
-                        .put(BACKEND_URL + 'flights/update?flightId=' + retFlightOld?.flightId, retFlightOld)
+                        .put(BACKEND_URL + 'flights/update?flightId=' + retFlightOld?.flightId, retFlightOld,{
+                            headers: {
+                                'Authorization': localStorage.getItem('token')
+                            }
+                        })
                         .then(res => {
                             console.log(res.data);
 
@@ -369,7 +397,11 @@ const ResUpdateSummary = (props) => {
                                 chargeId: payArray
                             }
                             axios
-                                .put(BACKEND_URL + "reservations/update?_id=" + reservationId, data)
+                                .put(BACKEND_URL + "reservations/update?_id=" + reservationId, data, {
+                                    headers: {
+                                        'Authorization': localStorage.getItem('token')
+                                    }
+                                })
                                 .then(res => {
                                     console.log("reservation")
                                     console.log(res.data);
@@ -395,12 +427,20 @@ const ResUpdateSummary = (props) => {
         }
         else if (window.location.href.includes("Dept")) {
             axios
-                .put(BACKEND_URL + 'flights/update?flightId=' + deptFlight?.flightId, deptFlight)
+                .put(BACKEND_URL + 'flights/update?flightId=' + deptFlight?.flightId, deptFlight,{
+                    headers: {
+                        'Authorization': localStorage.getItem('token')
+                    }
+                })
                 .then(res => {
                     console.log(res.data);
 
                     axios
-                        .put(BACKEND_URL + 'flights/update?flightId=' + deptFlightOld?.flightId, deptFlightOld)
+                        .put(BACKEND_URL + 'flights/update?flightId=' + deptFlightOld?.flightId, deptFlightOld,{
+                            headers: {
+                                'Authorization': localStorage.getItem('token')
+                            }
+                        })
                         .then(res => {
                             console.log(res.data);
 
@@ -413,7 +453,11 @@ const ResUpdateSummary = (props) => {
                                 chargeId: payArray
                             }
                             axios
-                                .put(BACKEND_URL + "reservations/update?_id=" + reservationId, data)
+                                .put(BACKEND_URL + "reservations/update?_id=" + reservationId, data,{
+                                    headers:{
+                                      'Authorization': localStorage.getItem('token')
+                                    }
+                                  })
                                 .then(res => {
                                     console.log("reservation")
                                     console.log(res.data);
@@ -560,7 +604,7 @@ const ResUpdateSummary = (props) => {
                         </DialogActions>
                     </Dialog>
 
-                    {loading && <LoadingPayment text={loading}/>}
+                    {loading && <LoadingPayment text={loading} />}
                 </div>
             </div>
 

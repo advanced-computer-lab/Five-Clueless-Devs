@@ -36,7 +36,11 @@ const EditUser = () => {
     const getUser = () => {
         console.log("Print id: " + { id });
         axios
-            .get(BACKEND_URL + "users/search?_id=" + id)
+            .get(BACKEND_URL + "users/search?_id=" + id,{
+                headers:{
+                  'Authorization': localStorage.getItem('token')
+                }
+              })
             .then(res => {
                 console.log(res.data[0]);
                 setUser(res.data[0]);

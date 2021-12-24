@@ -35,7 +35,7 @@ const SignInDialog = ({ show, setShow, setConfirm }) => {
                 localStorage.setItem('token', data.token)
                 localStorage.setItem("user", JSON.stringify(data.user))
                 localStorage.setItem("userId", JSON.stringify(data.user.userId))
-                setConfirm();
+                // setConfirm();
                 toggle();
             } else {
 

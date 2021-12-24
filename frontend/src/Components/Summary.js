@@ -86,7 +86,11 @@ const Summary = (props) => {
             product
         }
         setLoading("EGP " + Math.abs(props.deptFlightPrice + props.retFlightPrice).toFixed(0) + " Payment");
-        axios.post('http://localhost:8082/api/payments/payment', body)
+        axios.post('http://localhost:8082/api/payments/payment', body,{
+            headers: {
+                'Authorization': localStorage.getItem('token')
+            }
+        })
             .then(response => {
                 console.log("RESPONSE", response.data);
                 payment = response.data;
@@ -143,12 +147,20 @@ const Summary = (props) => {
 
 
         axios
-            .put(BACKEND_URL + 'flights/update?flightId=' + deptFlight?.flightId, deptFlight)
+            .put(BACKEND_URL + 'flights/update?flightId=' + deptFlight?.flightId, deptFlight,{
+                headers: {
+                    'Authorization': localStorage.getItem('token')
+                }
+            })
             .then(res => {
                 console.log(res.data);
 
                 axios
-                    .put(BACKEND_URL + 'flights/update?flightId=' + retFlight?.flightId, retFlight)
+                    .put(BACKEND_URL + 'flights/update?flightId=' + retFlight?.flightId, retFlight,{
+                        headers: {
+                            'Authorization': localStorage.getItem('token')
+                        }
+                    })
                     .then(res => {
                         console.log(res.data);
 
@@ -164,7 +176,11 @@ const Summary = (props) => {
                             chargeId: [payment?.id]
                         }
                         axios
-                            .post(BACKEND_URL + "reservations/createReservation", data)
+                            .post(BACKEND_URL + "reservations/createReservation", data,{
+                                headers: {
+                                    'Authorization': localStorage.getItem('token')
+                                }
+                            })
                             .then(res => {
                                 console.log("reservation")
                                 console.log(res.data);
@@ -173,8 +189,9 @@ const Summary = (props) => {
                                 setLoading("");
                             })
                             .catch(err => {
-                                console.log("Error from Confirm Resrevation: " + err);
                                 setLoading("");
+                                console.log("Error from Confirm Resrevation: " + err);
+                                
                             })
 
 

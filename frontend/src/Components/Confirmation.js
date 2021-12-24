@@ -172,11 +172,19 @@ const Confirmation = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     axios
-      .put(BACKEND_URL + 'flights/update?flightId=' + from, fromflight)
+      .put(BACKEND_URL + 'flights/update?flightId=' + from, fromflight,{
+        headers: {
+            'Authorization': localStorage.getItem('token')
+        }
+    })
       .then(res => {
         console.log(res.data);
         axios
-          .put(BACKEND_URL + 'flights/update?flightId=' + too, toflight)
+          .put(BACKEND_URL + 'flights/update?flightId=' + too, toflight,{
+            headers: {
+                'Authorization': localStorage.getItem('token')
+            }
+        })
           .then(res => {
             console.log(res.data);
 

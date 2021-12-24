@@ -3,7 +3,7 @@ import { Link, useParams, useHistory } from 'react-router-dom';
 import '../App.css';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 import UIButton from './UIButton/UIButton';
 
 
@@ -44,7 +44,11 @@ const ViewFlightDetails = () => {
 
   const onDeleteConfirm = () => {
     axios
-      .delete(BACKEND_URL + "flights/deleteFlight?flightId=" + id)
+      .delete(BACKEND_URL + "flights/deleteFlight?flightId=" + id,{
+        headers: {
+            'Authorization': localStorage.getItem('token')
+        }
+    })
       .then(res => {
         history.push("/search");
       })
@@ -75,87 +79,83 @@ const ViewFlightDetails = () => {
         <div className="row">
           <br />
           <div className="col-md-8 m-auto">
-            <h1 className="display-4 text-center">Flights' Record</h1>
-            <p className="lead text-center">
+            <h1 style={{ marginBottom: "15px" }} className="display-4 text-center">Flights' Record</h1>
+            {/* <p className="lead text-center">
               View Flights' Info
             </p>
-            <hr /> <br />
+            <hr /> <br /> */}
           </div>
         </div>
         <div>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <Table sx={{ maxWidth: 500 }} className="table table-hover table-dark">
-              {/* <thead>
-          <TableRow>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
-          </TableRow>
-        </thead> */}
-              <TableBody>
-                <TableRow>
-                  {/* <th scope="row">1</th> */}
-                  <TableCell>Flight ID</TableCell>
-                  <TableCell>{flight.flightId}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">2</th> */}
-                  <TableCell>Origin Country</TableCell>
-                  <TableCell>{flight.from}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">3</th> */}
-                  <TableCell>Destination</TableCell>
-                  <TableCell>{flight.to}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">4</th> */}
-                  <TableCell>Departure Date</TableCell>
-                  <TableCell>{flight.departureDate.substring(0, 10)}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">5</th> */}
-                  <TableCell>Arrival Date</TableCell>
-                  <TableCell>{flight.arrivalDate.substring(0, 10)}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">6</th> */}
-                  <TableCell>Departure Time</TableCell>
-                  <TableCell>{flight.departureTime}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">7</th> */}
-                  <TableCell>Arrival Time</TableCell>
-                  <TableCell>{flight.arrivalTime}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">8</th> */}
-                  <TableCell>Available Economy Seats</TableCell>
-                  <TableCell>{flight.availableEconomy}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">9</th> */}
-                  <TableCell>Available Business Seats</TableCell>
-                  <TableCell>{flight.availableBusiness}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">10</th> */}
-                  <TableCell>Available First Class Seats</TableCell>
-                  <TableCell>{flight.availableFirst}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">11</th> */}
-                  <TableCell>Departure Terminal</TableCell>
-                  <TableCell>{flight.departureTerminal}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">12</th> */}
-                  <TableCell>Arrival Terminal</TableCell>
-                  <TableCell>{flight.arrivalTerminal}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
+            <div className='view-user-card'>
+              <TableContainer component={Paper}>
+                <Table sx={{ maxWidth: 500 }} className="table table-hover table-dark">
+                  <TableBody>
+                    <TableRow>
+                      {/* <th scope="row">1</th> */}
+                      <TableCell><span className="info-header-font">Flight ID</span></TableCell>
+                      <TableCell align="right">{flight.flightId}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      {/* <th scope="row">2</th> */}
+                      <TableCell><span className="info-header-font">Origin Country</span></TableCell>
+                      <TableCell align="right">{flight.from}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      {/* <th scope="row">3</th> */}
+                      <TableCell><span className="info-header-font">Destination</span></TableCell>
+                      <TableCell align="right">{flight.to}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      {/* <th scope="row">4</th> */}
+                      <TableCell><span className="info-header-font">Departure Date</span></TableCell>
+                      <TableCell align="right">{flight.departureDate.substring(0, 10)}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      {/* <th scope="row">5</th> */}
+                      <TableCell><span className="info-header-font">Arrival Date</span></TableCell>
+                      <TableCell align="right">{flight.arrivalDate.substring(0, 10)}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      {/* <th scope="row">6</th> */}
+                      <TableCell><span className="info-header-font">Departure Time</span></TableCell>
+                      <TableCell align="right">{flight.departureTime}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      {/* <th scope="row">7</th> */}
+                      <TableCell><span className="info-header-font">Arrival Time</span></TableCell>
+                      <TableCell align="right">{flight.arrivalTime}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      {/* <th scope="row">8</th> */}
+                      <TableCell><span className="info-header-font">Available Economy Seats</span></TableCell>
+                      <TableCell align="right">{flight.availableEconomy}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      {/* <th scope="row">9</th> */}
+                      <TableCell><span className="info-header-font">Available Business Seats</span></TableCell>
+                      <TableCell align="right">{flight.availableBusiness}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      {/* <th scope="row">10</th> */}
+                      <TableCell><span className="info-header-font">Available First Class Seats</span></TableCell>
+                      <TableCell align="right">{flight.availableFirst}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      {/* <th scope="row">11</th> */}
+                      <TableCell><span className="info-header-font">Departure Terminal</span></TableCell>
+                      <TableCell align="right">{flight.departureTerminal}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      {/* <th scope="row">12</th> */}
+                      <TableCell><span className="info-header-font">Arrival Terminal</span></TableCell>
+                      <TableCell align="right">{flight.arrivalTerminal}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
           </div>
         </div>
 
@@ -187,7 +187,7 @@ const ViewFlightDetails = () => {
               text={"Delete"}
               margin="10px"
               color={'red'}
-            />: null}
+            /> : null}
 
             {/* {showConfirm ? <Button onClick={onDeleteConfirm} variant="outlined" color="error">Confirm</Button> : null} */}
 
