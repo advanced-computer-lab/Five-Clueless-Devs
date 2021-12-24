@@ -15,65 +15,86 @@ const ChangePassword=()=>{
     //     oldPassword: '',
     //     confirmPassword: '',
     // })
-    let pass;
+   // let pass;
     let ready=false;
-    const[oldpass,setOldpass]=useState({
-        oldPassword: '',
+    const history = useHistory();
+    const[oldpass,setOldpass]=useState('')
+    const[newpass,setNewpass]=useState('')
+    const[confirmpass,setConfpass]=useState('')
+    const[submitready,setSubmit]=useState({
+        oldpassword:'',
+        Newpassword:'',
+        email:'',
     })
-    const[newpass,setNewpass]=useState({
-        Newpassword: '',
-    })
-    const[confirmpass,setConfpass]=useState({
-        Confirmpassword: '',
-    })
-    let Uid = JSON.parse(localStorage.getItem('user'))?._id;
-    const getOldPass=()=>{
-        console.log("Print id: " + { id });
-        axios
-            .get(BACKEND_URL + "users/search?_id=" + Uid)
-            .then(res => {
-               // let temp=res.data[0].password;
-                pass=res.data[0].password;
-                console.log(pass);
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    }
+    let Uid = JSON.parse(localStorage.getItem('user'))?.email;
+    // const getOldPass=()=>{
+    //     console.log("Print id: " + { id });
+    //     axios
+    //         .get(BACKEND_URL + "users/search?_id=" + Uid)
+    //         .then(res => {
+    //            // let temp=res.data[0].password;
+    //             pass=res.data[0].password;
+    //             console.log(pass);
+    //         })
+    //         .catch(err => {
+    //             console.log(err);
+    //         })
+    // }
     const onChange = (e) =>{
-        if(e.target.name=="oldpassword"){
+        console.log("i am here");
+        if(e.target.name=="oldPassword"){
             setOldpass(e.target.value);
             console.log(oldpass);
         }
-        if(e.target.name=="newpassword"){
+        if(e.target.name=="NewPassword"){
             setNewpass(e.target.value);
             console.log(newpass);
         }
-        if(e.target.name=="confirmpass"){
+        if(e.target.name=="confirmpassword"){
             setConfpass(e.target.value)
+            console.log(confirmpass)
+        }
+        
+    }
+    const [passincorrect,setPassincorrect]=useState("");
+    const [passmissmatch,setPassmissmatch]=useState("");
+    const [oldempty,setoldempty]=useState("");
+    const [newempty,setnewempty]=useState("");
+    const [conempty,setconempty]=useState("");
+    const onSubmit=(e)=>{
+        e.preventDefault();
+        if(oldpass==''){
+            setoldempty("this field can not be empty");
+        }
+        if(newpass==''){
+            setnewempty("this field can not be empty");
+        }
+        if(confirmpass==''){
+            setconempty("this field can not be empty");
         }
         if(oldpass!=''&&newpass!=''&&confirmpass!=''){
-              check(oldpass,newpass,confirmpass);
-        }
-    }
-    const check=(i,j,k)=>{
-        
-        let comp=await bcrypt.hash(i,10);
-        if(comp==pass){
-            if(j==k){
+            if(newpass==confirmpass){
                 ready=true;
+                setSubmit({oldpassword:oldpass,Newpassword:newpass,email:Uid})
             }
+            else{
+                setnewempty("those fields should match");
+                setconempty("those fields should match");
+
+            }
+            //setPassmissmatch("the new password should be the same ");
         }
-    } 
-    const onSubmit=()=>{
         if(ready){
-            let newpassencry=await bcrypt.hash(j,10);
+           let data={oldpassword:oldpass,Newpassword:newpass,email:Uid};
             axios
-            .put(BACKEND_URL + "users/update?_id=" + Uid,newpassencry)
+            .put(BACKEND_URL + "users/changePass",data)
             .then(res => {
                 console.log(res.data);
+                alert('password was changed successfully')
+                history.push(`/`);
             })
             .catch(err => {
+                setPassincorrect("the old password is inCorrect");
                 console.log(err);
             })
             
@@ -93,16 +114,21 @@ const ChangePassword=()=>{
 
 
                         <form noValidate onSubmit={onSubmit}>
+                            
                             <div className='criteria-form-group'>
                                 <div>
                                     <TextField
                                         id="outlined"
-                                        label="oldpassword"
+                                        label="Old Password"
                                         className='form-control'
-                                        name="oldpassword"
+                                        name="oldPassword"
+                                        type="password"
                                         value={oldpass}
                                         onChange={(e) =>onChange(e)}
+                                        error={oldempty!==""}
+                                        helperText={oldempty}
                                     />
+                                    <br />
                                 </div>
                             </div>
 
@@ -112,20 +138,27 @@ const ChangePassword=()=>{
                                     <TextField
                                         id="outlined"
                                         className='form-control'
-                                        label='newPassword'
-                                        name="newpassword"
+                                        label='New Password'
+                                        name="NewPassword"
+                                        type="password"
                                         value={newpass}
                                         onChange={(e) =>onChange(e)}
+                                        error={newempty!==""}
+                                        helperText={newempty}
                                     />
-
+                                      <br />
                                     <TextField
                                         id="outlined"
                                         className='form-control'
-                                        label='confirmPassword'
-                                        name="confirmpass"
+                                        label='Confirm Password'
+                                        name="confirmpassword"
+                                        type="password"
                                         value={confirmpass}
                                         onChange={(e) => onChange(e)}
+                                        error={conempty!==""}
+                                        helperText={conempty}
                                     />
+                                    <br />
                                 </div>
                             </div>
 
@@ -140,3 +173,4 @@ const ChangePassword=()=>{
     );
 
 }
+export default ChangePassword;

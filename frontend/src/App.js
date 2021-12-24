@@ -36,6 +36,7 @@ import RetUpdateReservation from './Components/RetUpdateReservation';
 import EditSeatsOutside from './Components/UpdateSeats/EditSeatsOutside';
 import StripeCheckout from "react-stripe-checkout";
 import Payment from './Components/Payment';
+import ChangePassword from './Components/UserChangePassword';
 function App() {
 
   return (
@@ -80,6 +81,7 @@ function App() {
 
           <Route path='/editSeats/:reservationId' component={EditSeatsOutside} />
           <Route path='/pay' component={Payment} />
+           <Route path='/passwordChange' component={ChangePassword}/>
 
 
         </Switch>

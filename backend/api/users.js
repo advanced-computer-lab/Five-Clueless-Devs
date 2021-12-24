@@ -2,6 +2,8 @@ const express = require('express');
 const { models } = require('mongoose');
 const router = express.Router();
 var bodyParser = require('body-parser')
+const bcrypt =require('bcrypt')
+const jwt = require("jsonwebtoken");
 
 require("dotenv").config
 
@@ -128,18 +130,35 @@ router.post("/login" , (req, res) => {
           }  });
     });
   });
+  router.post('/register',async (req,res) => {
+    const user =req.body;
+    
+    const takenUsername = await User.findOne({username: user.username})
+    const takenEmail = await User.findOne({email: user.email})
+    
+    if(takenEmail || takenUsername){
+        res.json({message: "Username or email has already been taken"})
+    } else {
+        user.password = await bcrypt.hash(req.body.password, 10)
+    
+        User.create({ ...user, isAdmin: "false" })
+            .then((newUser) =>
+            res.json({message:"User added" , data:newUser,status:'ok'})
+            )
+    }
+    })
 router.put('/changePass',async(req,res)=>{
   console.log("here");
-  const currUser = req.body.userId;
-  console.log(req.body.userId)
-  User.findOne({ userId:currUser }).then((user) => {
-    //console.log(user);
+  const currUser = req.body.email;
+ // console.log(req.body.userId)
+  User.findOne({ email:currUser }).then((user) => {
+   // console.log(user);
     bcrypt
-      .compare(currUser.oldpassword, user.password)
-      .then((isCorrect) => {
+      .compare(req.body.oldpassword, user.password)
+      .then(async(isCorrect) => {
         if (isCorrect) {
           let newpassword=await bcrypt.hash(req.body.Newpassword,10)
-          User.findOneAndUpdate({userId:user.userId},newpassword)
+          User.findOneAndUpdate({email:user.email},{password:newpassword})
           .then(res.status(200).json("updated succesfully"))
           .catch(err =>
           res.status(400).json({ error: 'Unable to update the Database' })
