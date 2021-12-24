@@ -16,16 +16,29 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { useTheme,createTheme, ThemeProvider } from '@mui/material/styles';
 import Input from "./Input";
+import { containerClasses } from "@mui/material";
+import { useEffect } from "react";
+
 
 const Login=()=> {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 
+	let history=useHistory()
+	useEffect(() =>{
+		let user=localStorage.getItem('user')
+		if (user)
+			history.push("/")
+		
+	}
+
+		,[])
+
 	async function loginUser(event) {
 		event.preventDefault()
 		setEmailError("")
 		setPassError("")
-
+		try{
 		const response = await fetch(BACKEND_URL+'users/login', {
 			method: 'POST',
 			headers: {
@@ -36,6 +49,7 @@ const Login=()=> {
 				password,
 			}),
 		})
+	
 
 		const data = await response.json()
         console.log(data.user)
@@ -62,6 +76,7 @@ const Login=()=> {
 			}
 			//alert('Invalid Email or Password')
 		}
+	}catch(err) {console.log(err)}
 	}
 const theme=createTheme();
 
