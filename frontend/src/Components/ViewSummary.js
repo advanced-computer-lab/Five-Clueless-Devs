@@ -426,7 +426,8 @@ const ViewSummary = () => {
                     </TableRow>
                     <TableRow style={{ cursor: 'pointer' }} onClick={seatsDeparture} title="Click to edit seats">
                       {/* <th scope="row">12</th> */}
-                      <TableCell>  <span className="info-header-font">Seats</span></TableCell>
+                      <TableCell>  <span className="info-header-font">Seats <b style={{fontSize:'12.5px', color:'blue', textDecoration:'underline'}}
+                      >(change seats)</b></span></TableCell>
                       <TableCell align="right">{seatsFrom}</TableCell>
                     </TableRow>
                   </TableBody>
@@ -496,7 +497,8 @@ const ViewSummary = () => {
                     </TableRow>
                     <TableRow style={{ cursor: 'pointer' }} onClick={seatsArrival}  title="Click to edit seats">
                       {/* <th scope="row">12</th> */}
-                      <TableCell><span className="info-header-font">Seats</span></TableCell>
+                      <TableCell><span className="info-header-font">Seats <b style={{fontSize:'12.5px', color:'blue', textDecoration:'underline'}}
+                      >(change seats)</b></span></TableCell>
                       <TableCell align="right">{seatsTO}</TableCell>
                     </TableRow>
                   </TableBody>

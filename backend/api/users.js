@@ -106,9 +106,9 @@ router.post('/send_mail', cors(), async (req, res) => {
 router.post('/send_mailRes', cors(), async (req, res) => {
 
   let { deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo, refundedAmount, bookingNumber,
-    departureDateDep,arrivalDateDep,departureTimeDep,arrivalTimeDep,departureTerminalDep,arrivalTerminalDep,cabinClassDep,seatsDep,
-    departureDateRet,arrivalDateRet,departureTimeRet,arrivalTimeRet,departureTerminalRet,arrivalTerminalRet,cabinClassRet,seatsRet,
-    firstName,lastName,
+    departureDateDep, arrivalDateDep, departureTimeDep, arrivalTimeDep, departureTerminalDep, arrivalTerminalDep, cabinClassDep, seatsDep,
+    departureDateRet, arrivalDateRet, departureTimeRet, arrivalTimeRet, departureTerminalRet, arrivalTerminalRet, cabinClassRet, seatsRet,
+    firstName, lastName,
     to } = req.body
   const transport = nodemailer.createTransport({
     host: process.env.MAIL_HOST,
@@ -186,14 +186,96 @@ router.post('/send_mailRes', cors(), async (req, res) => {
 })
 
 
+
+router.post('/send_mailPay', cors(), async (req, res) => {
+
+  let { deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo,
+    departureDateDep, arrivalDateDep, departureTimeDep, arrivalTimeDep, cabinClassDep,
+    departureDateRet, arrivalDateRet, departureTimeRet, arrivalTimeRet, cabinClassRet,
+    flightPriceDept, flightPriceRet, totalPrice, bookingNumber,
+    firstName, lastName,
+    to } = req.body
+  const transport = nodemailer.createTransport({
+    host: process.env.MAIL_HOST,
+    port: process.env.MAIL_PORT,
+    auth: {
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASS
+    }
+
+  })
+
+  await transport.sendMail({
+    from: process.env.MAIL_FROM,
+    to: to,
+    subject: "Payment Confirmation ",
+    html: `
+  
+    
+    <div className="email" style="
+        border: 1px solid black;
+        padding: 20px;
+        font-family: sans-serif;
+        line-height: 2;
+        font-size: 20px; 
+        ">
+        <h1 > <span style="color:#59B39E; font-size:25px">Clueless Pilots Aviation</span></h1>
+        <h2> <span style="font-style:italic"> Dear ${firstName} ${lastName}, this email is sent to you to confirm your payment of EGP<span style="font-size:25px; color:blue">
+        ${totalPrice}</span> </span> for your latest reservation </h2>
+        <hr>
+        <hr>
+        <h2 style="fontStyle:italic;">Departure Flight:</h2>
+
+       
+        <div>
+        
+        
+        <p>Flight ID: ${deptFlightId}</p>
+        <p>From: ${deptFrom}</p>
+        <p>To: ${deptTo}</p>
+        <p>Departure Time and Date: ( ${departureTimeDep}) ,  ${departureDateDep} </p>
+        <p>Arrival Time and Date: (${arrivalTimeDep}) , ${arrivalDateDep}</p>
+        
+        <p>Cabin Class: ${cabinClassDep}</p>
+        <p>Flight Price: ${flightPriceDept}</p>
+        
+        <p></p>
+        </div>
+        <hr>
+        <hr>
+        <h2>Return Flight</h2>
+        
+        <div>
+        <p>Flight ID: ${retFlightId}</p>
+        <p>From: ${retFrom}</p>
+        <p>To: ${retTo}</p>
+        <p>Departure Time and Date: (${departureTimeRet}) , ${departureDateRet}</p>
+        <p>Arrival Time and Date: (${arrivalTimeRet}) , ${arrivalDateRet}</p>
+        
+        <p>Cabin Class: ${cabinClassRet}</p>
+        <p>Flight Price: ${flightPriceRet}</p>
+        
+        <p></p>
+        </div>
+        <hr>
+        
+        <h3> Booking Number: <span style="font-size:25px; color:blue">
+        ${bookingNumber}</span> </h3>
+        <p>Thank you for choosing Clueless Pilots Airlines. Have a safe flight!</p>
+         </div>
+    `})
+  //console.log("Message sent: %s", info.messageId);  
+})
+
+
 router.put('/update', authenticateToken, (req, res) => {
-    let { userId } = req.body
-    console.log("updating user with id: " + userId);
-    User.findOneAndUpdate(req.query, req.body)
-        .then(res.status(200).json("updated succesfully"))
-        .catch(err =>
-            res.status(400).json({ error: 'Unable to update the Database' })
-        );
+  let { userId } = req.body
+  console.log("updating user with id: " + userId);
+  User.findOneAndUpdate(req.query, req.body)
+    .then(res.status(200).json("updated succesfully"))
+    .catch(err =>
+      res.status(400).json({ error: 'Unable to update the Database' })
+    );
 });
 
 router.post('/register', async (req, res) => {
@@ -238,7 +320,7 @@ router.post("/login", (req, res) => {
               if (err) {
                 return res.json({ message: "error" });
               }
-              return res.json({ message: "Success", token: "Bearer " + token, user:user });
+              return res.json({ message: "Success", token: "Bearer " + token, user: user });
             }
           );
         } else {
@@ -250,16 +332,16 @@ router.post("/login", (req, res) => {
 
 
 function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]
-  
-    if(!token) res.sendStatus(401);
-  
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) =>{
-      if(err) res.sendStatus(403);
-      req.user = user
-      next()
-    })
-  }
-  
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]
+
+  if (!token) res.sendStatus(401);
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) res.sendStatus(403);
+    req.user = user
+    next()
+  })
+}
+
 module.exports = router;

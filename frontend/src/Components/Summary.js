@@ -19,7 +19,12 @@ import LoadingPayment from './LoadingPayment/LoadingPayment';
 
 const Summary = (props) => {
     const flight = props.flight;
-
+    let toEmail = JSON.parse(localStorage.getItem('user'))?.email;
+    let deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo,
+        departureDateDep, arrivalDateDep, departureTimeDep, arrivalTimeDep, cabinClassDep,
+        departureDateRet, arrivalDateRet, departureTimeRet, arrivalTimeRet, cabinClassRet,
+        flightPriceDept, flightPriceRet, totalPrice, bookingNumber,
+        firstName, lastName;
     const history = useHistory();
     // const handleClick = () => {
     //     history.push(`/details/${flight.flightId}`)
@@ -29,6 +34,7 @@ const Summary = (props) => {
     }
 
     const [loading, setLoading] = useState("");
+    let bookForHere = "";
 
     const [showConfirm, setConfirm] = useState(false);
 
@@ -63,7 +69,60 @@ const Summary = (props) => {
         }
     }
 
+    const handleSendRes = async (e) => {
 
+        deptFlightId = props.selectedDeptFlightId
+        retFlightId = props.retFlightId
+        deptFrom = props.deptFrom
+        deptTo = props.deptTo
+        retFrom = props.deptTo
+        retTo = props.deptFrom
+        bookingNumber = bookForHere //this
+
+
+
+        departureDateDep = props.deptFlightDeptDate.substring(0, 10);
+        arrivalDateDep = props.deptFlightArrivalDate.substring(0, 10);
+        departureTimeDep = props.deptFlightDeptTime;
+        arrivalTimeDep = props.deptFlightArrivalTime;
+
+        cabinClassDep = props.chosenClass;
+
+
+        departureDateRet = props.retFlightDeptDate.substring(0, 10);
+        arrivalDateRet = props.retFlightArrivalDate.substring(0, 10);
+        departureTimeRet = props.retFlightDeptTime;
+        arrivalTimeRet = props.retFlightArrivalTime;
+
+        cabinClassRet = props.chosenClass;
+
+        flightPriceDept = props.deptFlightPrice;
+        flightPriceRet = props.retFlightPrice
+        totalPrice = props.retFlightPrice + props.deptFlightPrice
+
+        firstName = JSON.parse(localStorage.getItem('user'))?.firstName;
+        lastName = JSON.parse(localStorage.getItem('user'))?.lastName;
+
+
+
+
+        try {
+
+
+            //  BACKEND_URL + "users/search?userId=" + id)
+            await axios.post(BACKEND_URL + "users/send_mailPay?email=" + toEmail, {
+                deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo,
+                departureDateDep, arrivalDateDep, departureTimeDep, arrivalTimeDep, cabinClassDep,
+                departureDateRet, arrivalDateRet, departureTimeRet, arrivalTimeRet, cabinClassRet,
+                flightPriceDept, flightPriceRet, totalPrice, bookingNumber,
+                firstName, lastName,
+                to: toEmail
+            })
+        } catch (error) {
+
+            console.error(error)
+        }
+    }
 
     const [product, setproduct] = useState({
         name: `Ticket between ${props.deptFrom} & ${props.deptTo} for user ${userId}`,
@@ -89,7 +148,7 @@ const Summary = (props) => {
                 setLoading('error');
                 console.log(err)
                 setTimeout(() => setLoading(''), 1000);
-              });
+            });
     };
 
     const onConfirm = (e) => {
@@ -161,8 +220,11 @@ const Summary = (props) => {
                                 console.log("reservation")
                                 console.log(res.data);
                                 props.setBookingNum(res.data._id);
+                                bookForHere = res.data._id;
                                 props.selectDept();
                                 setLoading("");
+                                console.log("SENDING MAIL");
+                                handleSendRes(e)
                             })
                             .catch(err => {
                                 console.log("Error from Confirm Resrevation: " + err);
@@ -299,7 +361,7 @@ const Summary = (props) => {
                         </DialogActions>
                     </Dialog>
 
-                    {loading && <LoadingPayment text={loading}/>}
+                    {loading && <LoadingPayment text={loading} />}
                 </div>
             </div>
 
