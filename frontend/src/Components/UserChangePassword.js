@@ -16,6 +16,8 @@ const ChangePassword=()=>{
     //     confirmPassword: '',
     // })
    // let pass;
+   useEffect(() => {
+}, []);
     let ready=false;
     const history = useHistory();
     const[oldpass,setOldpass]=useState('')
@@ -90,11 +92,15 @@ const ChangePassword=()=>{
             .put(BACKEND_URL + "users/changePass",data)
             .then(res => {
                 console.log(res.data);
+                if(res.data.message=="Invalid Password"){
+                    setoldempty("old password is inCorrect");
+                }
+                else{
                 alert('password was changed successfully')
-                history.push(`/`);
+                history.push(`/`);}
             })
             .catch(err => {
-                setPassincorrect("the old password is inCorrect");
+                //setPassincorrect("the old password is inCorrect");
                 console.log(err);
             })
             

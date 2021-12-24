@@ -164,7 +164,7 @@ router.put('/changePass',async(req,res)=>{
           res.status(400).json({ error: 'Unable to update the Database' })
 );
         } else {
-          res.json({ message: "Invalid email or Password" });
+          res.json({ message: "Invalid Password" });
         }  });
   });
 });
