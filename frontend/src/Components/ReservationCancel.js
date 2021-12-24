@@ -6,6 +6,7 @@ import { BACKEND_URL } from '../API/URLS';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
 import './ReservationCancel.css';
 import UIButton from './UIButton/UIButton';
+import LoadingPayment from './LoadingPayment/LoadingPayment';
 
 const ReservationCancel = (props) => {
   const history = useHistory();
@@ -126,10 +127,12 @@ const ReservationCancel = (props) => {
   };
 
 
+  const [loading, setLoading] = useState('');
   const onSubmit = (e) => {
     OnCancel();
     props.handleSend(e);
     e.preventDefault();
+    setLoading('Refund');
     axios
       .put(BACKEND_URL + 'flights/update?flightId=' + from, f)
       .then(res => {
@@ -150,9 +153,15 @@ const ReservationCancel = (props) => {
                   axios.post('http://localhost:8082/api/payments/refund', body)
                     .then(response => {
                       console.log("RESPONSE", response.data);
-                      history.push("/Reserved-flights");
+                      setLoading('success');
+                      setTimeout(() => history.push("/Reserved-flights"), 500)
                     })
-                    .catch(err => console.log(err));
+                    .catch(err => {
+                      setLoading('error');
+                      console.log(err)
+                      setTimeout(() => setLoading(''), 1000);
+                    });
+                  
                 })
               })
               .catch(err => {
@@ -237,7 +246,13 @@ const ReservationCancel = (props) => {
             {/* <Button onClick={onSubmit} variant="text" color="error">cancel Reservation</Button> */}
           </DialogActions>
         </Dialog>
+
+        {loading && <LoadingPayment text={loading} />}
+
+        {/* {showConfirm && <LoadingPayment text={"error"} />} */}
+
       </div>
+
     </div>
   )
 }

@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams, useHistory } from 'react-router-dom';
+import { Link, useParams, useHistory, Switch } from 'react-router-dom';
 import '../App.css';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 import "./FlightCard.css";
 import UIButton from './UIButton/UIButton';
 import './ViewUserDetails.css'
+import LoadingButton from '@mui/lab/LoadingButton';
+import SaveIcon from '@mui/icons-material/Save';
+import LoadingPayment from './LoadingPayment/LoadingPayment';
 
 
 const ViewUserDetails = () => {
@@ -92,7 +95,6 @@ const ViewUserDetails = () => {
     setConfirm(!showConfirm);
   }
 
-
   return (
     <div className="ViewFlight">
       <div className="container">
@@ -112,7 +114,7 @@ const ViewUserDetails = () => {
               <TableContainer component={Paper}>
                 <Table sx={{ maxWidth: 500 }} className="table table-hover table-dark">
                   <TableBody>
-               
+
                     <TableRow>
                       <TableCell><span className="info-header-font">Username</span></TableCell>
                       <TableCell align="right">{user?.username}</TableCell>
@@ -217,6 +219,7 @@ const ViewUserDetails = () => {
         </Dialog>
 
       </div>
+
 
       {/* <div className="App">
 

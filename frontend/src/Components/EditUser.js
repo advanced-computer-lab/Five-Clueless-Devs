@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField';
 import './SearchFlightCriteria.css';   // create one for users
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Table, TableBody, TableCell, TableRow } from '@mui/material';
 import UIButton from './UIButton/UIButton';
+import LoadingPayment from './LoadingPayment/LoadingPayment';
 
 const EditUser = () => {
     const history = useHistory();

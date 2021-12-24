@@ -14,6 +14,7 @@ import { BACKEND_URL } from '../API/URLS';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 import UIButton from './UIButton/UIButton';
 import StripeCheckout from 'react-stripe-checkout';
+import LoadingPayment from './LoadingPayment/LoadingPayment';
 
 const ResUpdateSummary = (props) => {
     const flight = props.flight;
@@ -35,6 +36,8 @@ const ResUpdateSummary = (props) => {
     // let payment = [];
 
     const [payment, setPayment] = useState([]);
+
+    const [loading, setLoading] = useState('');
 
     useEffect(() => {
         console.table(payment);
@@ -92,7 +95,6 @@ const ResUpdateSummary = (props) => {
     if (window.location.href.includes("Dept")) {
         if (props.priceToDisplay <= 0) {
 
-
             rows.push(createData('Additional Fee', Math.abs(props.priceToDisplay).toFixed(0)))
         }
         else {
@@ -149,7 +151,7 @@ const ResUpdateSummary = (props) => {
 
         if (price <= 0) {
             //pay extra
-
+           
             const product = {
                 name: `Ticket between ${props.deptFrom} & ${props.deptTo} for user ${userId}`,
                 price: Math.abs(price), ///price of ticket from input //remove hardcode
@@ -158,20 +160,27 @@ const ResUpdateSummary = (props) => {
             const body = {
                 token,
                 product
-            }
+            } 
+            setLoading('Payment');
             axios.post('http://localhost:8082/api/payments/payment', body)
                 .then(response => {
-                    console.log("RESPONSE", response.data);
+                    // console.log("RESPONSE", response.data);
                     let paymentId = response.data.id;
                     setPayment(payment.concat([paymentId]))
                     let payArray = payment.concat([paymentId]);
+                    setLoading('success');
                     onConfirm(null, payArray);
                 })
-                .catch(err => console.log(err));
+                .catch(err => {
+                    setLoading('error');
+                    console.log(err)
+                    setTimeout(() => setLoading(''), 1000);
+                  });
 
 
         } else {
             //refund
+            setLoading('Refund');
             let amountLeft = price;
             charges.forEach(c => {
                 if (amountLeft > 0 && c.amount > 0) {
@@ -184,10 +193,14 @@ const ResUpdateSummary = (props) => {
                         axios.post('http://localhost:8082/api/payments/refund', body)
                             .then(response => {
                                 console.log("RESPONSE", response.data);
+                                setLoading('success');
                                 onConfirm();
                             })
-                            .catch(err => console.log(err));
-
+                            .catch(err => {
+                                setLoading('error');
+                                console.log(err)
+                                setTimeout(() => setLoading(''), 1000);
+                              });
                         amountLeft = 0;
                     } else {
                         const body = {
@@ -199,7 +212,11 @@ const ResUpdateSummary = (props) => {
                             .then(response => {
                                 console.log("RESPONSE", response.data);
                             })
-                            .catch(err => console.log(err));
+                            .catch(err => {
+                                setLoading('error');
+                                console.log(err)
+                                setTimeout(() => setLoading(''), 1000);
+                              });
                         amountLeft = amountLeft - c.amount;
                     }
                 }
@@ -207,8 +224,6 @@ const ResUpdateSummary = (props) => {
 
         }
     }
-
-
 
     const onConfirm = (e, payArray) => {
         let numOfAdults = props.numOfAdults
@@ -360,9 +375,11 @@ const ResUpdateSummary = (props) => {
                                     console.log(res.data);
                                     props.setBookingNum(res.data._id);
                                     props.selectDept();
+                                    setLoading('');
                                 })
                                 .catch(err => {
                                     console.log("Error updating reservation: " + err);
+                                    setLoading('');
                                 })
 
 
@@ -402,9 +419,11 @@ const ResUpdateSummary = (props) => {
                                     console.log(res.data);
                                     props.setBookingNum(res.data._id);
                                     props.selectDept();
+                                    setLoading('');
                                 })
                                 .catch(err => {
                                     console.log("Error updating reservation: " + err);
+                                    setLoading('');
                                 })
 
 
@@ -525,7 +544,6 @@ const ResUpdateSummary = (props) => {
                                     email={JSON.parse(localStorage.getItem('user'))?.email}
                                 >
                                     <UIButton
-                                        onClick={makePayment}
                                         text={"Confirm & Pay"}
                                         margin="10px"
                                         color="green"
@@ -540,6 +558,8 @@ const ResUpdateSummary = (props) => {
                                 />}
                         </DialogActions>
                     </Dialog>
+
+                    {loading && <LoadingPayment text={loading}/>}
                 </div>
             </div>
 

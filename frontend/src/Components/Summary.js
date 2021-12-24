@@ -12,8 +12,10 @@ import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import UIButton from './UIButton/UIButton';
 import StripeCheckout from 'react-stripe-checkout';
+import LoadingPayment from './LoadingPayment/LoadingPayment';
 
 const Summary = (props) => {
     const flight = props.flight;
@@ -25,6 +27,8 @@ const Summary = (props) => {
     function createData(name, calories) {
         return { name, calories };
     }
+
+    const [loading, setLoading] = useState("");
 
     const [showConfirm, setConfirm] = useState(false);
 
@@ -66,21 +70,26 @@ const Summary = (props) => {
         price: props.deptFlightPrice + props.retFlightPrice, ///price of ticket from input //remove hardcode
         productBy: "FiveCluelessDevs"
     })
-   
+
     let payment = null;
     const makePayment = token => {
         const body = {
             token,
             product
         }
-
+        setLoading("Payment");
         axios.post('http://localhost:8082/api/payments/payment', body)
             .then(response => {
                 console.log("RESPONSE", response.data);
                 payment = response.data;
+                setLoading('success')
                 onConfirm();
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                setLoading('error');
+                console.log(err)
+                setTimeout(() => setLoading(''), 1000);
+              });
     };
 
     const onConfirm = (e) => {
@@ -153,9 +162,11 @@ const Summary = (props) => {
                                 console.log(res.data);
                                 props.setBookingNum(res.data._id);
                                 props.selectDept();
+                                setLoading("");
                             })
                             .catch(err => {
                                 console.log("Error from Confirm Resrevation: " + err);
+                                setLoading("");
                             })
 
 
@@ -243,7 +254,7 @@ const Summary = (props) => {
                 </TableContainer>
 
                 <div>Total cost: <p> <span><b>EGP</b>{props.deptFlightPrice + props.retFlightPrice}</span></p> </div>
-                <p className="passenger-font">(for {1*props.numOfAdults + 1*props.numOfChildren} passengers)</p>
+                <p className="passenger-font">(for {1 * props.numOfAdults + 1 * props.numOfChildren} passengers)</p>
 
                 <button className="confirm-res" onClick={clickConfirm}>Confirm Reservation</button>
 
@@ -287,6 +298,8 @@ const Summary = (props) => {
 
                         </DialogActions>
                     </Dialog>
+
+                    {loading && <LoadingPayment text={loading}/>}
                 </div>
             </div>
 

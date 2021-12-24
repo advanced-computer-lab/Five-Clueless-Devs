@@ -9,6 +9,7 @@ const Navbar = () => {
   const [userId, setUser] = useState();
 
   useEffect(() => {
+    setUser(JSON.parse(localStorage.getItem('user'))?._id)
     setInterval(() => setUser(JSON.parse(localStorage.getItem('user'))?._id),
       2000);
   }, [])
