@@ -9,13 +9,7 @@ const Navbar = () => {
   const [userId, setUser] = useState();
 
   useEffect(() => {
-    setInterval(() => {
-      setUser(JSON.parse(localStorage.getItem('user'))?._id);
-      //func();
-    },
-      2000);
-
-
+    setUser(JSON.parse(localStorage.getItem('user'))?._id);
   }, [])
 
   //const [color, setColor] = useState('#596EB3');
@@ -34,7 +28,7 @@ const Navbar = () => {
 
   return (
 
-    <AppBar position="static" style={{ alignItems: 'flex-start', background:  '#A48184' , }}>
+    <AppBar position="static" style={{ alignItems: 'flex-start', background: '#A48184', }}>
 
       {/* <Toolbar> */}
       <div className="toolbar">
@@ -50,7 +44,7 @@ const Navbar = () => {
           <Button className="admin" color="inherit" onClick={(e) => history.push('/')}>Search for Flights</Button>
         </div>
 
-        {JSON.parse(localStorage.getItem('user'))?.isAdmin? <div className="ayesm">
+        {JSON.parse(localStorage.getItem('user'))?.isAdmin ? <div className="ayesm">
           <Button color="inherit" onClick={(e) => history.push('/admin-search')}> Admin Panel</Button>
           <Button color="inherit" onClick={(e) => history.push('/flight-schedule')}>Flight Schedule</Button>
           <Button color="inherit" onClick={(e) => history.push('/create-flight')}>Add Flight</Button>
