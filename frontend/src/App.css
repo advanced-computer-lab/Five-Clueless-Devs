@@ -37,14 +37,22 @@ body{
   color: #61dafb;
 }
 
+.MuiAutocomplete-inputRoot{
+  background-color: #ffffff !important;
+}
+
 .MuiFormControl-root{
-  background-color: #ffffff;
+  background-color: #ffffff00 !important;
 }
 
 .MuiButton-outlined{
-  background-color: white !important;
+  background-color: rgba(255, 255, 255, 0) !important;
+
 }
 
+.MuiOutlinedInput-input, .MuiInputBase-input{
+  background-color: #ffffff !important;
+}
 
 @keyframes App-logo-spin {
   from {

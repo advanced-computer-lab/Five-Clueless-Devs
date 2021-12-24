@@ -9,21 +9,39 @@ const Navbar = () => {
   const [userId, setUser] = useState();
 
   useEffect(() => {
-    setUser(JSON.parse(localStorage.getItem('user'))?._id)
-    setInterval(() => setUser(JSON.parse(localStorage.getItem('user'))?._id),
+    setInterval(() => {
+      setUser(JSON.parse(localStorage.getItem('user'))?._id);
+      //func();
+    },
       2000);
+
+
   }, [])
+
+  //const [color, setColor] = useState('#596EB3');
+
+  // const func = () => {
+  //   if (window.location.href == "http://localhost:3000/") {
+  //     setColor('#A48184')
+  //   }
+  //   else {
+  //     setColor('#A48184')
+  //   }
+  // }
+
+
 
 
   return (
-    <AppBar position="static" style={{ alignItems: 'flex-start', background: '#596EB3', }}>
+
+    <AppBar position="static" style={{ alignItems: 'flex-start', background:  '#A48184' , }}>
 
       {/* <Toolbar> */}
       <div className="toolbar">
 
         <div className="nav-logo-cont nav-logo" onClick={(e) => history.push('/')}>
           <img style={{ width: '35px', marginRight: '5px' }} src="https://img.icons8.com/fluency-systems-regular/48/000000/air-pilot-hat.png" />
-          <p style={{ color: '#59B39E', fontWeight: 'bolder', fontSize: '30px', marginBottom: '4px', marginRight: '00px' }}>Clueless Pilots</p>
+          <p style={{ color: 'seashell', fontWeight: 'bolder', fontSize: '30px', marginBottom: '4px', marginRight: '00px' }}>Clueless Pilots</p>
         </div>
 
         <div className="nav-logo-cont">

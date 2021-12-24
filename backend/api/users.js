@@ -200,9 +200,11 @@ router.post('/register', async (req, res) => {
   const takenUsername = await User.findOne({ username: user.username })
   const takenEmail = await User.findOne({ email: user.email })
 
-  if (takenEmail || takenUsername) {
-    res.json({ message: "Username or email has already been taken" })
-  } else {
+  if (takenEmail) {
+    res.json({ message: "email taken" })
+  }else if (takenUsername) {
+    res.json({ message: "username taken" })
+  }  else {
     user.password = await bcrypt.hash(req.body.password, 10)
 
     User.create({ ...user, isAdmin: "false" })

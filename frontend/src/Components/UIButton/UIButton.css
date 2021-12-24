@@ -29,3 +29,9 @@
     text-shadow: 0px 1px 0px #3d8a41;
     background:linear-gradient(#59b389, #409947);
   }
+  .btn-blue{
+    border-color:#599bb3;
+    box-shadow: 0px 10px 14px -7px rgba(5, 27, 31, 1);
+    text-shadow: 0px 1px 0px rgba(35, 98, 121, 1);
+    background:linear-gradient(rgba(83, 181, 240, 1), rgba(33, 81, 109, 1));
+  }
