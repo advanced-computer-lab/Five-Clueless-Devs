@@ -16,6 +16,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import UIButton from './UIButton/UIButton';
 import StripeCheckout from 'react-stripe-checkout';
 import LoadingPayment from './LoadingPayment/LoadingPayment';
+import SignInDialog from './SignInDialog';
+import { useEffect } from 'react';
 
 const Summary = (props) => {
     const flight = props.flight;
@@ -61,11 +63,17 @@ const Summary = (props) => {
 
     let userId = JSON.parse(localStorage.getItem('user'))?._id;
 
+    const [loginDialog, setLoginDialog] = useState(false);
+    useEffect(() => {
+        userId = JSON.parse(localStorage.getItem('user'))?._id;
+    }, [loginDialog])
+
     const clickConfirm = () => {
         if (userId) {
             toggleDialog();
         } else {
-            history.push('/login');
+            // history.push('/login');
+            setLoginDialog(true)
         }
     }
 
@@ -136,8 +144,12 @@ const Summary = (props) => {
             token,
             product
         }
-        setLoading("Payment");
-        axios.post('http://localhost:8082/api/payments/payment', body)
+        setLoading("EGP " + Math.abs(props.deptFlightPrice + props.retFlightPrice).toFixed(0) + " Payment");
+        axios.post('http://localhost:8082/api/payments/payment', body,{
+            headers: {
+                'Authorization': localStorage.getItem('token')
+            }
+        })
             .then(response => {
                 console.log("RESPONSE", response.data);
                 payment = response.data;
@@ -194,12 +206,20 @@ const Summary = (props) => {
 
 
         axios
-            .put(BACKEND_URL + 'flights/update?flightId=' + deptFlight?.flightId, deptFlight)
+            .put(BACKEND_URL + 'flights/update?flightId=' + deptFlight?.flightId, deptFlight,{
+                headers: {
+                    'Authorization': localStorage.getItem('token')
+                }
+            })
             .then(res => {
                 console.log(res.data);
 
                 axios
-                    .put(BACKEND_URL + 'flights/update?flightId=' + retFlight?.flightId, retFlight)
+                    .put(BACKEND_URL + 'flights/update?flightId=' + retFlight?.flightId, retFlight,{
+                        headers: {
+                            'Authorization': localStorage.getItem('token')
+                        }
+                    })
                     .then(res => {
                         console.log(res.data);
 
@@ -215,7 +235,11 @@ const Summary = (props) => {
                             chargeId: [payment?.id]
                         }
                         axios
-                            .post(BACKEND_URL + "reservations/createReservation", data)
+                            .post(BACKEND_URL + "reservations/createReservation", data,{
+                                headers: {
+                                    'Authorization': localStorage.getItem('token')
+                                }
+                            })
                             .then(res => {
                                 console.log("reservation")
                                 console.log(res.data);
@@ -227,8 +251,9 @@ const Summary = (props) => {
                                 handleSendRes(e)
                             })
                             .catch(err => {
-                                console.log("Error from Confirm Resrevation: " + err);
                                 setLoading("");
+                                console.log("Error from Confirm Resrevation: " + err);
+                                
                             })
 
 
@@ -348,6 +373,7 @@ const Summary = (props) => {
                                 name="Buy Ticket"
                                 amount={product.price * 100}
                                 email={JSON.parse(localStorage.getItem('user'))?.email}
+                                currency='egp'
                             >
                                 <UIButton
                                     // onClick={onConfirm}
@@ -356,12 +382,12 @@ const Summary = (props) => {
                                     color={'green'}
                                 />
                             </StripeCheckout>
-
-
                         </DialogActions>
                     </Dialog>
 
                     {loading && <LoadingPayment text={loading} />}
+
+                    <SignInDialog show={loginDialog} setShow={setLoginDialog} setConfirm={toggleDialog} />
                 </div>
             </div>
 

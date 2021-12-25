@@ -16,7 +16,6 @@
     "supertest": "^6.1.6"
   },
   "dependencies": {
-    "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
     "env": "0.0.2",
     "jsonwebtoken": "^8.5.1",

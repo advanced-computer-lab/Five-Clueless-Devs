@@ -445,7 +445,7 @@ const SearchFlightUser = ({ location }) => {
                     console.log(err);
                 })
         }
-        
+
     };
 
     //SEARCHING AND SELECTING DEPARTURE FLIGHT------------------------------------------------------------------------------------------------------------------------------------------
@@ -1335,12 +1335,12 @@ const SearchFlightUser = ({ location }) => {
                                                 </FormControl>
                                             </div>
                                             <div className='input-group-append'>
-                                            <UIButton
-                                            type={"submit"}
-                                            text={"Search"}
-                                            margin="10px"
-                                            color={"blue"}
-                                        />
+                                                <UIButton
+                                                    type={"submit"}
+                                                    text={"Search"}
+                                                    margin="10px"
+                                                    color={"blue"}
+                                                />
 
 
                                             </div>

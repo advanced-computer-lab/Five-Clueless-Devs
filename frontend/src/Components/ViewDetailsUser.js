@@ -49,11 +49,11 @@ const ViewDetailsUser = () => {
         <div className="row">
           <br />
           <div className="col-md-8 m-auto">
-            <h1 className="display-4 text-center">Flights' Record</h1>
-            <p className="lead text-center">
+            <h1 style={{marginBottom:"15px"}}  className="display-4 text-center">Flights' Record</h1>
+            {/* <p className="lead text-center">
               View Flights' Info
             </p>
-            <hr /> <br />
+            <hr /> <br /> */}
           </div>
         </div>
         <div>

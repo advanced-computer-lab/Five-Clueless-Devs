@@ -16,15 +16,15 @@ const ViewSummary = () => {
   let Uid = JSON.parse(localStorage.getItem('user'))?._id;
   let emailSearch = JSON.parse(localStorage.getItem('user'))?.email;
 
-  
+
   const [showConfirmation, setShow] = useState(false);
   const [sent, setSent] = useState(false)
   const [text, setText] = useState("")
   const [email, setEmail] = useState("")
   const [firstName, setFirstName] = useState("")
   let deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo, refundedAmount, bookingNumber;
-  let  departureDateDep,arrivalDateDep,departureTimeDep,arrivalTimeDep,departureTerminalDep,arrivalTerminalDep,cabinClassDep,seatsDep,departureDateRet,
-  arrivalDateRet,departureTimeRet,arrivalTimeRet,departureTerminalRet,arrivalTerminalRet,cabinClassRet,seatsRet, Name, lastName;
+  let departureDateDep, arrivalDateDep, departureTimeDep, arrivalTimeDep, departureTerminalDep, arrivalTerminalDep, cabinClassDep, seatsDep, departureDateRet,
+    arrivalDateRet, departureTimeRet, arrivalTimeRet, departureTerminalRet, arrivalTerminalRet, cabinClassRet, seatsRet, Name, lastName;
   const handleSend = async (e) => {
     refundedAmount = reservation?.price
     deptFlightId = fromflight?.flightId
@@ -34,17 +34,16 @@ const ViewSummary = () => {
     retFrom = toflight?.from
     retTo = toflight?.to
     bookingNumber = bookingId
-    
 
-  
 
-    
+
+
+
     setSent(true)
-    
+
     try {
 
       console.log(email);
-      //  BACKEND_URL + "users/search?userId=" + id)
       await axios.post(BACKEND_URL + "users/send_mail?email=" + emailSearch, {
         deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo, refundedAmount, bookingNumber, to: email
       })
@@ -66,23 +65,23 @@ const ViewSummary = () => {
 
 
 
-    departureDateDep= fromflight?.departureDate.substring(0, 10);
-    arrivalDateDep= fromflight?.arrivalDate.substring(0, 10);
-    departureTimeDep=fromflight?.departureTime;
-    arrivalTimeDep=fromflight?.arrivalTime;
-    departureTerminalDep= fromflight?.departureTerminal;
-    arrivalTerminalDep= fromflight?.arrivalTerminal;
-    cabinClassDep=reservation?.cabinDeparture;
-    seatsDep= seatsFrom;
+    departureDateDep = fromflight?.departureDate.substring(0, 10);
+    arrivalDateDep = fromflight?.arrivalDate.substring(0, 10);
+    departureTimeDep = fromflight?.departureTime;
+    arrivalTimeDep = fromflight?.arrivalTime;
+    departureTerminalDep = fromflight?.departureTerminal;
+    arrivalTerminalDep = fromflight?.arrivalTerminal;
+    cabinClassDep = reservation?.cabinDeparture;
+    seatsDep = seatsFrom;
 
-    departureDateRet=toflight?.departureDate.substring(0, 10);
-    arrivalDateRet=toflight?.arrivalDate.substring(0, 10);
-    departureTimeRet=toflight?.departureTime;
-    arrivalTimeRet=toflight?.arrivalTime;
-    departureTerminalRet=toflight?.departureTerminal;
-    arrivalTerminalRet=toflight?.arrivalTerminal;
-    cabinClassRet=reservation?.cabinArrival;
-    seatsRet=seatsTO;
+    departureDateRet = toflight?.departureDate.substring(0, 10);
+    arrivalDateRet = toflight?.arrivalDate.substring(0, 10);
+    departureTimeRet = toflight?.departureTime;
+    arrivalTimeRet = toflight?.arrivalTime;
+    departureTerminalRet = toflight?.departureTerminal;
+    arrivalTerminalRet = toflight?.arrivalTerminal;
+    cabinClassRet = reservation?.cabinArrival;
+    seatsRet = seatsTO;
 
     Name = JSON.parse(localStorage.getItem('user'))?.firstName;
     lastName = JSON.parse(localStorage.getItem('user'))?.lastName;
@@ -91,18 +90,18 @@ const ViewSummary = () => {
 
     //alert("An email has been sent to " + emailSearch);
     setShow(true);
-    
+
     setSent(true)
-    
+
     try {
 
       console.log(email);
       //  BACKEND_URL + "users/search?userId=" + id)
       await axios.post(BACKEND_URL + "users/send_mailRes?email=" + emailSearch, {
-        deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo, refundedAmount, bookingNumber, 
-        departureDateDep,arrivalDateDep,departureTimeDep,arrivalTimeDep,departureTerminalDep,arrivalTerminalDep,cabinClassDep,seatsDep,
-        departureDateRet,arrivalDateRet,departureTimeRet,arrivalTimeRet,departureTerminalRet,arrivalTerminalRet,cabinClassRet,seatsRet,
-        firstName,lastName,
+        deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo, refundedAmount, bookingNumber,
+        departureDateDep, arrivalDateDep, departureTimeDep, arrivalTimeDep, departureTerminalDep, arrivalTerminalDep, cabinClassDep, seatsDep,
+        departureDateRet, arrivalDateRet, departureTimeRet, arrivalTimeRet, departureTerminalRet, arrivalTerminalRet, cabinClassRet, seatsRet,
+        firstName, lastName,
         to: email
       })
     } catch (error) {
@@ -147,7 +146,11 @@ const ViewSummary = () => {
     getSummary();
 
     axios
-      .get(BACKEND_URL + "users/search?email=" + emailSearch)
+      .get(BACKEND_URL + "users/search?email=" + emailSearch, {
+        headers: {
+          'Authorization': localStorage.getItem('token')
+        }
+      })
       .then(res => {
         console.log(res.data);
         setEmail(res.data[0].email);
@@ -180,7 +183,11 @@ const ViewSummary = () => {
 
     // console.log(tempFromEconomy);
     // axios.get(BACKEND_URL + "reservations/GetReservation?UserID=" + Uid + "&from=" + idfrom + "&to=" + idto)
-    axios.get(BACKEND_URL + "reservations/GetReservation?_id=" + reservationId)
+    axios.get(BACKEND_URL + "reservations/GetReservation?_id=" + reservationId,{
+      headers:{
+        'Authorization': localStorage.getItem('token')
+      }
+    })
       .then(res => {
         setReservation(res.data[0]);
         setBookingId(reservationId.toUpperCase());
@@ -298,7 +305,7 @@ const ViewSummary = () => {
           flight: fromflight,
           maxSeats: reservation?.numberOfSeats,
           cabin: reservation?.cabinDeparture,
-          type: "Departure"  
+          type: "Departure"
         }
       })
   }
@@ -311,7 +318,7 @@ const ViewSummary = () => {
           flight: toflight,
           maxSeats: reservation?.numberOfSeats,
           cabin: reservation?.cabinArrival,
-          type: "Arrival"  ,
+          type: "Arrival",
           reservationId: reservation?._id
         }
       })
@@ -356,14 +363,14 @@ const ViewSummary = () => {
           <br />
           <div className="col-md-8 m-auto">
             <h1 className="display-4 text-center">{firstName}'s Reservation Details</h1>
-            
+
             <hr /> <br />
           </div>
         </div>
         <div>
-        <Button className="updateButton" style={{ marginBottom: "10px", marginTop:"-10px"  }} onClick={(e) => handleSendRes(e)}>
-        Email Reservation Itinerary</Button>
-        { showConfirmation ? <p style={{fontSize: '12px', color:'green'}}>An email has been sent to {emailSearch} !</p>: null}
+          <Button className="updateButton" style={{ marginBottom: "10px", marginTop: "-10px" }} onClick={(e) => handleSendRes(e)}>
+            Email Reservation Itinerary</Button>
+          {showConfirmation ? <p style={{ fontSize: '12px', color: 'green' }}>An email has been sent to {emailSearch} !</p> : null}
           <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", margin: "10px" }}>
             <div className='view-summary-card'>
 
@@ -433,7 +440,7 @@ const ViewSummary = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-            
+
             </div>
 
             <div className='view-summary-card'>
@@ -495,7 +502,7 @@ const ViewSummary = () => {
                       <TableCell><span className="info-header-font">Cabin Class</span></TableCell>
                       <TableCell align="right">{reservation?.cabinArrival}</TableCell>
                     </TableRow>
-                    <TableRow style={{ cursor: 'pointer' }} onClick={seatsArrival}  title="Click to edit seats">
+                    <TableRow style={{ cursor: 'pointer' }} onClick={seatsArrival} title="Click to edit seats">
                       {/* <th scope="row">12</th> */}
                       <TableCell><span className="info-header-font">Seats <b style={{fontSize:'12.5px', color:'blue', textDecoration:'underline'}}
                       >(change seats)</b></span></TableCell>
@@ -503,12 +510,12 @@ const ViewSummary = () => {
                     </TableRow>
                   </TableBody>
                 </Table>
-             
+
               </TableContainer>
-             
+
             </div>
           </div>
-         
+
         </div>
 
         <div className="row">
@@ -529,7 +536,7 @@ const ViewSummary = () => {
                 userid={Uid}
                 cabin={reservation?.cabin}
                 cabinDeparture={reservation?.cabinDeparture}
-                cabinReturn = {reservation?.cabinArrival}
+                cabinReturn={reservation?.cabinArrival}
                 reservationId={reservationId}
                 fromflight={fromflight}
                 toflight={toflight}
@@ -541,8 +548,8 @@ const ViewSummary = () => {
                 returnToCountry={toflight?.to}
                 seatCount={seatCount}
                 handleSend={handleSend}
-                bookingId = {bookingId}
-                reservationPrice= {reservation?.price}
+                bookingId={bookingId}
+                reservationPrice={reservation?.price}
               />
 
             </div>

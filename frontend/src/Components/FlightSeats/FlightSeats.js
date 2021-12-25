@@ -110,7 +110,11 @@ const FlightSeats = ({ from, to, maxSeats, setView, cabin, setFrom, setTo, setDe
 
             let id = flight?.flightId;
             axios
-                .put(BACKEND_URL + 'flights/update?flightId=' + id, tmpFlight)
+                .put(BACKEND_URL + 'flights/update?flightId=' + id, tmpFlight,{
+                    headers: {
+                        'Authorization': localStorage.getItem('token')
+                    }
+                })
                 .then(res => {
                     console.log(res.data);
                     if (type === 'Arrival') {

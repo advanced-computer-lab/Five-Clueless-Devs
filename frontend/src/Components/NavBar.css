@@ -24,3 +24,7 @@
     cursor: pointer;
     user-select: none;
 }
+
+.logout{
+    margin-left: 162px !important;
+}

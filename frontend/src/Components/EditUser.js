@@ -36,7 +36,11 @@ const EditUser = () => {
     const getUser = () => {
         console.log("Print id: " + { id });
         axios
-            .get(BACKEND_URL + "users/search?_id=" + id)
+            .get(BACKEND_URL + "users/search?_id=" + id,{
+                headers:{
+                  'Authorization': localStorage.getItem('token')
+                }
+              })
             .then(res => {
                 console.log(res.data[0]);
                 setUser(res.data[0]);
@@ -62,7 +66,7 @@ const EditUser = () => {
                 history.push('/user-details/' + user?._id);
                 console.log(res.data);
                 console.log(user);
-                localStorage.setItem('user',JSON.stringify(user))
+                localStorage.setItem('user', JSON.stringify(user))
             })
             .catch(err => {
                 console.log(err);
@@ -202,18 +206,25 @@ const EditUser = () => {
 
                             <div className='input-group-append'>
                                 {/* <Button style={{ marginRight: "10px" }} variant="outlined">Back</Button> */}
-
                                 <UIButton
-                                    onClick={() => history.push('/user-details/' + JSON.parse(localStorage.getItem('user'))?._id)}
-                                    text={"Back"}
+                                    onClick={() => history.push('/passwordChange')}
+                                    text={"change password"}
                                     margin="10px"
                                 />
 
-                                <UIButton
-                                    onClick={toggleDialog}
-                                    text={"Edit User"}
-                                    margin="10px"
-                                />
+                                <div className='input-group-append'>
+                                    <UIButton
+                                        onClick={() => history.push('/user-details/' + JSON.parse(localStorage.getItem('user'))?._id)}
+                                        text={"Back"}
+                                        margin="10px"
+                                    />
+                                    <UIButton
+                                        onClick={toggleDialog}
+                                        text={"Edit User"}
+                                        margin="10px"
+                                        color={'green'}
+                                    />
+                                </div>
                                 {/* <Button onClick={toggleDialog} variant="outlined" >Edit User</Button> */}
 
                             </div>

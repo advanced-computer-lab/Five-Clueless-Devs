@@ -20,6 +20,70 @@ const ResUpdateSummary = (props) => {
     const flight = props.flight;
     let priceToFinalDisplay = 0;
 
+    let toEmail = JSON.parse(localStorage.getItem('user'))?.email;
+    let bookForHere = "";
+    let deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo,
+        departureDateDep, arrivalDateDep, departureTimeDep, arrivalTimeDep, cabinClassDep,
+        departureDateRet, arrivalDateRet, departureTimeRet, arrivalTimeRet, cabinClassRet,
+        flightPriceDept, flightPriceRet, totalPrice, bookingNumber,
+        firstName, lastName, yourPaymentOrARefund, refundedOrFee;
+
+    const handleSendRes = async (e) => {
+
+        deptFlightId = props.selectedDeptFlightId
+        retFlightId = props.retFlightId
+        deptFrom = props.deptFrom
+        deptTo = props.deptTo
+        retFrom = props.deptTo
+        retTo = props.deptFrom
+        bookingNumber = bookForHere //this
+
+
+
+        departureDateDep = props.deptFlightDeptDate.substring(0, 10);
+        arrivalDateDep = props.deptFlightArrivalDate.substring(0, 10);
+        departureTimeDep = props.deptFlightDeptTime;
+        arrivalTimeDep = props.deptFlightArrivalTime;
+
+        
+
+
+        departureDateRet = props.retFlightDeptDate.substring(0, 10);
+        arrivalDateRet = props.retFlightArrivalDate.substring(0, 10);
+        departureTimeRet = props.retFlightDeptTime;
+        arrivalTimeRet = props.retFlightArrivalTime;
+
+        
+
+       
+        
+
+        firstName = JSON.parse(localStorage.getItem('user'))?.firstName;
+        lastName = JSON.parse(localStorage.getItem('user'))?.lastName;
+
+
+
+
+        try {
+
+
+            //  BACKEND_URL + "users/search?userId=" + id)
+            await axios.post(BACKEND_URL + "users/send_mailChange?email=" + toEmail, {
+                deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo,
+                departureDateDep, arrivalDateDep, departureTimeDep, arrivalTimeDep, cabinClassDep,
+                departureDateRet, arrivalDateRet, departureTimeRet, arrivalTimeRet, cabinClassRet,
+                flightPriceDept, flightPriceRet, totalPrice, bookingNumber,
+                firstName, lastName, yourPaymentOrARefund, refundedOrFee,
+                to: toEmail
+            })
+            console.log("Email sent to:")
+            console.log(toEmail);
+        } catch (error) {
+
+            console.error(error)
+        }
+    }
+
     useEffect(() => {
         console.log(props.retFlightOld);
         console.log(props.retFlight);
@@ -45,14 +109,22 @@ const ResUpdateSummary = (props) => {
 
     useEffect(() => {
         let c = [];
-        axios.get(BACKEND_URL + "reservations/GetReservation?_id=" + props.reservationId)
+        axios.get(BACKEND_URL + "reservations/GetReservation?_id=" + props.reservationId,{
+            headers:{
+              'Authorization': localStorage.getItem('token')
+            }
+          })
             .then(res => {
                 setReservation(res.data[0]);
                 console.log(reservation)
                 setPayment([...res.data[0].chargeId]);
 
                 res.data[0].chargeId.forEach((cId, index) => {
-                    axios.post(BACKEND_URL + "payments/retrieve", { chargeId: cId })
+                    axios.post(BACKEND_URL + "payments/retrieve", { chargeId: cId },{
+                        headers: {
+                            'Authorization': localStorage.getItem('token')
+                        }
+                    })
                         .then((charge) => {
                             c[index] = { id: cId, amount: charge.data.amount_captured / 100 };
                             setCharges(c);
@@ -96,29 +168,50 @@ const ResUpdateSummary = (props) => {
         if (props.priceToDisplay <= 0) {
 
             rows.push(createData('Additional Fee', Math.abs(props.priceToDisplay).toFixed(0)))
+            flightPriceDept = Math.abs(props.priceToDisplay);
+            yourPaymentOrARefund= "your payment"
+            refundedOrFee = "Additional Fee:"
+           
         }
         else {
             rows.push(createData('Amount to be refunded', (props.priceToDisplay).toFixed(0)))
+            flightPriceDept = Math.abs(props.priceToDisplay);
+            yourPaymentOrARefund= "a refund"
+            refundedOrFee = "Amount Refunded:"
         }
+        flightPriceRet = 0;
         priceToFinalDisplay = props.priceToDisplay;
+        totalPrice = Math.abs(props.priceToDisplay)
         rowsR.push(createData('Additional Fee', 0))
         rows.push(createData('Chosen Class', props.newCabin))
         rowsR.push(createData('Chosen Class', props.oldCabinReturn))
+        cabinClassDep = props.newCabin;
+        cabinClassRet = props.oldCabinReturn;
     }
     else if (window.location.href.includes("Ret")) {
 
         if (props.priceToDisplayRet <= 0) {
 
             rowsR.push(createData('Additional Fee', Math.abs(props.priceToDisplayRet).toFixed(0)))
+            flightPriceRet = Math.abs(props.priceToDisplayRet)
+            yourPaymentOrARefund= "your payment"
+            refundedOrFee = "Additional Fee:"
         }
         else {
 
             rowsR.push(createData('Amount to be refunded', (props.priceToDisplayRet).toFixed(0)))
+            flightPriceRet = Math.abs(props.priceToDisplayRet)
+            yourPaymentOrARefund= "a refund"
+            refundedOrFee = "Amount Refunded:"
         }
+        flightPriceDept = 0;
         priceToFinalDisplay = props.priceToDisplayRet;
+        totalPrice = Math.abs(props.priceToDisplayRet);
         rows.push(createData('Additional Fee', 0))
         rows.push(createData('Chosen Class', props.oldCabinDept))
         rowsR.push(createData('Chosen Class', props.newCabin))
+        cabinClassDep = props.oldCabinDept;
+        cabinClassRet = props.newCabin;
     }
 
     let userId = JSON.parse(localStorage.getItem('user'))?._id;
@@ -151,7 +244,7 @@ const ResUpdateSummary = (props) => {
 
         if (price <= 0) {
             //pay extra
-           
+
             const product = {
                 name: `Ticket between ${props.deptFrom} & ${props.deptTo} for user ${userId}`,
                 price: Math.abs(price), ///price of ticket from input //remove hardcode
@@ -160,9 +253,13 @@ const ResUpdateSummary = (props) => {
             const body = {
                 token,
                 product
-            } 
-            setLoading('Payment');
-            axios.post('http://localhost:8082/api/payments/payment', body)
+            }
+            setLoading("EGP" + Math.abs(price).toFixed(0) + ' Payment');
+            axios.post('http://localhost:8082/api/payments/payment', body,{
+                headers: {
+                    'Authorization': localStorage.getItem('token')
+                }
+            })
                 .then(response => {
                     // console.log("RESPONSE", response.data);
                     let paymentId = response.data.id;
@@ -175,12 +272,12 @@ const ResUpdateSummary = (props) => {
                     setLoading('error');
                     console.log(err)
                     setTimeout(() => setLoading(''), 1000);
-                  });
+                });
 
 
         } else {
             //refund
-            setLoading('Refund');
+            setLoading("EGP" + Math.abs(price).toFixed(0) + ' Refund');
             let amountLeft = price;
             charges.forEach(c => {
                 if (amountLeft > 0 && c.amount > 0) {
@@ -190,7 +287,11 @@ const ResUpdateSummary = (props) => {
                             chargeId: c.id
                         }
                         console.log(body)
-                        axios.post('http://localhost:8082/api/payments/refund', body)
+                        axios.post('http://localhost:8082/api/payments/refund', body,{
+                            headers: {
+                                'Authorization': localStorage.getItem('token')
+                            }
+                        })
                             .then(response => {
                                 console.log("RESPONSE", response.data);
                                 setLoading('success');
@@ -200,7 +301,7 @@ const ResUpdateSummary = (props) => {
                                 setLoading('error');
                                 console.log(err)
                                 setTimeout(() => setLoading(''), 1000);
-                              });
+                            });
                         amountLeft = 0;
                     } else {
                         const body = {
@@ -208,7 +309,11 @@ const ResUpdateSummary = (props) => {
                             chargeId: c.id
                         }
                         console.log(body)
-                        axios.post('http://localhost:8082/api/payments/refund', body)
+                        axios.post('http://localhost:8082/api/payments/refund', body,{
+                            headers: {
+                                'Authorization': localStorage.getItem('token')
+                            }
+                        })
                             .then(response => {
                                 console.log("RESPONSE", response.data);
                             })
@@ -216,7 +321,7 @@ const ResUpdateSummary = (props) => {
                                 setLoading('error');
                                 console.log(err)
                                 setTimeout(() => setLoading(''), 1000);
-                              });
+                            });
                         amountLeft = amountLeft - c.amount;
                     }
                 }
@@ -352,12 +457,20 @@ const ResUpdateSummary = (props) => {
         console.table(payArray);
         if (window.location.href.includes("Ret")) {
             axios
-                .put(BACKEND_URL + 'flights/update?flightId=' + retFlight?.flightId, retFlight)
+                .put(BACKEND_URL + 'flights/update?flightId=' + retFlight?.flightId, retFlight,{
+                    headers: {
+                        'Authorization': localStorage.getItem('token')
+                    }
+                })
                 .then(res => {
                     console.log(res.data);
 
                     axios
-                        .put(BACKEND_URL + 'flights/update?flightId=' + retFlightOld?.flightId, retFlightOld)
+                        .put(BACKEND_URL + 'flights/update?flightId=' + retFlightOld?.flightId, retFlightOld,{
+                            headers: {
+                                'Authorization': localStorage.getItem('token')
+                            }
+                        })
                         .then(res => {
                             console.log(res.data);
 
@@ -369,13 +482,19 @@ const ResUpdateSummary = (props) => {
                                 chargeId: payArray
                             }
                             axios
-                                .put(BACKEND_URL + "reservations/update?_id=" + reservationId, data)
+                                .put(BACKEND_URL + "reservations/update?_id=" + reservationId, data, {
+                                    headers: {
+                                        'Authorization': localStorage.getItem('token')
+                                    }
+                                })
                                 .then(res => {
                                     console.log("reservation")
                                     console.log(res.data);
                                     props.setBookingNum(res.data._id);
+                                    bookForHere = res.data._id;
                                     props.selectDept();
                                     setLoading('');
+                                    handleSendRes(e);
                                 })
                                 .catch(err => {
                                     console.log("Error updating reservation: " + err);
@@ -395,12 +514,20 @@ const ResUpdateSummary = (props) => {
         }
         else if (window.location.href.includes("Dept")) {
             axios
-                .put(BACKEND_URL + 'flights/update?flightId=' + deptFlight?.flightId, deptFlight)
+                .put(BACKEND_URL + 'flights/update?flightId=' + deptFlight?.flightId, deptFlight,{
+                    headers: {
+                        'Authorization': localStorage.getItem('token')
+                    }
+                })
                 .then(res => {
                     console.log(res.data);
 
                     axios
-                        .put(BACKEND_URL + 'flights/update?flightId=' + deptFlightOld?.flightId, deptFlightOld)
+                        .put(BACKEND_URL + 'flights/update?flightId=' + deptFlightOld?.flightId, deptFlightOld,{
+                            headers: {
+                                'Authorization': localStorage.getItem('token')
+                            }
+                        })
                         .then(res => {
                             console.log(res.data);
 
@@ -413,13 +540,20 @@ const ResUpdateSummary = (props) => {
                                 chargeId: payArray
                             }
                             axios
-                                .put(BACKEND_URL + "reservations/update?_id=" + reservationId, data)
+                                .put(BACKEND_URL + "reservations/update?_id=" + reservationId, data,{
+                                    headers:{
+                                      'Authorization': localStorage.getItem('token')
+                                    }
+                                  })
                                 .then(res => {
                                     console.log("reservation")
                                     console.log(res.data);
                                     props.setBookingNum(res.data._id);
+                                    bookForHere = res.data._id;
+                                    
                                     props.selectDept();
                                     setLoading('');
+                                    handleSendRes(e);
                                 })
                                 .catch(err => {
                                     console.log("Error updating reservation: " + err);
@@ -542,6 +676,7 @@ const ResUpdateSummary = (props) => {
                                     name="Buy Ticket"
                                     amount={getPrice() * 100}
                                     email={JSON.parse(localStorage.getItem('user'))?.email}
+                                    currency='egp'
                                 >
                                     <UIButton
                                         text={"Confirm & Pay"}
@@ -559,7 +694,7 @@ const ResUpdateSummary = (props) => {
                         </DialogActions>
                     </Dialog>
 
-                    {loading && <LoadingPayment text={loading}/>}
+                    {loading && <LoadingPayment text={loading} />}
                 </div>
             </div>
 

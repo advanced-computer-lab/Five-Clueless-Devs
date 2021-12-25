@@ -41,6 +41,7 @@ function Payment() {
                     token={makePayment}
                     name="Buy Ticket"
                     amount={product.price * 100}
+                    currency="EGP"
                 >
 
                     <button className="btn-large style={{ color: '#599BB3' }}" >
