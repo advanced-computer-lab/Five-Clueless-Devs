@@ -103,3 +103,48 @@ Issues with the code will be actively added to the issues on GitHub, everyone is
   
 * Registration  
 ![Registration](/frontend/src/Screenshots/7.png?raw=true "Registration")
+
+### Code Examples
+* For creating a backend api:  
+ `router.get('/search', (req, res) => {
+    Flight.find(req.query)
+        .then(flight => res.json(flight))
+        .catch(err => res.status(404).json({ nobookfound: 'No flights found' }));
+});`  
+
+* Axios Request:
+    `axios.get(BACKEND_URL + "flights/search?")
+            .then(res => {
+                setAll(res.data);
+            }).catch(err => {
+                console.log(err);
+            }) `  
+  
+* Example of a database schema:  
+`const mongoose = require('mongoose');
+const ReservationSchema = new mongoose.Schema({
+  UserID:{
+    type : String,
+    required: true
+  },
+  from: {
+    type: Number,
+    required: true
+  },
+  to: {
+    type: Number,
+    required: true
+  },
+  .
+  . // more objects in the schema
+  .
+  .});
+  module.exports = Reservation = mongoose.model('reservation', ReservationSchema);
+`  
+
+* Example of React Router Path:
+`<Route path='/search-user' component={SearchFlightUser} />
+ <Route path='/update-flight/:id' component={UpdateFlight} />
+`
+
+
