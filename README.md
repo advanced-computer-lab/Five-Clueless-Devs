@@ -111,7 +111,8 @@ Issues with the code will be actively added to the issues on GitHub, everyone is
     Flight.find(req.query)  
         .then(flight => res.json(flight))  
         .catch(err => res.status(404).json({ nobookfound: 'No flights found' }));  
-});```  
+});
+```  
 
 * Axios Request:  
     ``` js
@@ -120,7 +121,8 @@ Issues with the code will be actively added to the issues on GitHub, everyone is
                 setAll(res.data);   
             }).catch(err => {   
                 console.log(err);   
-            })   ```     
+            })   
+            ```     
   
 * Example of a database schema:  
 ```javascript
