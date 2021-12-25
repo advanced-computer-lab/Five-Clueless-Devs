@@ -17,10 +17,10 @@ If you fork this repo to create another version of the project, you need to add 
  * MAIL_PASS = _Mail host password_
  * JWT_SECRET = _The hash used for the json web token_
 
-To run the project after adding the .env, you go to the front end directory and run the front end server:
-    `npm start`
-To run the backend server, go to the backend directory then:
-    `npm run app`
+To run the project after adding the .env, you go to the front end directory and run the front end server: **Enter**
+    `npm start` **Enter**
+To run the backend server, go to the backend directory then: **Enter**
+    `npm run app` **Enter**
 
 ### Code Style
  * All variables are using the camelCase convention.
@@ -57,11 +57,11 @@ This will install all the dependencies needed such as mui, stripe, jsonwebtoken,
 
 ### Tests
 Tests can be easily performed by running both the frontend and backend servers, then using the frontend to create a user.
-* To Edit User:
+* To Edit User: **Enter**
     Click on *View Profile*, *Edit Information*, then do some edits or change the password then click *Edit User*. The profile page should contain the new data.
-* To test reservation: 
+* To test reservation:  **Enter**
     Search for a flight, test using different combination of From, To, dates and classes, then go through with reserving the flight. As the project is not yet deployed, you can use any of Stripes test cards to pay for the flights. If everything is successful, navigating to *View Reservations* through the Nav Bar, you should see that reservation. An email should have been sent to your account email containing all reservation details and payment details.
-* To test editing reservation:
+* To test editing reservation: **Enter**
     Select a reservation, click *Update Depart Flight*, search and select the new flight, either repay using the stripe test card, or the amount will automatically be refunded to the test card, select the seats and you should get your new itenerary with the updated flights.
 
 ### How to Use?
