@@ -83,4 +83,4 @@ Issues with the code will be actively added to the issues on GitHub, everyone is
 * Stripe Tutorial: https://www.youtube.com/watch?v=lbEFSP1WAv0
 
 ### Screenshots
-![Alt text](/Screenshots/1.png?raw=true "Optional Title")
+![Alt text](/frontend/src/Screenshots/1.png?raw=true "Optional Title")
