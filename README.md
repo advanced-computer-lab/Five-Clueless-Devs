@@ -106,24 +106,27 @@ Issues with the code will be actively added to the issues on GitHub, everyone is
 
 ### Code Examples
 * For creating a backend api:  
- `router.get('/search', (req, res) => {
-    Flight.find(req.query)
-        .then(flight => res.json(flight))
-        .catch(err => res.status(404).json({ nobookfound: 'No flights found' }));
-});`  
+ ```js
+ router.get('/search', (req, res) => {  
+    Flight.find(req.query)  
+        .then(flight => res.json(flight))  
+        .catch(err => res.status(404).json({ nobookfound: 'No flights found' }));  
+});```  
 
-* Axios Request:
-    `axios.get(BACKEND_URL + "flights/search?")
-            .then(res => {
-                setAll(res.data);
-            }).catch(err => {
-                console.log(err);
-            }) `  
+* Axios Request:  
+    ``` js
+    axios.get(BACKEND_URL + "flights/search?")  
+            .then(res => {  
+                setAll(res.data);   
+            }).catch(err => {   
+                console.log(err);   
+            })   ```     
   
 * Example of a database schema:  
-`const mongoose = require('mongoose');
-const ReservationSchema = new mongoose.Schema({
-  UserID:{
+```javascript
+const mongoose = require('mongoose');   
+const ReservationSchema = new mongoose.Schema({   
+  UserID:{  
     type : String,
     required: true
   },
@@ -140,11 +143,12 @@ const ReservationSchema = new mongoose.Schema({
   .
   .});
   module.exports = Reservation = mongoose.model('reservation', ReservationSchema);
-`  
+```  
 
 * Example of React Router Path:
-`<Route path='/search-user' component={SearchFlightUser} />
+```html
+<Route path='/search-user' component={SearchFlightUser} />
  <Route path='/update-flight/:id' component={UpdateFlight} />
-`
+```
 
 
