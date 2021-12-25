@@ -21,6 +21,9 @@ import FlightSchedule from './Components/FlightSchedule';
 import SearchFlightUser from './Components/SearchFlightUser';
 import FlightSeats from './Components/FlightSeats/FlightSeats';
 
+// import Login from './Components/Login';
+import Register from './Components/Register';
+
 
 import ViewDetailsUser from './Components/ViewDetailsUser';
 import ReservedFlight from './Components/ReservedFlight';
@@ -28,6 +31,12 @@ import ViewSummary from './Components/ViewSummary';
 import Confirmation from './Components/Confirmation';
 import ReservationCancel from './Components/ReservationCancel';
 import Login from './Components/Login';
+import DeptUpdateReservation from './Components/DeptUpdateReservation';
+import RetUpdateReservation from './Components/RetUpdateReservation';
+import EditSeatsOutside from './Components/UpdateSeats/EditSeatsOutside';
+import StripeCheckout from "react-stripe-checkout";
+import Payment from './Components/Payment';
+import ChangePassword from './Components/UserChangePassword';
 function App() {
 
   return (
@@ -37,7 +46,7 @@ function App() {
         <Navbar />
         <Switch>
 
-        <Route exact path="/" component={SearchFlightUser} />
+          <Route exact path="/" component={SearchFlightUser} />
 
 
           <Route exact path="/admin-search" component={SearchFlightCriteria} />
@@ -64,8 +73,15 @@ function App() {
           {/* <Route path='/summary/:idfrom/:idto' component={ViewSummary} /> */}
           <Route path='/summary/:reservationId' component={ViewSummary} />
           <Route path='/Resrevation-cancel' component={ReservationCancel} />
+          <Route path='/Reservation-Update-Dept' component={DeptUpdateReservation} />
+          <Route path='/Reservation-Update-Ret' component={RetUpdateReservation} />
           <Route path='/reserve' component={Confirmation} />
           <Route path='/login' component={Login} />
+          <Route path='/register' component={Register} />
+
+          <Route path='/editSeats/:reservationId' component={EditSeatsOutside} />
+          <Route path='/pay' component={Payment} />
+          <Route path='/passwordChange' component={ChangePassword} />
 
 
         </Switch>

@@ -1,0 +1,11 @@
+May Magdy:     Change password frontend and backend , login UI
+
+Mariam Eissa:  Worked on payment in the backend and frontend using stripe
+
+David Said:    Authentication and validation, error handling, and emailing payment
+
+Youssef Kersha:   Implemented the select and update seats in frontend, integrated payment into the frontend, UI of register
+
+Hazem Hisham:   Worked on updating flights in frontend and backend, emailing itinerary, and UI for search flights
+
+Everyone worked on README file.

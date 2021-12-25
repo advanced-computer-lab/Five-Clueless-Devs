@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams, useHistory } from 'react-router-dom';
+import { Link, useParams, useHistory, Switch } from 'react-router-dom';
 import '../App.css';
 import axios from 'axios';
 import { BACKEND_URL } from '../API/URLS';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 import "./FlightCard.css";
+import UIButton from './UIButton/UIButton';
+import './ViewUserDetails.css'
+import LoadingButton from '@mui/lab/LoadingButton';
+import SaveIcon from '@mui/icons-material/Save';
+import LoadingPayment from './LoadingPayment/LoadingPayment';
 
 
 const ViewUserDetails = () => {
@@ -49,11 +54,12 @@ const ViewUserDetails = () => {
   useEffect(() => {
     console.log("Print id: " + { id });
     axios
-      .get(BACKEND_URL + "users/search?userId=" + id)
+      .get(BACKEND_URL + "users/search?_id=" + id,{
+        headers:{
+          'Authorization': localStorage.getItem('token')
+        }
+      })
       .then(res => {
-        //console.log(res.data);
-        //console.log(res.data[0].email);
-        //currEmail=res.data.email;
         setUser(res.data[0] || {});
       })
       .catch(err => {
@@ -90,85 +96,69 @@ const ViewUserDetails = () => {
     setConfirm(!showConfirm);
   }
 
-
   return (
     <div className="ViewFlight">
       <div className="container">
         <div className="row">
           <br />
           <div className="col-md-8 m-auto">
-            <h1 className="display-4 text-center">User's Record</h1>
-            <p className="lead text-center">
+            <h1 style={{marginBottom:"15px"}} className="display-4 text-center">User's Record</h1>
+            {/* <p className="lead text-center">
               View User's Info
             </p>
-            <hr /> <br />
+            <hr /> <br /> */}
           </div>
         </div>
         <div>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <Table sx={{ maxWidth: 500 }} className="table table-hover table-dark">
-              {/* <thead>
-          <TableRow>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
-          </TableRow>
-        </thead> */}
-              <TableBody>
-                <TableRow>
-                  {/* <th scope="row">1</th> */}
-                  <TableCell>User ID</TableCell>
-                  <TableCell>{user?.userId}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">2</th> */}
-                  <TableCell>Username</TableCell>
-                  <TableCell>{user?.username}</TableCell>
-                </TableRow>
-                {/* <TableRow>
-                  
-                  <TableCell>password</TableCell>
-                  <TableCell>{user?.password}</TableCell>
-                </TableRow> */}
-                <TableRow>
-                  {/* <th scope="row">4</th> */}
-                  <TableCell>Email</TableCell>
-                  <TableCell>{user?.email}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">1</th> */}
-                  <TableCell>First Name</TableCell>
-                  <TableCell>{user?.firstName}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">1</th> */}
-                  <TableCell>Last Name</TableCell>
-                  <TableCell>{user?.lastName}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">1</th> */}
-                  <TableCell>Home Address</TableCell>
-                  <TableCell>{user?.homeAddress}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">1</th> */}
-                  <TableCell>Telephone Number</TableCell>
-                  <TableCell>{user?.telephone}</TableCell>
-                </TableRow>
-                <TableRow>
-                  {/* <th scope="row">1</th> */}
-                  <TableCell>Passport Number</TableCell>
-                  <TableCell>{user?.passportNumber}</TableCell>
-                </TableRow>
+            <div className='view-user-card'>
+              <TableContainer component={Paper}>
+                <Table sx={{ maxWidth: 500 }} className="table table-hover table-dark">
+                  <TableBody>
 
-                {/* <th scope="row">4</th> */}
+                    <TableRow>
+                      <TableCell><span className="info-header-font">Username</span></TableCell>
+                      <TableCell align="right">{user?.username}</TableCell>
+                    </TableRow>
+
+                    <TableRow>
+                      <TableCell><span className="info-header-font">Email </span></TableCell>
+                      <TableCell align="right">{user?.email}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell><span className="info-header-font">First Name </span></TableCell>
+                      <TableCell align="right">{user?.firstName}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell><span className="info-header-font">Last Name </span></TableCell>
+                      <TableCell align="right">{user?.lastName}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      {/* <th scope="row">1</th> */}
+                      <TableCell><span className="info-header-font">Home Address </span></TableCell>
+                      <TableCell align="right">{user?.homeAddress}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      {/* <th scope="row">1</th> */}
+                      <TableCell><span className="info-header-font">Telephone Number </span></TableCell>
+                      <TableCell align="right">{user?.telephone}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      {/* <th scope="row">1</th> */}
+                      <TableCell><span className="info-header-font">Passport Number </span></TableCell>
+                      <TableCell align="right">{user?.passportNumber}</TableCell>
+                    </TableRow>
+
+                    {/* <th scope="row">4</th> */}
 
 
 
-              </TableBody>
-            </Table>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
           </div>
+
         </div>
 
         <div className="row">
@@ -181,16 +171,28 @@ const ViewUserDetails = () => {
             </Link>
             <br /> */}
 
-            <Button
+            <UIButton
+              onClick={() => history.push(`/edit-user/${id}`)}
+              text={"Edit Information "}
+              margin="10px"
+            />
+
+            {/* <Button
               onClick={() => history.push(`/edit-user/${id}`)}
               variant="outlined"
               style={{ marginRight: "10px" }}
-            > Edit Information </Button>
-            <Button
+            > Edit Information </Button> */}
+            {/* <Button
               onClick={() => history.push(`/Reserved-flights`)}
               variant="outlined"
               style={{ marginRight: "10px" }}
-            > View Reservations </Button>
+            > View Reservations </Button> */}
+
+            <UIButton
+              onClick={() => history.push(`/Reserved-flights`)}
+              text={"View Reservations"}
+              margin="10px"
+            />
 
             {/*showDelete ? <Button onClick={setConfirmButton} variant="outlined" color="error">Delete </Button> : null*/}
             {/* {showConfirm ? <Button onClick={onDeleteConfirm} variant="outlined" color="error">Confirm</Button> : null} */}
@@ -218,6 +220,7 @@ const ViewUserDetails = () => {
         </Dialog>
 
       </div>
+
 
       {/* <div className="App">
 

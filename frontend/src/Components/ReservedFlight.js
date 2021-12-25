@@ -17,14 +17,18 @@ const ReservedFlight = () => {
     }, []);
     //let { id } = useParams();
 
-    let Uid = localStorage.getItem('userId');
+    let Uid = JSON.parse(localStorage.getItem('user'))?._id;
     console.log(Uid);
 
     const getReservetion = () => {
         let fromtemp = [];
         let totemp = [];
 
-        axios.get(BACKEND_URL + "reservations/GetReservation?UserID=" + Uid)
+        axios.get(BACKEND_URL + "reservations/GetReservation?UserID=" + Uid,{
+            headers:{
+              'Authorization': localStorage.getItem('token')
+            }
+          })
             .then(res => {
                 var temp = [];
                 //  console.log(res.data);
@@ -101,6 +105,7 @@ const ReservedFlight = () => {
                         <h1>You haven't made any reservations yet!</h1></div>
                 }
             </div>
+            
 
         </div>
         )

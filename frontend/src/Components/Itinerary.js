@@ -117,7 +117,7 @@ const Itinerary = (props) => {
                     </Table>
                 </TableContainer>
 
-                <div>Booking Number: <p> <span>{props.bookingNum.toUpperCase()}</span></p> </div>
+                <div>Booking Number: <p> <span>{props.bookingNum?.toUpperCase()}</span></p> </div>
                 <div>Total cost: <p> <span><b>EGP</b>{props.deptFlightPrice + props.retFlightPrice}</span></p> </div>
                 <p className="passenger-font">(for {props.numOfAdults + props.numOfChildren} passengers)</p>
             </div>

@@ -6,11 +6,16 @@ import { BACKEND_URL } from '../API/URLS';
 import TextField from '@mui/material/TextField';
 
 import './SearchFlightCriteria.css';   // create one for users
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import UIButton from './UIButton/UIButton';
+import LoadingPayment from './LoadingPayment/LoadingPayment';
+
+
 
 const EditUser = () => {
     const history = useHistory();
     const [showConfirm, setConfirm] = useState(false);
+    const [currentEmail,setCurrentEmail]=useState("");
     const toggleDialog = () => {
         setConfirm(!showConfirm);
     }
@@ -29,14 +34,19 @@ const EditUser = () => {
         reservations: ''
     });
     let { id } = useParams();
-
+    
 
     const getUser = () => {
         console.log("Print id: " + { id });
         axios
-            .get(BACKEND_URL + "users/search?userId=" + id)
+            .get(BACKEND_URL + "users/search?_id=" + id,{
+                headers:{
+                  'Authorization': localStorage.getItem('token')
+                }
+              })
             .then(res => {
-                console.log(res.data[0]);
+                console.log(res.data[0].email);
+                setCurrentEmail(res.data[0].email)
                 setUser(res.data[0]);
             })
             .catch(err => {
@@ -49,24 +59,66 @@ const EditUser = () => {
     };
 
     const onSubmit = (e) => {
+       
         e.preventDefault();
-        axios
-            .put(BACKEND_URL + 'users/update?userId=' + id, user)
-            .then(res => {
-                history.push('/user-details/' + user?.userId);
-                console.log(res.data);
+		setEmailError("")
+        setUsernameError("")
 
+        const isError=false
+        //console.log("current email is :"+currentEmail)
+        //console.log("email in text box "+user.email)
+        if(user.email==""){
+            setEmailError("Email cannot be left empty")
+        }
+        else
+        if(!(user.email.includes("@")&&((user.email.includes(".com")||(user.email.includes(".edu.eg"))))))
+            setEmailError("Email must be in the format anything@mail.com")
+        else{
+        axios
+            .put(BACKEND_URL + 'users/update?_id=' + id, user, {
+                headers: {
+                    'Authorization': localStorage.getItem('token')
+                }
+            })
+            .then(res => {
+                //console.log(res)
+                
+                if(user.username==""){
+                    setUsernameError("Username cannot be left empty")
+                    isError=true;
+                }
+                if(user.email==""){
+                    setEmailError("Email cannot be left empty")
+                    isError=true
+                }
+                else{
+                if((res.data=="updated succesfully"||(currentEmail==user.email))&&!isError){
+                    console.log("no errors found")
+                history.push('/user-details/' + user?._id);
+                console.log(res.data);
+                localStorage.setItem('user',JSON.stringify(user))
+                //alert(res.data)
+                }
+                else{
+                   
+                    setEmailError("Email in use by another user") 
+                }
+            }
+            
             })
             .catch(err => {
                 console.log(err);
             })
-
+        }
+        
     };
 
     useEffect(() => {
         getUser();
     }, []);
 
+    const [emailError,setEmailError]=useState("");
+    const [usernameError,setUsernameError]=useState("");
 
     return (
 
@@ -79,7 +131,7 @@ const EditUser = () => {
 
 
                         <form noValidate onSubmit={onSubmit}>
-                            <div className='criteria-form-group'>
+                            {/* <div className='criteria-form-group'>
                                 <div>
                                     <TextField
                                         disabled
@@ -87,11 +139,11 @@ const EditUser = () => {
                                         label="User ID"
                                         className='form-control'
                                         name="userId"
-                                        value={user?.userId}
+                                        value={user?._id}
 
                                     />
                                 </div>
-                            </div>
+                            </div> */}
 
 
                             <div className='form-group'>
@@ -102,6 +154,8 @@ const EditUser = () => {
                                         name="username"
                                         value={user?.username}
                                         onChange={(e) => onChange(e)}
+                                        error={usernameError !== ""}
+					                    helperText= {usernameError}
                                     />
 
 
@@ -178,6 +232,8 @@ const EditUser = () => {
                                         name="email"
                                         value={user?.email}
                                         onChange={(e) => onChange(e)}
+                                        error={emailError !== ""}
+					                    helperText= {emailError}
                                     />
 
                                     <TextField
@@ -194,8 +250,27 @@ const EditUser = () => {
 
 
                             <div className='input-group-append'>
-                                <Button style={{ marginRight: "10px" }} onClick={() => history.push('/user-details/' + localStorage.getItem("userId"))} variant="outlined">Back</Button>
-                                <Button onClick={toggleDialog} variant="outlined" >Edit User</Button>
+                                {/* <Button style={{ marginRight: "10px" }} variant="outlined">Back</Button> */}
+                                <UIButton
+                                    onClick={() => history.push('/passwordChange')}
+                                    text={"change password"}
+                                    margin="10px"
+                                />
+
+                                <div className='input-group-append'>
+                                    <UIButton
+                                        onClick={() => history.push('/user-details/' + JSON.parse(localStorage.getItem('user'))?._id)}
+                                        text={"Back"}
+                                        margin="10px"
+                                    />
+                                    <UIButton
+                                        onClick={toggleDialog}
+                                        text={"Edit User"}
+                                        margin="10px"
+                                        color={'green'}
+                                    />
+                                </div>
+                                {/* <Button onClick={toggleDialog} variant="outlined" >Edit User</Button> */}
 
                             </div>
                             <div>
@@ -206,13 +281,27 @@ const EditUser = () => {
                                     aria-labelledby="alert-dialog-title"
                                     aria-describedby="alert-dialog-description"
                                 >
-                                    <DialogTitle id="alert-dialog-title">
-                                        {"Are you sure you want to edit this user?"}
-                                    </DialogTitle>
-                                    <DialogActions>
-                                        <Button onClick={toggleDialog} variant="text">Cancel </Button>
-                                        <Button onClick={ onSubmit} variant="text" type="submit" color="success" >Confirm Edit</Button>
-                                    </DialogActions>
+                                    <div style={{ margin: '0 0 10px 0' }} >
+                                        <DialogTitle id="alert-dialog-title">
+                                            {"Are you sure you want to edit this user?"}
+                                        </DialogTitle>
+                                        <DialogActions>
+                                            {/* <Button onClick={toggleDialog} variant="text">Cancel </Button> */}
+                                            <UIButton
+                                                text={"Cancel"}
+                                                margin="0px 5px"
+                                                color={'red'}
+                                                onClick={toggleDialog}
+                                            />
+                                            {/* <Button onClick={onSubmit} variant="text" type="submit" color="success" >Confirm Edit</Button> */}
+                                            <UIButton
+                                                text={"Confirm Edit"}
+                                                margin="0px 5px"
+                                                onClick={onSubmit}
+                                                color={'green'}
+                                            />
+                                        </DialogActions>
+                                    </div>
                                 </Dialog>
 
                             </div>

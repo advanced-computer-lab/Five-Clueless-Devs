@@ -6,6 +6,7 @@ import { BACKEND_URL } from '../API/URLS';
 import './CreateFlight.css';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
+import UIButton from './UIButton/UIButton';
 
 
 class CreateUser extends Component {
@@ -13,18 +14,18 @@ class CreateUser extends Component {
         super();
         this.state = {
             userId: '',
-        username: '',
-        password: '',
-        firstName: '',
-        lastName: '',
-        homeAddress: '',
-        countryCode: '',
-        telephone: '',
-        email: '',
-        passportNumber: '',
-        isAdmin: false,
-        reservations: '',
-        err: ''
+            username: '',
+            password: '',
+            firstName: '',
+            lastName: '',
+            homeAddress: '',
+            countryCode: '',
+            telephone: '',
+            email: '',
+            passportNumber: '',
+            isAdmin: false,
+            reservations: '',
+            err: ''
         };
     }
 
@@ -52,7 +53,11 @@ class CreateUser extends Component {
         };
 
         axios
-            .post(BACKEND_URL + 'users/createUser', data)
+            .post(BACKEND_URL + 'users/createUser', data, {
+                headers: {
+                    'Authorization': localStorage.getItem('token')
+                }
+            })
             .then(res => {
                 this.setState({
                     userId: '',
@@ -68,14 +73,14 @@ class CreateUser extends Component {
                     isAdmin: false,
                     reservations: ''
                 })
-               
+
             })
             .catch(err => {
                 console.log(err);
-                this.setState({['err']: 'error'})
+                this.setState({ ['err']: 'error' })
             })
-            console.log(data.userId);
-            this.props.history.push('/user-details/'+ data.userId);
+        console.log(data.userId);
+        this.props.history.push('/user-details/' + data.userId);
     };
 
     render() {
@@ -131,51 +136,51 @@ class CreateUser extends Component {
                                 </div>
 
 
-                            
+
                                 <div className='form-group'>
                                     <div>
-                                        
-                                            <TextField
-                                               
-                                                className='form-control'
-                                                label='First Name'
-                                                name="firstName"
-                                                value={this.state.firstName}
-                                                onChange={this.onChange}
-                                            />
-                                        
-                                            <TextField
-                                                
-                                                className='form-control'
-                                                label='Last Name'
-                                                name="lastName"
-                                                value={this.state.lastName}
-                                                onChange={this.onChange}
-                                            />
-                                     
+
+                                        <TextField
+
+                                            className='form-control'
+                                            label='First Name'
+                                            name="firstName"
+                                            value={this.state.firstName}
+                                            onChange={this.onChange}
+                                        />
+
+                                        <TextField
+
+                                            className='form-control'
+                                            label='Last Name'
+                                            name="lastName"
+                                            value={this.state.lastName}
+                                            onChange={this.onChange}
+                                        />
+
                                     </div>
                                 </div>
                                 <div className='form-group'>
                                     <div>
-                                        
-                                            <TextField
-                                               
-                                                className='form-control'
-                                                label='Home Address'
-                                                name="homeAddress"
-                                                value={this.state.homeAddress}
-                                                onChange={this.onChange}
-                                            />
-                                        
-                                            <TextField
-                                                
-                                                className='form-control'
-                                                label='Country Code'
-                                                name="countryCode"
-                                                value={this.state.countryCode}
-                                                onChange={this.onChange}
-                                            />
-                                     
+
+                                        <TextField
+
+                                            className='form-control'
+                                            label='Home Address'
+                                            name="homeAddress"
+                                            value={this.state.homeAddress}
+                                            onChange={this.onChange}
+                                        />
+
+                                        <TextField
+
+                                            className='form-control'
+                                            label='Country Code'
+                                            name="countryCode"
+                                            value={this.state.countryCode}
+                                            onChange={this.onChange}
+                                        />
+
                                     </div>
                                 </div>
 
@@ -199,34 +204,39 @@ class CreateUser extends Component {
                                             onChange={this.onChange}
                                         />
                                     </div>
-                                    
-                                        <TextField
-                                            id="outlined"
-                                            className='form-control'
-                                            label='Passport Number'
-                                            name="passportNumber"
-                                            value={this.state.passportNumber}
-                                            onChange={this.onChange}
-                                        />
 
-                                        <TextField
-                                            id="outlined"
-                                            className='form-control'
-                                            label='Reservations'
-                                            name="reservations"
-                                            value={this.state.reservations}
-                                            onChange={this.onChange}
-                                        />
+                                    <TextField
+                                        id="outlined"
+                                        className='form-control'
+                                        label='Passport Number'
+                                        name="passportNumber"
+                                        value={this.state.passportNumber}
+                                        onChange={this.onChange}
+                                    />
 
-                                
+                                    <TextField
+                                        id="outlined"
+                                        className='form-control'
+                                        label='Reservations'
+                                        name="reservations"
+                                        value={this.state.reservations}
+                                        onChange={this.onChange}
+                                    />
+
+
                                 </div>
 
 
                                 {
-                                   /* this.state.err ? <p>Cannot add user, Ensure userID is unique and all fields are filled</p> : null*/
+                                    /* this.state.err ? <p>Cannot add user, Ensure userID is unique and all fields are filled</p> : null*/
                                 }
                                 <div className='button'>
-                                    <Button variant="outlined" type="submit">Submit</Button>
+                                    {/* <Button variant="outlined" type="submit">Submit</Button> */}
+                                    <UIButton
+                                        text={"Submit"}
+                                        margin="0px"
+                                        type={'submit'}
+                                    />
                                 </div>
                             </form>
                         </div>

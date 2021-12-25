@@ -5,7 +5,7 @@ import "./DepartureFlightCard.css";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { Table, TableBody, TableCell, TableRow , IconButton} from '@mui/material';
+import { Table, TableBody, TableCell, TableRow, IconButton } from '@mui/material';
 
 const FlightCard = (props) => {
 
@@ -84,13 +84,13 @@ const FlightCard = (props) => {
     }
     const checkTotal = () => {
         if (props.chosenClass == "Economy") {
-            return +(flight.price * props.numOfAdults + flight.price * props.numOfChildren * 0.7).toFixed(2)
+            return +(flight.price * (props.numOfAdults + props.numOfChildren)).toFixed(2)
         }
         else if (props.chosenClass == "Business") {
-            return +(1.2 * (flight.price * props.numOfAdults + flight.price * props.numOfChildren * 0.7)).toFixed(2)
+            return +(1.2 * (flight.price * (props.numOfAdults + props.numOfChildren))).toFixed(2)
         }
         else if (props.chosenClass == "First") {
-            return +(1.4 * (flight.price * props.numOfAdults + flight.price * props.numOfChildren * 0.7)).toFixed(2)
+            return +(1.4 * (flight.price * (props.numOfAdults + props.numOfChildren))).toFixed(2)
         }
     }
 

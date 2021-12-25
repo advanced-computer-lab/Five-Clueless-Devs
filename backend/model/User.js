@@ -5,8 +5,8 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
     userId: {
         type: String,
-        required: true,
-        unique: true
+        required: false,
+        unique: false
     },
     username: {
         type: String,
@@ -32,7 +32,9 @@ const UserSchema = new mongoose.Schema({
         type: [String]
     },
     email: {
-        type: String
+        type: String,
+        required:true,
+        unique: true
     },
     passportNumber: {
         type: String

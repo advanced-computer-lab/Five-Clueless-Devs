@@ -20,7 +20,19 @@ const ReservationSchema = new mongoose.Schema({
     required:true
   },
   price:{
-    type:Number
+    type: Number
+  },
+  numberOfSeats:{
+    type: Number
+  },
+  cabinDeparture:{
+    type:String,
+  },
+  cabinArrival:{
+    type:String,
+  },
+  chargeId:{
+    type:[String]
   }
 });
 
