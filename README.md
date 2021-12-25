@@ -18,11 +18,10 @@ If you fork this repo to create another version of the project, you need to add 
  * JWT_SECRET = _The hash used for the json web token_
 
 To run the project after adding the .env, you go to the front end directory and run the front end server:  
-`npm start`  
+    `npm start`  
 
 To run the backend server, go to the backend directory then:  
-`npm run app`  
-
+    `npm run app`  
 
 ### Code Style
  * All variables are using the camelCase convention.
@@ -46,9 +45,9 @@ Unlike modern airplane reservation websites, our website features a simplistic u
 ### Installation
 This project uses the node runtime environment, make sure it is installed on your system before runnin the app, or install the LTS version from https://nodejs.org/en/download/.
 
-For the project to run, you must install all the dependencies in the package.json, do that by running
-    `npm install`
-in the root folder, as well as frontend and backend folders.
+For the project to run, you must install all the dependencies in the package.json, do that by running  
+    `npm install`  
+    in the root folder, as well as frontend and backend folders.
 This will install all the dependencies needed such as mui, stripe, jsonwebtoken, express, react, mongoose, parallax, etc.
 
 ### API reference
