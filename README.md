@@ -83,17 +83,23 @@ Issues with the code will be actively added to the issues on GitHub, everyone is
 * Stripe Tutorial: https://www.youtube.com/watch?v=lbEFSP1WAv0
 
 ### Screenshots
-
+* Search for flights  
 ![Search for flights](/frontend/src/Screenshots/1.png?raw=true "Search for flights")  
-
-![Reserved Flights](/frontend/src/Screenshots/2.png?raw=true "Reserved Flights")  
   
+* Reserved Flights  
+![Reserved Flights](/frontend/src/Screenshots/2.png?raw=true "Reserved Flights")  
+
+* Reservation Summary    
 ![Reservation Summary](/frontend/src/Screenshots/3.png?raw=true "Reservation Summary")  
   
+* Select Seats  
 ![Select Seats](/frontend/src/Screenshots/4.png?raw=true "Select Seats")  
-   
+
+* Payment   
 ![Payment](/frontend/src/Screenshots/5.png?raw=true "Payment")  
-      
+
+* Login        
 ![Login](/frontend/src/Screenshots/6.png?raw=true "Login")  
   
+* Registration  
 ![Registration](/frontend/src/Screenshots/7.png?raw=true "Registration")
