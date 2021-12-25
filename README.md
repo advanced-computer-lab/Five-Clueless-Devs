@@ -8,6 +8,7 @@ It is implemented using the MERN stack.
 We have created this project to practice using the different technologies included in the MERN stack, as well as apply the agile methodologies in a real life practical application. Moreover, this project presented an opportunity for us to work using the tools commonly used in the industry such as git, and go through the software development cycle from data and requirements collection, to development to testing and back to development and so on.
 
 ### Build Status
+To see a sample of the project go to https://cluelesspilots.netlify.app/  
 If you fork this repo to create another version of the project, you need to add a .env file in the backend folder containing the following params:
  * DB_MONGO = _Your mongoDB url for the database_
  * MAIL_FROM = _The email address that notifactions will be sent from_
