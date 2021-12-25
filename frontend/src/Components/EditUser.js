@@ -62,11 +62,18 @@ const EditUser = () => {
        
         e.preventDefault();
 		setEmailError("")
+        setUsernameError("")
 
-        console.log("button pressed")
-        console.log("current email is :"+currentEmail)
-        console.log("email in text box "+user.email)
-
+        const isError=false
+        //console.log("current email is :"+currentEmail)
+        //console.log("email in text box "+user.email)
+        if(user.email==""){
+            setEmailError("Email cannot be left empty")
+        }
+        else
+        if(!(user.email.includes("@")&&((user.email.includes(".com")||(user.email.includes(".edu.eg"))))))
+            setEmailError("Email must be in the format anything@mail.com")
+        else{
         axios
             .put(BACKEND_URL + 'users/update?_id=' + id, user, {
                 headers: {
@@ -74,9 +81,19 @@ const EditUser = () => {
                 }
             })
             .then(res => {
-                console.log(res)
+                //console.log(res)
                 
-                if(res.data=="updated succesfully"||(currentEmail==user.email)){
+                if(user.username==""){
+                    setUsernameError("Username cannot be left empty")
+                    isError=true;
+                }
+                if(user.email==""){
+                    setEmailError("Email cannot be left empty")
+                    isError=true
+                }
+                else{
+                if((res.data=="updated succesfully"||(currentEmail==user.email))&&!isError){
+                    console.log("no errors found")
                 history.push('/user-details/' + user?._id);
                 console.log(res.data);
                 localStorage.setItem('user',JSON.stringify(user))
@@ -86,11 +103,13 @@ const EditUser = () => {
                    
                     setEmailError("Email in use by another user") 
                 }
+            }
             
             })
             .catch(err => {
                 console.log(err);
             })
+        }
         
     };
 
@@ -99,6 +118,8 @@ const EditUser = () => {
     }, []);
 
     const [emailError,setEmailError]=useState("");
+    const [usernameError,setUsernameError]=useState("");
+
     return (
 
         <div className="Edit User">
@@ -133,6 +154,8 @@ const EditUser = () => {
                                         name="username"
                                         value={user?.username}
                                         onChange={(e) => onChange(e)}
+                                        error={usernameError !== ""}
+					                    helperText= {usernameError}
                                     />
 
 

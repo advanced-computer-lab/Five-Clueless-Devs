@@ -110,8 +110,8 @@ router.put('/update', async (req, res) => {
 
   const takenEmail2 = await User.findOne({ _id: req.body._id })
 
-  console.log(takenEmail.email)
-  console.log(takenEmail2.email)
+ // console.log(takenEmail.email)
+  //console.log(takenEmail2.email)
 
   if (takenEmail && takenEmail.email != takenEmail2.email) {//&&takenEmail!=JSON.parse(localStorage.getItem('user'))?.email){
     res.json({ message: "Email has already been taken" })
@@ -130,13 +130,11 @@ router.put('/update', async (req, res) => {
 router.post('/register', async (req, res) => {
   const user = req.body;
 
-  const takenUsername = await User.findOne({ username: user.username })
+  //const takenUsername = await User.findOne({ username: user.username })
   const takenEmail = await User.findOne({ email: user.email })
 
   if (takenEmail) {
     res.json({ message: "email taken" })
-  } else if (takenUsername) {
-    res.json({ message: "username taken" })
   } else {
     user.password = await bcrypt.hash(req.body.password, 10)
 
@@ -162,6 +160,7 @@ router.post("/login", (req, res) => {
           const payload = {
             id: user.userId,
             username: user.username,
+            isAdmin: user.isAdmin
           };
           jwt.sign(
             payload,
@@ -215,8 +214,6 @@ function authenticateToken(req, res, next) {
     next()
   })
 }
-
-
 
 
 module.exports = router;
