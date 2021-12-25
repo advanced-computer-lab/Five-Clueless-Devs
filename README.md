@@ -32,10 +32,10 @@ To run the backend server, go to the backend directory then:
  * Use of global variables was kept to a minimum.
 
 ### Tech/Framework used
-This project was implemented using the MERN stack. Where the database is using the NoSQL MongoDB, backend server was handled using express.js, front end was implementes using React and all of these were running using the Node.js runtime environment.
-Payments were handled using stripe APIs (https://stripe.com/docs/api)
-Emails were sent using the nodemailer library (https://nodemailer.com/about/)
-The styling library used was the React Material UI Library (https://mui.com/)
+This project was implemented using the MERN stack. Where the database is using the NoSQL MongoDB, backend server was handled using express.js, front end was implementes using React and all of these were running using the Node.js runtime environment.  
+Payments were handled using stripe APIs (https://stripe.com/docs/api)  
+Emails were sent using the nodemailer library (https://nodemailer.com/about/)  
+The styling library used was the React Material UI Library (https://mui.com/)  
 
 ### Features
 In this reservation system, a user can easily modify his reservation after confirming it. They can easily change the booked seat on the same flight, or delay or advance any booked flight and pay/refund the price difference. An email is sent confirming any change done.
