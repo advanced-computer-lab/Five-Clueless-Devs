@@ -145,7 +145,7 @@ const Summary = (props) => {
             product
         }
         setLoading("EGP " + Math.abs(props.deptFlightPrice + props.retFlightPrice).toFixed(0) + " Payment");
-        axios.post('http://localhost:8082/api/payments/payment', body,{
+        axios.post(BACKEND_URL + 'payments/payment', body,{
             headers: {
                 'Authorization': localStorage.getItem('token')
             }

@@ -10,9 +10,12 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Table
 import UIButton from './UIButton/UIButton';
 import LoadingPayment from './LoadingPayment/LoadingPayment';
 
+
+
 const EditUser = () => {
     const history = useHistory();
     const [showConfirm, setConfirm] = useState(false);
+    const [currentEmail,setCurrentEmail]=useState("");
     const toggleDialog = () => {
         setConfirm(!showConfirm);
     }
@@ -31,7 +34,7 @@ const EditUser = () => {
         reservations: ''
     });
     let { id } = useParams();
-
+    
 
     const getUser = () => {
         console.log("Print id: " + { id });
@@ -42,7 +45,8 @@ const EditUser = () => {
                 }
               })
             .then(res => {
-                console.log(res.data[0]);
+                console.log(res.data[0].email);
+                setCurrentEmail(res.data[0].email)
                 setUser(res.data[0]);
             })
             .catch(err => {
@@ -55,7 +59,21 @@ const EditUser = () => {
     };
 
     const onSubmit = (e) => {
+       
         e.preventDefault();
+		setEmailError("")
+        setUsernameError("")
+
+        const isError=false
+        //console.log("current email is :"+currentEmail)
+        //console.log("email in text box "+user.email)
+        if(user.email==""){
+            setEmailError("Email cannot be left empty")
+        }
+        else
+        if(!(user.email.includes("@")&&((user.email.includes(".com")||(user.email.includes(".edu.eg"))))))
+            setEmailError("Email must be in the format anything@mail.com")
+        else{
         axios
             .put(BACKEND_URL + 'users/update?_id=' + id, user, {
                 headers: {
@@ -63,21 +81,44 @@ const EditUser = () => {
                 }
             })
             .then(res => {
+                //console.log(res)
+                
+                if(user.username==""){
+                    setUsernameError("Username cannot be left empty")
+                    isError=true;
+                }
+                if(user.email==""){
+                    setEmailError("Email cannot be left empty")
+                    isError=true
+                }
+                else{
+                if((res.data=="updated succesfully"||(currentEmail==user.email))&&!isError){
+                    console.log("no errors found")
                 history.push('/user-details/' + user?._id);
                 console.log(res.data);
-                console.log(user);
-                localStorage.setItem('user', JSON.stringify(user))
+                localStorage.setItem('user',JSON.stringify(user))
+                //alert(res.data)
+                }
+                else{
+                   
+                    setEmailError("Email in use by another user") 
+                }
+            }
+            
             })
             .catch(err => {
                 console.log(err);
             })
-
+        }
+        
     };
 
     useEffect(() => {
         getUser();
     }, []);
 
+    const [emailError,setEmailError]=useState("");
+    const [usernameError,setUsernameError]=useState("");
 
     return (
 
@@ -113,6 +154,8 @@ const EditUser = () => {
                                         name="username"
                                         value={user?.username}
                                         onChange={(e) => onChange(e)}
+                                        error={usernameError !== ""}
+					                    helperText= {usernameError}
                                     />
 
 
@@ -189,6 +232,8 @@ const EditUser = () => {
                                         name="email"
                                         value={user?.email}
                                         onChange={(e) => onChange(e)}
+                                        error={emailError !== ""}
+					                    helperText= {emailError}
                                     />
 
                                     <TextField

@@ -63,11 +63,10 @@ const Register = () => {
 				return false;
 			}
 		} else if (activeStep == 1) {
-
 			handleComplete();
 			return true;
-
 		}
+		return true;
 	}
 
 	const handleNext = () => {
@@ -84,7 +83,9 @@ const Register = () => {
 	};
 
 	const handleStep = (step) => () => {
-		setActiveStep(step);
+		if (handleErrors()) {
+			setActiveStep(step);
+		}
 	};
 
 	const handleComplete = () => {
@@ -130,11 +131,11 @@ const Register = () => {
 	})
 
 	async function registerUser() {
-		if(completed[0] != true){
+		if (completed[0] != true) {
 			setActiveStep(0);
 			return;
 		}
-		if(completed[1] != true){
+		if (completed[1] != true) {
 			setActiveStep(1);
 			return;
 		}

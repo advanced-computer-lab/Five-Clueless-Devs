@@ -346,27 +346,40 @@ router.post('/send_mailChange', cors(), async (req, res) => {
 })
 
 
-router.put('/update', authenticateToken, (req, res) => {
+router.put('/update', async (req, res) => {
   let { userId } = req.body
-  console.log("updating user with id: " + userId);
-  User.findOneAndUpdate(req.query, req.body)
-    .then(res.status(200).json("updated succesfully"))
-    .catch(err =>
-      res.status(400).json({ error: 'Unable to update the Database' })
-    );
+  //console.log(req.body._id)
+  //console.log(req.query)
+  const takenEmail = await User.findOne({ email: req.body.email })
+
+  const takenEmail2 = await User.findOne({ _id: req.body._id })
+
+ // console.log(takenEmail.email)
+  //console.log(takenEmail2.email)
+
+  if (takenEmail && takenEmail.email != takenEmail2.email) {//&&takenEmail!=JSON.parse(localStorage.getItem('user'))?.email){
+    res.json({ message: "Email has already been taken" })
+  }
+
+  else {
+    User.findOneAndUpdate(req.query, req.body)
+      .then(res.status(200).json("updated succesfully"))
+      .catch(err =>
+        res.status(400).json({ error: 'Unable to update the Database' })
+      );
+  }
+
 });
 
 router.post('/register', async (req, res) => {
   const user = req.body;
 
-  const takenUsername = await User.findOne({ username: user.username })
+  //const takenUsername = await User.findOne({ username: user.username })
   const takenEmail = await User.findOne({ email: user.email })
 
   if (takenEmail) {
     res.json({ message: "email taken" })
-  }else if (takenUsername) {
-    res.json({ message: "username taken" })
-  }  else {
+  } else {
     user.password = await bcrypt.hash(req.body.password, 10)
 
     User.create({ ...user, isAdmin: "false" })
@@ -391,6 +404,7 @@ router.post("/login", (req, res) => {
           const payload = {
             id: user.userId,
             username: user.username,
+            isAdmin: user.isAdmin
           };
           jwt.sign(
             payload,
@@ -409,25 +423,26 @@ router.post("/login", (req, res) => {
       });
   });
 });
-router.put('/changePass',authenticateToken, async(req,res)=>{
+router.put('/changePass', authenticateToken, async (req, res) => {
   console.log("here");
   const currUser = req.body.email;
- // console.log(req.body.userId)
-  User.findOne({ email:currUser }).then((user) => {
-   // console.log(user);
+  // console.log(req.body.userId)
+  User.findOne({ email: currUser }).then((user) => {
+    // console.log(user);
     bcrypt
       .compare(req.body.oldpassword, user.password)
-      .then(async(isCorrect) => {
+      .then(async (isCorrect) => {
         if (isCorrect) {
-          let newpassword=await bcrypt.hash(req.body.Newpassword,10)
-          User.findOneAndUpdate({email:user.email},{password:newpassword})
-          .then(res.status(200).json("updated succesfully"))
-          .catch(err =>
-          res.status(400).json({ error: 'Unable to update the Database' })
-);
+          let newpassword = await bcrypt.hash(req.body.Newpassword, 10)
+          User.findOneAndUpdate({ email: user.email }, { password: newpassword })
+            .then(res.status(200).json("updated succesfully"))
+            .catch(err =>
+              res.status(400).json({ error: 'Unable to update the Database' })
+            );
         } else {
           res.json({ message: "Invalid Password" });
-        }  });
+        }
+      });
   });
 });
 
@@ -443,5 +458,6 @@ function authenticateToken(req, res, next) {
     next()
   })
 }
+
 
 module.exports = router;
