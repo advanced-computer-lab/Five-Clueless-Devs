@@ -51,11 +51,7 @@ const ViewUserDetails = () => {
   useEffect(() => {
     console.log("Print id: " + { id });
     axios
-      .get(BACKEND_URL + "users/search?_id=" + id,{
-      headers: {
-        'Authorization': localStorage.getItem('token')
-    }
-  })
+      .get(BACKEND_URL + "users/search?_id=" + id)
       .then(res => {
         //console.log(res.data);
         //console.log(res.data[0].email);

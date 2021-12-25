@@ -50,7 +50,7 @@ router.post('/createUser', (req, res) => {
 router.get('/search', (req, res) => {
   User.find(req.query)
     .then(user => res.json(user))
-    .catch(err => res.status(404).json({ nobookfound: 'No users found' }));
+    .catch(err => res.status(404).json({err}));
 });
 
 
@@ -112,8 +112,8 @@ router.put('/update', async (req, res) => {
 
   const takenEmail2 = await User.findOne({ _id: req.body._id })
 
-  console.log(takenEmail.email)
-  console.log(takenEmail2.email)
+ // console.log(takenEmail.email)
+  //console.log(takenEmail2.email)
 
   if(takenEmail && takenEmail.email!=takenEmail2.email){//&&takenEmail!=JSON.parse(localStorage.getItem('user'))?.email){
     res.json({ message: "Email has already been taken" })
@@ -180,7 +180,18 @@ router.post("/login", (req, res) => {
       });
   });
 });
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]
 
+  if(!token) res.sendStatus(401);
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) =>{
+    if(err) res.sendStatus(403);
+    req.user = user
+    next()
+  })
+}
 
 
 
