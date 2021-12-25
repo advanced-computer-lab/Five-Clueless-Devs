@@ -46,7 +46,7 @@ function App() {
         <Navbar />
         <Switch>
 
-        <Route exact path="/" component={SearchFlightUser} />
+          <Route exact path="/" component={SearchFlightUser} />
 
 
           <Route exact path="/admin-search" component={SearchFlightCriteria} />
@@ -77,11 +77,11 @@ function App() {
           <Route path='/Reservation-Update-Ret' component={RetUpdateReservation} />
           <Route path='/reserve' component={Confirmation} />
           <Route path='/login' component={Login} />
-          <Route path='/register'component={Register} />
+          <Route path='/register' component={Register} />
 
           <Route path='/editSeats/:reservationId' component={EditSeatsOutside} />
           <Route path='/pay' component={Payment} />
-           <Route path='/passwordChange' component={ChangePassword}/>
+          <Route path='/passwordChange' component={ChangePassword} />
 
 
         </Switch>

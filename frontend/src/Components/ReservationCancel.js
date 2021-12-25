@@ -162,7 +162,7 @@ const ReservationCancel = (props) => {
                     chargeId: cId
                   }
                   console.log(body)
-                  axios.post('http://localhost:8082/api/payments/refund', body,{
+                  axios.post(BACKEND_URL + 'payments/refund', body,{
                     headers: {
                         'Authorization': localStorage.getItem('token')
                     }

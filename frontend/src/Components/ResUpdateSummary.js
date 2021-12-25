@@ -62,7 +62,7 @@ const ResUpdateSummary = (props) => {
                         }
                     })
                         .then((charge) => {
-                            c[index] = { id: cId, amount: charge.data.amount_captured / 100 };
+                            c[index] = { id: cId, amount: (charge.data.amount - charge.data.amount_refunded) / 100 };
                             setCharges(c);
                             console.log(c);
                         })
@@ -170,7 +170,7 @@ const ResUpdateSummary = (props) => {
                 product
             }
             setLoading("EGP" + Math.abs(price).toFixed(0) + ' Payment');
-            axios.post('http://localhost:8082/api/payments/payment', body,{
+            axios.post(BACKEND_URL + 'payments/payment', body,{
                 headers: {
                     'Authorization': localStorage.getItem('token')
                 }
@@ -202,7 +202,7 @@ const ResUpdateSummary = (props) => {
                             chargeId: c.id
                         }
                         console.log(body)
-                        axios.post('http://localhost:8082/api/payments/refund', body,{
+                        axios.post(BACKEND_URL + 'payments/refund', body,{
                             headers: {
                                 'Authorization': localStorage.getItem('token')
                             }
@@ -224,7 +224,7 @@ const ResUpdateSummary = (props) => {
                             chargeId: c.id
                         }
                         console.log(body)
-                        axios.post('http://localhost:8082/api/payments/refund', body,{
+                        axios.post(BACKEND_URL + 'payments/refund', body,{
                             headers: {
                                 'Authorization': localStorage.getItem('token')
                             }

@@ -38,12 +38,11 @@ const LoadingPayment = ({ text }) => {
                             </>
                             :
                             <>
-                                <CircularProgress size={'55px'} />
+                                <CircularProgress size={'55px'} style={{'color': '#A48184'}} />
                                 <Typography variant="h5" marginTop={'15px'}>
                                     Processing {text}...
                                 </Typography>
                             </>
-
                     }
                 </Paper>
             </div>

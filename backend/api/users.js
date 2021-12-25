@@ -22,7 +22,7 @@ router.get('/test', (req, res) => res.send('user route testing!'));
 // @route GET api/users
 // @description Get all users
 // @access Public
-router.get('/',authenticateToken, (req, res) => {
+router.get('/', authenticateToken, (req, res) => {
   User.find()
     .then(users => res.json(users))
     .catch(err => res.status(404).json({ noUsersFound: 'No Users found' }));
@@ -48,7 +48,7 @@ router.post('/createUser', authenticateToken, (req, res) => {
 router.get('/search', authenticateToken, (req, res) => {
   User.find(req.query)
     .then(user => res.json(user))
-    .catch(err => res.status(404).json({err}));
+    .catch(err => res.status(404).json({ err }));
 });
 
 
@@ -113,16 +113,16 @@ router.put('/update', async (req, res) => {
   console.log(takenEmail.email)
   console.log(takenEmail2.email)
 
-  if(takenEmail && takenEmail.email!=takenEmail2.email){//&&takenEmail!=JSON.parse(localStorage.getItem('user'))?.email){
+  if (takenEmail && takenEmail.email != takenEmail2.email) {//&&takenEmail!=JSON.parse(localStorage.getItem('user'))?.email){
     res.json({ message: "Email has already been taken" })
   }
 
-  else{
-  User.findOneAndUpdate(req.query, req.body)
-    .then(res.status(200).json("updated succesfully"))
-    .catch(err =>
-      res.status(400).json({ error: 'Unable to update the Database' })
-    );
+  else {
+    User.findOneAndUpdate(req.query, req.body)
+      .then(res.status(200).json("updated succesfully"))
+      .catch(err =>
+        res.status(400).json({ error: 'Unable to update the Database' })
+      );
   }
 
 });
@@ -135,9 +135,9 @@ router.post('/register', async (req, res) => {
 
   if (takenEmail) {
     res.json({ message: "email taken" })
-  }else if (takenUsername) {
+  } else if (takenUsername) {
     res.json({ message: "username taken" })
-  }  else {
+  } else {
     user.password = await bcrypt.hash(req.body.password, 10)
 
     User.create({ ...user, isAdmin: "false" })
@@ -171,7 +171,7 @@ router.post("/login", (req, res) => {
               if (err) {
                 return res.json({ message: "error" });
               }
-              return res.json({ message: "Success", token: "Bearer " + token, user:user });
+              return res.json({ message: "Success", token: "Bearer " + token, user: user });
             }
           );
         } else {
@@ -180,27 +180,42 @@ router.post("/login", (req, res) => {
       });
   });
 });
-router.put('/changePass',authenticateToken, async(req,res)=>{
+router.put('/changePass', authenticateToken, async (req, res) => {
   console.log("here");
   const currUser = req.body.email;
- // console.log(req.body.userId)
-  User.findOne({ email:currUser }).then((user) => {
-   // console.log(user);
+  // console.log(req.body.userId)
+  User.findOne({ email: currUser }).then((user) => {
+    // console.log(user);
     bcrypt
       .compare(req.body.oldpassword, user.password)
-      .then(async(isCorrect) => {
+      .then(async (isCorrect) => {
         if (isCorrect) {
-          let newpassword=await bcrypt.hash(req.body.Newpassword,10)
-          User.findOneAndUpdate({email:user.email},{password:newpassword})
-          .then(res.status(200).json("updated succesfully"))
-          .catch(err =>
-          res.status(400).json({ error: 'Unable to update the Database' })
-);
+          let newpassword = await bcrypt.hash(req.body.Newpassword, 10)
+          User.findOneAndUpdate({ email: user.email }, { password: newpassword })
+            .then(res.status(200).json("updated succesfully"))
+            .catch(err =>
+              res.status(400).json({ error: 'Unable to update the Database' })
+            );
         } else {
           res.json({ message: "Invalid Password" });
-        }  });
+        }
+      });
   });
 });
+
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]
+
+  if (!token) res.sendStatus(401);
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) res.sendStatus(403);
+    req.user = user
+    next()
+  })
+}
+
 
 
 
