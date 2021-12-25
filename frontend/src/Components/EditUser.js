@@ -9,9 +9,12 @@ import './SearchFlightCriteria.css';   // create one for users
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Table, TableBody, TableCell, TableRow } from '@mui/material';
 import UIButton from './UIButton/UIButton';
 
+
+
 const EditUser = () => {
     const history = useHistory();
     const [showConfirm, setConfirm] = useState(false);
+    const [currentEmail,setCurrentEmail]=useState("");
     const toggleDialog = () => {
         setConfirm(!showConfirm);
     }
@@ -30,14 +33,17 @@ const EditUser = () => {
         reservations: ''
     });
     let { id } = useParams();
-
+    
 
     const getUser = () => {
         console.log("Print id: " + { id });
         axios
-            .get(BACKEND_URL + "users/search?_id=" + id)
+            .get(BACKEND_URL + "users/search?_id=" + id,{ headers: {
+                'Authorization': localStorage.getItem('token')
+            }})
             .then(res => {
-                console.log(res.data[0]);
+                console.log(res.data[0].email);
+                setCurrentEmail(res.data[0].email)
                 setUser(res.data[0]);
             })
             .catch(err => {
@@ -50,7 +56,14 @@ const EditUser = () => {
     };
 
     const onSubmit = (e) => {
+       
         e.preventDefault();
+		setEmailError("")
+
+        console.log("button pressed")
+        console.log("current email is :"+currentEmail)
+        console.log("email in text box "+user.email)
+
         axios
             .put(BACKEND_URL + 'users/update?_id=' + id, user, {
                 headers: {
@@ -58,22 +71,31 @@ const EditUser = () => {
                 }
             })
             .then(res => {
+                console.log(res)
+                
+                if(res.data=="updated succesfully"||(currentEmail==user.email)){
                 history.push('/user-details/' + user?._id);
                 console.log(res.data);
-                console.log(user);
                 localStorage.setItem('user',JSON.stringify(user))
+                //alert(res.data)
+                }
+                else{
+                   
+                    setEmailError("Email in use by another user") 
+                }
+            
             })
             .catch(err => {
                 console.log(err);
             })
-
+        
     };
 
     useEffect(() => {
         getUser();
     }, []);
 
-
+    const [emailError,setEmailError]=useState("");
     return (
 
         <div className="Edit User">
@@ -184,6 +206,8 @@ const EditUser = () => {
                                         name="email"
                                         value={user?.email}
                                         onChange={(e) => onChange(e)}
+                                        error={emailError !== ""}
+					                    helperText= {emailError}
                                     />
 
                                     <TextField

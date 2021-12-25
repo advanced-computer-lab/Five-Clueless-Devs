@@ -46,7 +46,9 @@ const ViewSummary = () => {
 
       console.log(email);
       //  BACKEND_URL + "users/search?userId=" + id)
-      await axios.post(BACKEND_URL + "users/send_mail?email=" + emailSearch, {
+      await axios.post(BACKEND_URL + "users/send_mail?email=" + emailSearch,{ headers: {
+        'Authorization': localStorage.getItem('token')
+    }}, {
         deptFlightId, retFlightId, deptFrom, deptTo, retFrom, retTo, refundedAmount, bookingNumber, to: email
       })
     } catch (error) {
