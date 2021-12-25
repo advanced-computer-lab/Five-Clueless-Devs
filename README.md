@@ -82,28 +82,6 @@ Issues with the code will be actively added to the issues on GitHub, everyone is
 * JWT authentication: https://www.youtube.com/watch?v=mbsmsi7l3r4 
 * Stripe Tutorial: https://www.youtube.com/watch?v=lbEFSP1WAv0
 
-### Screenshots
-* Search for flights  
-![Search for flights](/frontend/src/Screenshots/1.png?raw=true "Search for flights")  
-  
-* Reserved Flights  
-![Reserved Flights](/frontend/src/Screenshots/2.png?raw=true "Reserved Flights")  
-
-* Reservation Summary    
-![Reservation Summary](/frontend/src/Screenshots/3.png?raw=true "Reservation Summary")  
-  
-* Select Seats  
-![Select Seats](/frontend/src/Screenshots/4.png?raw=true "Select Seats")  
-
-* Payment   
-![Payment](/frontend/src/Screenshots/5.png?raw=true "Payment")  
-
-* Login        
-![Login](/frontend/src/Screenshots/6.png?raw=true "Login")  
-  
-* Registration  
-![Registration](/frontend/src/Screenshots/7.png?raw=true "Registration")
-
 ### Code Examples
 * For creating a backend api:  
  ```js
@@ -116,13 +94,13 @@ Issues with the code will be actively added to the issues on GitHub, everyone is
 
 * Axios Request:  
     ``` js
-    axios.get(BACKEND_URL + "flights/search?")  
-            .then(res => {  
-                setAll(res.data);   
-            }).catch(err => {   
-                console.log(err);   
-            })   
-            ```     
+axios.get(BACKEND_URL + "flights/search?")  
+.then(res => {  
+    setAll(res.data);   
+}).catch(err => {   
+    console.log(err);   
+})   
+    ```     
   
 * Example of a database schema:  
 ```javascript
@@ -151,6 +129,28 @@ const ReservationSchema = new mongoose.Schema({
 ```html
 <Route path='/search-user' component={SearchFlightUser} />
  <Route path='/update-flight/:id' component={UpdateFlight} />
-```
+```  
+  
+### Screenshots
+* Search for flights  
+![Search for flights](/frontend/src/Screenshots/1.png?raw=true "Search for flights")  
+  
+* Reserved Flights  
+![Reserved Flights](/frontend/src/Screenshots/2.png?raw=true "Reserved Flights")  
+
+* Reservation Summary    
+![Reservation Summary](/frontend/src/Screenshots/3.png?raw=true "Reservation Summary")  
+  
+* Select Seats  
+![Select Seats](/frontend/src/Screenshots/4.png?raw=true "Select Seats")  
+
+* Payment   
+![Payment](/frontend/src/Screenshots/5.png?raw=true "Payment")  
+
+* Login        
+![Login](/frontend/src/Screenshots/6.png?raw=true "Login")  
+  
+* Registration  
+![Registration](/frontend/src/Screenshots/7.png?raw=true "Registration")
 
 
