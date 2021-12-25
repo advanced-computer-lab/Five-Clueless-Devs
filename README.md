@@ -81,3 +81,6 @@ Issues with the code will be actively added to the issues on GitHub, everyone is
 * React Hooks --functional components: https://www.youtube.com/playlist?list=PLZlA0Gpn_vH8EtggFGERCwMY5u5hOjf-h
 * JWT authentication: https://www.youtube.com/watch?v=mbsmsi7l3r4 
 * Stripe Tutorial: https://www.youtube.com/watch?v=lbEFSP1WAv0
+
+### Screenshots
+![Alt text](/Screenshots/1.png?raw=true "Optional Title")
